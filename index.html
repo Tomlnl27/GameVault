@@ -194,7 +194,7 @@ main {
     color: white;
 }
 
-.rating-box {
+.panel {
     margin-top: 22px;
     padding: 16px;
     background: #101016;
@@ -202,9 +202,9 @@ main {
     border: 1px solid #292934;
 }
 
-.rating-title {
+.panel-title {
     color: #aaaab5;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .rating-value {
@@ -235,6 +235,43 @@ main {
     cursor: default;
 }
 
+.playtime {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.playtime input {
+    width: 100px;
+    padding: 10px;
+    border-radius: 9px;
+    border: 1px solid #33333d;
+    background: #20202a;
+    color: white;
+}
+
+.save-button {
+    margin-top: 12px;
+    padding: 10px 15px;
+    border: 0;
+    border-radius: 9px;
+    background: white;
+    color: black;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.progress-value {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.progress-slider {
+    width: 100%;
+    cursor: pointer;
+}
+
 .library-item {
     display: flex;
     gap: 15px;
@@ -257,7 +294,9 @@ main {
     flex: 1;
 }
 
-.library-rating {
+.library-rating,
+.library-progress,
+.library-time {
     margin-top: 6px;
     font-weight: 700;
 }
@@ -547,19 +586,32 @@ function renderDetail() {
             .join(", ")
         : "Inconnues";
 
-    const alreadyAdded =
-        library.some(
-            item => item.id === currentGame.id
-        );
-
     const savedGame =
         library.find(
             item => item.id === currentGame.id
         );
 
+    const alreadyAdded =
+        Boolean(savedGame);
+
     const personalRating =
         savedGame
         ? savedGame.note
+        : 0;
+
+    const playHours =
+        savedGame
+        ? savedGame.hours
+        : 0;
+
+    const playMinutes =
+        savedGame
+        ? savedGame.minutes
+        : 0;
+
+    const progress =
+        savedGame
+        ? savedGame.progress
         : 0;
 
     detail.innerHTML = `
@@ -632,16 +684,18 @@ function renderDetail() {
         </div>
 
 
-        <div class="rating-box">
+        <div class="panel">
 
-            <div class="rating-title">
+            <div class="panel-title">
                 ⭐ Ma note
             </div>
 
-            <div class="rating-value"
-                 id="ratingValue">
+            <div class="rating-value">
 
-                ${personalRating} / 10
+                <span id="ratingValue">
+                    ${personalRating}
+                </span>
+                / 10
 
             </div>
 
@@ -654,7 +708,7 @@ function renderDetail() {
                 </button>
 
                 <span>
-                    Pas de note
+                    Par 0,5
                 </span>
 
                 <button
@@ -664,6 +718,72 @@ function renderDetail() {
                 </button>
 
             </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-title">
+                🕐 Temps de jeu
+            </div>
+
+            <div class="playtime">
+
+                <input
+                    id="hoursInput"
+                    type="number"
+                    min="0"
+                    value="${playHours}"
+                    placeholder="Heures"
+                >
+
+                <input
+                    id="minutesInput"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="${playMinutes}"
+                    placeholder="Minutes"
+                >
+
+            </div>
+
+            <button
+                class="save-button"
+                onclick="savePlaytime()">
+
+                💾 Enregistrer
+
+            </button>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-title">
+                📊 Progression
+            </div>
+
+            <div class="progress-value">
+
+                <span id="progressValue">
+                    ${progress}
+                </span>%
+
+            </div>
+
+            <input
+                id="progressSlider"
+                class="progress-slider"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="${progress}"
+                oninput="updateProgress(this.value)"
+            >
 
         </div>
 
@@ -695,49 +815,9 @@ function renderDetail() {
 }
 
 
-function addToLibrary() {
+function ensureGameInLibrary() {
 
-    if (!currentGame) return;
-
-    const exists =
-        library.some(
-            game => game.id === currentGame.id
-        );
-
-    if (exists) return;
-
-    library.push({
-
-        id:
-            currentGame.id,
-
-        name:
-            currentGame.name,
-
-        background_image:
-            currentGame.background_image,
-
-        released:
-            currentGame.released,
-
-        status:
-            "À jouer",
-
-        note:
-            0
-
-    });
-
-    saveLibrary();
-
-    renderDetail();
-
-}
-
-
-function changeRating(amount) {
-
-    if (!currentGame) return;
+    if (!currentGame) return null;
 
     let game =
         library.find(
@@ -746,14 +826,63 @@ function changeRating(amount) {
 
     if (!game) {
 
-        addToLibrary();
+        game = {
 
-        game =
-            library.find(
-                item => item.id === currentGame.id
-            );
+            id:
+                currentGame.id,
+
+            name:
+                currentGame.name,
+
+            background_image:
+                currentGame.background_image,
+
+            released:
+                currentGame.released,
+
+            status:
+                "À jouer",
+
+            note:
+                0,
+
+            progress:
+                0,
+
+            hours:
+                0,
+
+            minutes:
+                0
+
+        };
+
+        library.push(game);
+
+        saveLibrary();
 
     }
+
+    return game;
+
+}
+
+
+function addToLibrary() {
+
+    ensureGameInLibrary();
+
+    renderDetail();
+
+}
+
+
+function changeRating(amount) {
+
+    const game =
+        ensureGameInLibrary();
+
+    if (!game) return;
 
     let newRating =
         Number(game.note || 0) + amount;
@@ -809,6 +938,90 @@ function updateRatingButtons() {
             game.note >= 10;
 
     }
+
+}
+
+
+function savePlaytime() {
+
+    const game =
+        ensureGameInLibrary();
+
+    if (!game) return;
+
+    let hours =
+        Number(
+            document.getElementById(
+                "hoursInput"
+            ).value
+        );
+
+    let minutes =
+        Number(
+            document.getElementById(
+                "minutesInput"
+            ).value
+        );
+
+    if (isNaN(hours) || hours < 0) {
+        hours = 0;
+    }
+
+    if (isNaN(minutes) || minutes < 0) {
+        minutes = 0;
+    }
+
+    hours =
+        Math.floor(hours);
+
+    minutes =
+        Math.floor(minutes);
+
+    hours +=
+        Math.floor(minutes / 60);
+
+    minutes =
+        minutes % 60;
+
+    game.hours =
+        hours;
+
+    game.minutes =
+        minutes;
+
+    saveLibrary();
+
+    renderDetail();
+
+}
+
+
+function updateProgress(value) {
+
+    const game =
+        ensureGameInLibrary();
+
+    if (!game) return;
+
+    const progress =
+        Number(value);
+
+    game.progress =
+        progress;
+
+    const display =
+        document.getElementById(
+            "progressValue"
+        );
+
+    if (display) {
+
+        display.textContent =
+            progress;
+
+    }
+
+    saveLibrary();
 
 }
 
@@ -910,6 +1123,14 @@ function renderLibrary() {
             game.background_image ||
             "https://via.placeholder.com/100x150?text=No+Image";
 
+        const playtime =
+            game.hours > 0 ||
+            game.minutes > 0
+            ?
+            `${game.hours} h ${game.minutes} min`
+            :
+            "Aucun temps enregistré";
+
         item.innerHTML = `
 
             <img
@@ -937,6 +1158,20 @@ function renderLibrary() {
                         ? game.note + " / 10"
                         : "Pas encore noté"
                     }
+
+                </div>
+
+                <div class="library-progress">
+
+                    📊
+                    ${game.progress || 0}%
+
+                </div>
+
+                <div class="library-time">
+
+                    🕐
+                    ${playtime}
 
                 </div>
 
