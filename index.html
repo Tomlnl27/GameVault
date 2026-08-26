@@ -1,54 +1,58 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GameVault</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
 margin:0;
-background:#08090d;
+background:#09090d;
 color:#fff;
-font-family:Arial,Helvetica,sans-serif
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
-button,input,select{font:inherit}
-button{cursor:pointer}
 
 header{
-padding:22px 18px;
-background:#101117;
-border-bottom:1px solid #242631
+padding:22px 18px 18px;
+background:#101016;
+border-bottom:1px solid #24242d
 }
+
 .logo{
-font-size:30px;
-font-weight:900
+font-size:29px;
+font-weight:900;
+letter-spacing:-1px
 }
-.sub{
-color:#858995;
+
+.subtitle{
+color:#858590;
 font-size:14px;
-margin-top:5px
+margin-top:4px
 }
 
 nav{
 display:flex;
 gap:8px;
 padding:12px 16px;
-background:#101117;
-border-bottom:1px solid #242631;
+background:#101016;
+border-bottom:1px solid #20202a;
 overflow-x:auto
 }
+
 nav button{
-border:1px solid #30323d;
-background:#191b23;
+border:1px solid #2b2b35;
+background:#191920;
 color:#ddd;
+padding:10px 14px;
 border-radius:10px;
-padding:10px 15px;
+white-space:nowrap;
 font-weight:700;
-white-space:nowrap
+cursor:pointer
 }
+
 nav button.active{
 background:#fff;
 color:#000
@@ -67,29 +71,33 @@ display:flex;
 gap:10px;
 margin-bottom:18px
 }
+
 .search input{
 flex:1;
 min-width:0;
-background:#15171e;
-border:1px solid #343641;
+background:#15151c;
 color:#fff;
+border:1px solid #30303a;
 border-radius:12px;
 padding:14px;
+font-size:16px;
 outline:none
 }
+
 .search button{
+border:0;
 background:#fff;
 color:#000;
-border:0;
 border-radius:12px;
-padding:0 20px;
-font-weight:800
+padding:0 18px;
+font-weight:800;
+cursor:pointer
 }
 
 .status{
-color:#888b96;
+color:#858590;
 font-size:14px;
-margin-bottom:16px
+margin-bottom:18px
 }
 
 .games{
@@ -99,61 +107,67 @@ gap:16px
 }
 
 .card{
-background:#14161d;
-border:1px solid #292b35;
+background:#14141b;
+border:1px solid #25252f;
 border-radius:14px;
 overflow:hidden;
 cursor:pointer;
 transition:.15s
 }
+
 .card:hover{
 transform:translateY(-3px)
 }
+
 .card img{
+display:block;
 width:100%;
-height:230px;
-object-fit:cover;
-display:block
+height:225px;
+object-fit:cover
 }
-.card-body{
-padding:11px
+
+.card-content{
+padding:12px
 }
+
 .card-title{
 font-weight:800;
-line-height:1.3
+line-height:1.25
 }
+
 .card-date{
-color:#777b87;
 font-size:12px;
+color:#777783;
 margin-top:6px
 }
 
 .empty{
-padding:50px 15px;
 text-align:center;
-color:#777b87
+color:#777783;
+padding:50px 15px
 }
 
 /* DETAIL */
 
 .back{
-background:#20222b;
-border:1px solid #32343e;
+border:0;
+background:#20202a;
 color:#fff;
 padding:10px 14px;
 border-radius:10px;
+cursor:pointer;
 font-weight:700
 }
 
 .detail{
 margin-top:18px;
-background:#14161d;
-border:1px solid #292b35;
+background:#14141b;
+border:1px solid #292933;
 border-radius:18px;
 overflow:hidden
 }
 
-.detail-header{
+.detail-top{
 display:grid;
 grid-template-columns:300px 1fr;
 gap:25px;
@@ -162,25 +176,25 @@ padding:20px
 
 .cover{
 width:100%;
-max-height:470px;
+max-height:460px;
 object-fit:cover;
 border-radius:13px
 }
 
-h1{
-font-size:36px;
+.detail-title{
+font-size:35px;
 line-height:1.05;
-margin:4px 0 8px
+margin:5px 0 8px
 }
 
 .release{
-color:#818590;
+color:#858590;
 font-size:14px;
 margin-bottom:18px
 }
 
 .description{
-color:#c8cad1;
+color:#c9c9d0;
 line-height:1.65;
 font-size:15px
 }
@@ -193,38 +207,40 @@ margin-top:20px
 }
 
 .meta-box{
-background:#0d0e13;
-border:1px solid #292b35;
+background:#0d0d12;
+border:1px solid #292933;
 border-radius:11px;
 padding:12px
 }
+
 .meta-label{
 font-size:11px;
-color:#777b87;
+color:#777783;
 margin-bottom:5px
 }
+
 .meta-value{
 font-size:14px;
-font-weight:700;
-line-height:1.4
+font-weight:700
 }
 
 .panel{
 margin:0 20px 15px;
 padding:16px;
-background:#0d0e13;
-border:1px solid #292b35;
+background:#0d0d12;
+border:1px solid #292933;
 border-radius:13px
 }
+
 .panel-title{
 font-weight:800;
 margin-bottom:12px
 }
 
 .rating{
-font-size:31px;
+font-size:30px;
 font-weight:900;
-margin-bottom:10px
+margin-bottom:12px
 }
 
 .rating-controls{
@@ -232,79 +248,85 @@ display:flex;
 align-items:center;
 gap:12px
 }
+
 .rating-controls button{
-width:44px;
-height:44px;
+width:43px;
+height:43px;
 border-radius:10px;
-background:#20222b;
-border:1px solid #343640;
+border:1px solid #34343f;
+background:#20202a;
 color:#fff;
-font-size:22px
+font-size:23px;
+cursor:pointer
 }
 
 .rating-controls button:disabled{
 opacity:.3
 }
 
-.progress-number{
-font-size:26px;
-font-weight:900
+select{
+background:#1b1b23;
+color:#fff;
+border:1px solid #353540;
+border-radius:9px;
+padding:10px;
+outline:none
 }
 
 .slider{
 width:100%;
-margin-top:10px
+margin-top:8px
 }
 
-select{
-background:#191b23;
-color:#fff;
-border:1px solid #343640;
-padding:10px;
-border-radius:9px
+.progress-number{
+font-size:24px;
+font-weight:900
 }
 
-.time{
+.time-inputs{
 display:flex;
 gap:8px;
 flex-wrap:wrap
 }
-.time input{
+
+.time-inputs input{
 width:100px;
-background:#191b23;
+padding:10px;
+background:#1b1b23;
 color:#fff;
-border:1px solid #343640;
-border-radius:9px;
-padding:10px
+border:1px solid #353540;
+border-radius:9px
 }
 
-.actions{
+.action{
+margin:0 20px 20px;
 display:flex;
 gap:10px;
-flex-wrap:wrap;
-padding:0 20px 20px
+flex-wrap:wrap
 }
 
-.actions button{
+.action button{
 padding:12px 15px;
 border-radius:10px;
 border:0;
-font-weight:800
+font-weight:800;
+cursor:pointer
 }
 
-.primary{
+.add{
 background:#fff;
 color:#000
 }
 
-.danger{
-background:#35181c;
-color:#ff9aa2
+.delete{
+background:#2a171a;
+color:#ff929b
 }
 
-.secondary{
-background:#22242d;
-color:#fff
+.in-library{
+background:#20202a!important;
+color:#fff!important;
+cursor:default!important
 }
 
 /* LIBRARY */
@@ -319,23 +341,33 @@ margin-bottom:15px
 .library-tools input,
 .library-tools select{
 width:100%;
-background:#15171e;
-color:#fff;
-border:1px solid #343640;
 padding:11px;
+background:#15151c;
+color:#fff;
+border:1px solid #30303a;
 border-radius:10px
+}
+
+.count{
+color:#858590;
+font-size:14px;
+margin-bottom:15px
 }
 
 .library-item{
 display:flex;
 gap:14px;
 align-items:center;
-background:#14161d;
-border:1px solid #292b35;
 padding:12px;
-border-radius:13px;
 margin-bottom:10px;
+background:#14141b;
+border:1px solid #25252f;
+border-radius:13px;
 cursor:pointer
+}
+
+.library-item:hover{
+border-color:#444451
 }
 
 .library-item img{
@@ -354,13 +386,13 @@ min-width:0
 font-weight:850
 }
 
-.small{
-color:#777b87;
+.library-small{
+color:#777783;
 font-size:12px;
 margin-top:4px
 }
 
-.line{
+.library-line{
 font-size:13px;
 margin-top:5px
 }
@@ -369,46 +401,49 @@ margin-top:5px
 display:inline-block;
 margin-top:7px;
 padding:5px 8px;
+background:#20202a;
 border-radius:7px;
-background:#22242d;
 font-size:11px;
 color:#bbb
 }
 
 /* STATS */
 
-.stats{
+.stats-grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:12px
 }
 
 .stat{
-background:#14161d;
-border:1px solid #292b35;
+background:#14141b;
+border:1px solid #292933;
 border-radius:14px;
 padding:17px
 }
+
 .stat-icon{
 font-size:24px
 }
+
 .stat-number{
 font-size:28px;
 font-weight:900;
 margin-top:7px
 }
+
 .stat-label{
 font-size:12px;
-color:#858995;
+color:#858590;
 margin-top:4px
 }
 
 .stats-box{
-background:#14161d;
-border:1px solid #292b35;
+margin-top:15px;
+background:#14141b;
+border:1px solid #292933;
 border-radius:14px;
-padding:18px;
-margin-top:15px
+padding:18px
 }
 
 .big{
@@ -417,12 +452,13 @@ font-weight:900
 }
 
 .bar{
-height:12px;
-background:#292b35;
+height:13px;
+background:#292933;
 border-radius:20px;
 overflow:hidden;
 margin-top:12px
 }
+
 .fill{
 height:100%;
 background:#fff
@@ -430,9 +466,10 @@ background:#fff
 
 .best{
 display:flex;
-gap:14px;
-align-items:center
+align-items:center;
+gap:14px
 }
+
 .best img{
 width:60px;
 height:80px;
@@ -441,29 +478,60 @@ border-radius:8px
 }
 
 @media(max-width:800px){
-.detail-header{
+
+.detail-top{
 grid-template-columns:1fr
 }
+
 .cover{
 max-width:280px
 }
-.stats{
+
+.stats-grid{
 grid-template-columns:repeat(2,1fr)
 }
+
 }
 
 @media(max-width:600px){
-main{padding:15px}
-.search{flex-direction:column}
-.search button{height:48px}
+
+main{
+padding:15px
+}
+
+.search{
+flex-direction:column
+}
+
+.search button{
+height:48px
+}
+
 .games{
 grid-template-columns:repeat(2,1fr);
 gap:12px
 }
-.card img{height:225px}
-h1{font-size:28px}
-.meta{grid-template-columns:1fr}
-.library-tools{grid-template-columns:1fr}
+
+.card img{
+height:230px
+}
+
+.detail-title{
+font-size:28px
+}
+
+.meta{
+grid-template-columns:1fr
+}
+
+.library-tools{
+grid-template-columns:1fr
+}
+
+.stats-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
 }
 </style>
 </head>
@@ -472,13 +540,13 @@ h1{font-size:28px}
 
 <header>
 <div class="logo">🎮 GameVault</div>
-<div class="sub">Ta bibliothèque gaming</div>
+<div class="subtitle">Ta bibliothèque gaming</div>
 </header>
 
 <nav>
-<button id="navSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
-<button id="navLibrary" onclick="showLibrary()">📚 Bibliothèque</button>
-<button id="navStats" onclick="showStats()">📊 Statistiques</button>
+<button id="tabSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
+<button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
+<button id="tabStats" onclick="showStats()">📊 Statistiques</button>
 </nav>
 
 <main>
@@ -490,11 +558,11 @@ h1{font-size:28px}
 <button onclick="searchGames()">Rechercher</button>
 </div>
 
-<div id="searchStatus" class="status">
+<div id="status" class="status">
 Recherche ton prochain jeu 🎮
 </div>
 
-<div id="results" class="games"></div>
+<div id="games" class="games"></div>
 
 </section>
 
@@ -537,7 +605,7 @@ oninput="renderLibrary()"
 
 </div>
 
-<div id="libraryCount" class="status"></div>
+<div id="libraryCount" class="count"></div>
 <div id="library"></div>
 
 </section>
@@ -563,8 +631,8 @@ let currentGame = null;
 
 let library =
 JSON.parse(
-localStorage.getItem("gamevault_library") || "[]"
-);
+localStorage.getItem("gamevault_library")
+) || [];
 
 
 /* =========================
@@ -576,11 +644,11 @@ async function searchGames(){
 const input =
 document.getElementById("searchInput");
 
-const results =
-document.getElementById("results");
+const games =
+document.getElementById("games");
 
 const status =
-document.getElementById("searchStatus");
+document.getElementById("status");
 
 const query =
 input.value.trim();
@@ -596,7 +664,7 @@ return;
 status.textContent =
 "Recherche en cours...";
 
-results.innerHTML =
+games.innerHTML =
 '<div class="empty">🔎 Recherche...</div>';
 
 try{
@@ -611,26 +679,15 @@ encodeURIComponent(query)
 const data =
 await response.json();
 
-if(!response.ok){
+if(!response.ok ||
+!data.results){
 
-throw new Error(
-data.error ||
-"Erreur du Worker"
-);
-
-}
-
-if(!data.results){
-
-throw new Error(
-"RAWG n'a pas renvoyé de résultats"
-);
-
+throw new Error("Erreur RAWG");
 }
 
 if(data.results.length === 0){
 
-results.innerHTML =
+games.innerHTML =
 '<div class="empty">Aucun jeu trouvé.</div>';
 
 status.textContent =
@@ -643,45 +700,36 @@ status.textContent =
 data.results.length +
 " jeu(x) trouvé(s).";
 
-results.innerHTML = "";
+games.innerHTML = "";
 
-data.results.forEach(game=>{
+data.results.forEach(game => {
 
 const card =
 document.createElement("div");
 
-card.className = "card";
+card.className =
+"card";
 
 const image =
 game.background_image ||
-"";
+"https://via.placeholder.com/400x600?text=Game";
 
 card.innerHTML = `
-
-<img
-src="${image}"
-alt=""
-onerror="this.style.display='none'"
->
-
-<div class="card-body">
-
+<img src="${image}" alt="">
+<div class="card-content">
 <div class="card-title">
-${escapeHtml(game.name)}
+${escapeHtml(game.name || "Jeu")}
 </div>
-
 <div class="card-date">
 ${game.released || "Date inconnue"}
 </div>
-
 </div>
-
 `;
 
 card.onclick =
-()=>openGame(game);
+() => openGame(game);
 
-results.appendChild(card);
+games.appendChild(card);
 
 });
 
@@ -690,14 +738,10 @@ results.appendChild(card);
 console.error(error);
 
 status.textContent =
-"Erreur : " + error.message;
+"Erreur lors de la recherche.";
 
-results.innerHTML =
-`
-<div class="empty">
-❌ ${escapeHtml(error.message)}
-</div>
-`;
+games.innerHTML =
+'<div class="empty">Impossible de contacter GameVault.</div>';
 
 }
 
@@ -705,197 +749,139 @@ results.innerHTML =
 
 
 /* =========================
-   OUVERTURE JEU
+   FICHE DÉTAILLÉE
 ========================= */
 
 async function openGame(game){
 
 currentGame = game;
 
-hideAll();
+hideSections();
 
 document
 .getElementById("detailSection")
 .classList.remove("hidden");
 
+await renderDetail();
+
+}
+
+
+async function renderDetail(){
+
+if(!currentGame) return;
+
 const detail =
 document.getElementById("detail");
 
 detail.innerHTML =
-'<div class="empty">🎮 Chargement de la fiche...</div>';
+'<div class="empty">Chargement de la fiche...</div>';
 
-
-try{
-
-const url =
-WORKER_URL +
-"/game/" +
-encodeURIComponent(game.id);
-
-const response =
-await fetch(url);
-
-
-const text =
-await response.text();
-
-
-if(!response.ok){
-
-throw new Error(
-"Worker : " +
-response.status +
-" — " +
-text
-);
-
-}
-
-
-let data;
-
-try{
-
-data =
-JSON.parse(text);
-
-}catch{
-
-throw new Error(
-"Le Worker n'a pas renvoyé du JSON."
-);
-
-}
-
-
-if(data.error){
-
-throw new Error(
-data.error
-);
-
-}
+let game =
+currentGame;
 
 
 /*
-   On combine les données
-   de recherche + fiche détaillée
+   TON WORKER UTILISE :
+   /game/ID
 */
 
-currentGame = {
+try{
+
+const response =
+await fetch(
+WORKER_URL +
+"/game/" +
+encodeURIComponent(game.id)
+);
+
+if(response.ok){
+
+const data =
+await response.json();
+
+game = {
 ...game,
 ...data
 };
 
-renderGame(currentGame);
+currentGame = game;
 
+}
 
 }catch(error){
 
-console.error(error);
-
-detail.innerHTML = `
-
-<div class="empty">
-
-<h2>❌ Impossible de charger la fiche</h2>
-
-<p>
-${escapeHtml(error.message)}
-</p>
-
-<p>
-Le Worker répond, mais la fiche détaillée
-n'a pas pu être récupérée.
-</p>
-
-<button
-class="primary"
-onclick="showSearch()"
-style="padding:12px 16px;border-radius:10px;border:0;font-weight:800"
->
-← Retour à la recherche
-</button>
-
-</div>
-
-`;
-
-}
+console.log(error);
 
 }
 
 
-/* =========================
-   AFFICHAGE FICHE
-========================= */
-
-function renderGame(game){
-
-const detail =
-document.getElementById("detail");
+/* Jeu déjà sauvegardé ? */
 
 const saved =
 library.find(
-item=>item.id===game.id
+item => item.id === game.id
 );
+
+
+/* Informations */
 
 const image =
 game.background_image ||
-"";
+"https://via.placeholder.com/400x600?text=Game";
 
 const description =
 game.description_raw ||
-cleanDescription(game.description) ||
+stripHtml(game.description) ||
 "Aucune description disponible.";
 
 const developers =
-Array.isArray(game.developers) &&
+game.developers &&
 game.developers.length
 ?
 game.developers
-.map(x=>x.name)
-.filter(Boolean)
+.map(x => x.name)
 .join(", ")
 :
-"Non renseigné";
+"Inconnu";
 
 const publishers =
-Array.isArray(game.publishers) &&
+game.publishers &&
 game.publishers.length
 ?
 game.publishers
-.map(x=>x.name)
-.filter(Boolean)
+.map(x => x.name)
 .join(", ")
 :
-"Non renseigné";
+"Inconnu";
 
 const genres =
-Array.isArray(game.genres) &&
+game.genres &&
 game.genres.length
 ?
 game.genres
-.map(x=>x.name)
-.filter(Boolean)
+.map(x => x.name)
 .join(", ")
 :
-"Non renseigné";
+"Inconnu";
 
 const platforms =
-Array.isArray(game.platforms) &&
+game.platforms &&
 game.platforms.length
 ?
 game.platforms
-.map(x=>
-x.platform?.name || x.name
+.map(x =>
+x.platform
+?
+x.platform.name
+:
+x.name
 )
-.filter(Boolean)
 .join(", ")
 :
-"Non renseignées";
+"Inconnues";
 
-const note =
+const rating =
 saved
 ?
 Number(saved.note || 0)
@@ -935,9 +921,7 @@ detail.innerHTML = `
 
 <div class="detail">
 
-<div class="detail-header">
-
-<div>
+<div class="detail-top">
 
 <img
 class="cover"
@@ -945,11 +929,9 @@ src="${image}"
 alt=""
 >
 
-</div>
-
 <div>
 
-<h1>
+<h1 class="detail-title">
 ${escapeHtml(game.name || "Jeu")}
 </h1>
 
@@ -964,60 +946,44 @@ ${escapeHtml(description)}
 <div class="meta">
 
 <div class="meta-box">
-<div class="meta-label">
-🛠️ DÉVELOPPEUR
-</div>
+<div class="meta-label">🛠️ DÉVELOPPEUR</div>
 <div class="meta-value">
 ${escapeHtml(developers)}
 </div>
 </div>
 
 <div class="meta-box">
-<div class="meta-label">
-🏢 ÉDITEUR
-</div>
+<div class="meta-label">🏢 ÉDITEUR</div>
 <div class="meta-value">
 ${escapeHtml(publishers)}
 </div>
 </div>
 
 <div class="meta-box">
-<div class="meta-label">
-🎭 GENRES
-</div>
+<div class="meta-label">🎭 GENRES</div>
 <div class="meta-value">
 ${escapeHtml(genres)}
 </div>
 </div>
 
 <div class="meta-box">
-<div class="meta-label">
-🎮 PLATEFORMES
-</div>
+<div class="meta-label">🎮 PLATEFORMES</div>
 <div class="meta-value">
 ${escapeHtml(platforms)}
 </div>
 </div>
 
 <div class="meta-box">
-<div class="meta-label">
-⭐ NOTE RAWG
-</div>
+<div class="meta-label">⭐ NOTE RAWG</div>
 <div class="meta-value">
-${game.rating
-?
-game.rating + " / 5"
-:
-"Non renseignée"}
+${game.rating ? game.rating + " / 5" : "N/A"}
 </div>
 </div>
 
 <div class="meta-box">
-<div class="meta-label">
-👥 AVIS
-</div>
+<div class="meta-label">👥 AVIS</div>
 <div class="meta-value">
-${game.ratings_count || "Non renseigné"}
+${game.ratings_count || "N/A"}
 </div>
 </div>
 
@@ -1035,30 +1001,25 @@ ${game.ratings_count || "Non renseigné"}
 </div>
 
 <div class="rating">
-
 <span id="ratingValue">
-${note}
+${rating}
 </span>
-
-/ 10
-
+ / 10
 </div>
 
 <div class="rating-controls">
 
 <button
 id="minusRating"
-onclick="changeRating(-0.5)"
->
+onclick="changeRating(-0.5)">
 −
 </button>
 
-<span>Pas de 0,5</span>
+<span>par 0,5</span>
 
 <button
 id="plusRating"
-onclick="changeRating(0.5)"
->
+onclick="changeRating(0.5)">
 +
 </button>
 
@@ -1070,15 +1031,13 @@ onclick="changeRating(0.5)"
 <div class="panel">
 
 <div class="panel-title">
-📊 Progression
+📊 Ma progression
 </div>
 
 <div class="progress-number">
-
 <span id="progressValue">
 ${progress}
 </span>%
-
 </div>
 
 <input
@@ -1100,7 +1059,7 @@ oninput="changeProgress(this.value)"
 🕐 Temps de jeu
 </div>
 
-<div class="time">
+<div class="time-inputs">
 
 <input
 id="hoursInput"
@@ -1120,10 +1079,8 @@ placeholder="Minutes"
 >
 
 <button
-class="primary"
-onclick="saveTime()"
-style="padding:10px 14px;border:0;border-radius:9px;font-weight:800"
->
+class="add"
+onclick="saveTime()">
 Enregistrer
 </button>
 
@@ -1139,28 +1096,23 @@ Enregistrer
 </div>
 
 <select
-id="statusSelect"
-onchange="changeStatus(this.value)"
->
+onchange="changeStatus(this.value)">
 
 <option
 value="À jouer"
-${status==="À jouer"?"selected":""}
->
+${status === "À jouer" ? "selected" : ""}>
 À jouer
 </option>
 
 <option
 value="En cours"
-${status==="En cours"?"selected":""}
->
+${status === "En cours" ? "selected" : ""}>
 En cours
 </option>
 
 <option
 value="Terminé"
-${status==="Terminé"?"selected":""}
->
+${status === "Terminé" ? "selected" : ""}>
 Terminé
 </option>
 
@@ -1169,32 +1121,27 @@ Terminé
 </div>
 
 
-<div class="actions">
+<div class="action">
 
 ${
 saved
 ?
 `
-<button
-class="secondary"
-disabled
->
+<button class="in-library">
 ✅ Dans ma bibliothèque
 </button>
 
 <button
-class="danger"
-onclick="deleteCurrentGame()"
->
+class="delete"
+onclick="deleteCurrentGame()">
 🗑️ Supprimer
 </button>
 `
 :
 `
 <button
-class="primary"
-onclick="addCurrentGame()"
->
+class="add"
+onclick="addCurrentGame()">
 ➕ Ajouter à ma bibliothèque
 </button>
 `
@@ -1205,6 +1152,7 @@ onclick="addCurrentGame()"
 </div>
 `;
 
+
 updateRatingButtons();
 
 }
@@ -1214,15 +1162,13 @@ updateRatingButtons();
    BIBLIOTHÈQUE
 ========================= */
 
-function getSaved(){
+function getCurrentSaved(){
 
-return currentGame
-?
-library.find(
-x=>x.id===currentGame.id
-)
-:
-null;
+if(!currentGame) return null;
+
+return library.find(
+item => item.id === currentGame.id
+);
 
 }
 
@@ -1230,10 +1176,9 @@ null;
 function ensureSaved(){
 
 let game =
-getSaved();
+getCurrentSaved();
 
-if(game)
-return game;
+if(game) return game;
 
 game = {
 
@@ -1274,7 +1219,7 @@ function addCurrentGame(){
 
 ensureSaved();
 
-renderGame(currentGame);
+renderDetail();
 
 }
 
@@ -1284,31 +1229,31 @@ function changeRating(amount){
 const game =
 ensureSaved();
 
-let value =
+let rating =
 Number(game.note || 0) +
 amount;
 
-value =
-Math.round(value*2)/2;
+rating =
+Math.round(rating * 2) / 2;
 
-value =
+rating =
 Math.max(
 0,
 Math.min(
 10,
-value
+rating
 )
 );
 
 game.note =
-value;
+rating;
 
 saveLibrary();
 
-document
-.getElementById("ratingValue")
-.textContent =
-value;
+document.getElementById(
+"ratingValue"
+).textContent =
+rating;
 
 updateRatingButtons();
 
@@ -1318,10 +1263,9 @@ updateRatingButtons();
 function updateRatingButtons(){
 
 const game =
-getSaved();
+getCurrentSaved();
 
-if(!game)
-return;
+if(!game) return;
 
 const minus =
 document.getElementById(
@@ -1335,11 +1279,11 @@ document.getElementById(
 
 if(minus)
 minus.disabled =
-game.note<=0;
+game.note <= 0;
 
 if(plus)
 plus.disabled =
-game.note>=10;
+game.note >= 10;
 
 }
 
@@ -1386,20 +1330,20 @@ document.getElementById(
 ) || 0;
 
 hours +=
-Math.floor(minutes/60);
+Math.floor(minutes / 60);
 
 minutes =
-minutes%60;
+minutes % 60;
 
 game.hours =
-hours;
+Math.max(0,hours);
 
 game.minutes =
-minutes;
+Math.max(0,minutes);
 
 saveLibrary();
 
-renderGame(currentGame);
+renderDetail();
 
 }
 
@@ -1414,26 +1358,24 @@ value;
 
 saveLibrary();
 
-renderGame(currentGame);
+renderDetail();
 
 }
 
 
 function deleteCurrentGame(){
 
-if(!currentGame)
-return;
+if(!currentGame) return;
 
 if(
 !confirm(
 "Supprimer ce jeu de ta bibliothèque ?"
 )
-)
-return;
+) return;
 
 library =
 library.filter(
-x=>x.id!==currentGame.id
+item => item.id !== currentGame.id
 );
 
 saveLibrary();
@@ -1454,7 +1396,7 @@ JSON.stringify(library)
 
 
 /* =========================
-   AFFICHER BIBLIOTHÈQUE
+   BIBLIOTHÈQUE
 ========================= */
 
 function renderLibrary(){
@@ -1470,9 +1412,10 @@ document.getElementById(
 "librarySearch"
 ).value || ""
 )
-.toLowerCase();
+.toLowerCase()
+.trim();
 
-const status =
+const statusFilter =
 document.getElementById(
 "statusFilter"
 ).value;
@@ -1483,49 +1426,47 @@ document.getElementById(
 ).value;
 
 let games =
-library.filter(game=>{
+library.filter(game => {
 
-const name =
-(game.name || "")
-.toLowerCase();
+const nameMatch =
+game.name
+.toLowerCase()
+.includes(search);
 
-return (
-name.includes(search) &&
-(
-status==="Tous" ||
-game.status===status
-)
-);
+const statusMatch =
+statusFilter === "Tous" ||
+game.status === statusFilter;
+
+return nameMatch &&
+statusMatch;
 
 });
 
 
 games.sort((a,b)=>{
 
-if(sort==="name")
+if(sort === "name")
 return a.name.localeCompare(b.name);
 
-if(sort==="rating")
+if(sort === "rating")
 return (b.note||0)-(a.note||0);
 
-if(sort==="progress")
+if(sort === "progress")
 return (b.progress||0)-(a.progress||0);
 
-if(sort==="time"){
+if(sort === "time"){
 
 const aTime =
-(a.hours||0)*60+
-(a.minutes||0);
+(a.hours||0)*60+(a.minutes||0);
 
 const bTime =
-(b.hours||0)*60+
-(b.minutes||0);
+(b.hours||0)*60+(b.minutes||0);
 
 return bTime-aTime;
 
 }
 
-return (b.addedAt||0)-
+return (b.addedAt||0) -
 (a.addedAt||0);
 
 });
@@ -1540,11 +1481,7 @@ document.getElementById(
 if(!games.length){
 
 container.innerHTML =
-`
-<div class="empty">
-Ta bibliothèque est vide.
-</div>
-`;
+'<div class="empty">Ta bibliothèque est vide ou aucun jeu ne correspond.</div>';
 
 return;
 
@@ -1562,14 +1499,12 @@ item.className =
 "library-item";
 
 const image =
-game.background_image || "";
-
-const totalMinutes =
-(game.hours||0)*60+
-(game.minutes||0);
+game.background_image ||
+"https://via.placeholder.com/100x150?text=Game";
 
 const time =
-totalMinutes
+(game.hours||0) ||
+(game.minutes||0)
 ?
 `${game.hours||0} h ${game.minutes||0} min`
 :
@@ -1578,10 +1513,7 @@ totalMinutes
 
 item.innerHTML = `
 
-<img
-src="${image}"
-alt=""
->
+<img src="${image}" alt="">
 
 <div class="library-info">
 
@@ -1589,25 +1521,19 @@ alt=""
 ${escapeHtml(game.name)}
 </div>
 
-<div class="small">
+<div class="library-small">
 ${game.released || ""}
 </div>
 
-<div class="line">
-⭐ ${
-game.note
-?
-game.note+" / 10"
-:
-"Pas noté"
-}
+<div class="library-line">
+⭐ ${game.note > 0 ? game.note + " / 10" : "Pas noté"}
 </div>
 
-<div class="line">
-📊 ${game.progress||0}%
+<div class="library-line">
+📊 ${game.progress || 0}%
 </div>
 
-<div class="line">
+<div class="library-line">
 🕐 ${time}
 </div>
 
@@ -1616,6 +1542,7 @@ ${escapeHtml(game.status || "À jouer")}
 </div>
 
 </div>
+
 `;
 
 item.onclick =
@@ -1652,7 +1579,7 @@ library.filter(
 g=>g.status==="En cours"
 ).length;
 
-const waiting =
+const toPlay =
 library.filter(
 g=>g.status==="À jouer"
 ).length;
@@ -1669,7 +1596,8 @@ rated.length
 rated.reduce(
 (sum,g)=>sum+Number(g.note),
 0
-)/rated.length
+) /
+rated.length
 ).toFixed(1)
 :
 "—";
@@ -1684,9 +1612,11 @@ Number(g.minutes||0),
 );
 
 const totalHours =
-Math.floor(totalMinutes/60);
+Math.floor(
+totalMinutes / 60
+);
 
-const progress =
+const averageProgress =
 total
 ?
 Math.round(
@@ -1694,7 +1624,8 @@ library.reduce(
 (sum,g)=>
 sum+Number(g.progress||0),
 0
-)/total
+) /
+total
 )
 :
 0;
@@ -1713,7 +1644,8 @@ rated.length
 ?
 [...rated].sort(
 (a,b)=>
-(b.note||0)-(a.note||0)
+(b.note||0)-
+(a.note||0)
 )[0]
 :
 null;
@@ -1722,15 +1654,19 @@ const mostPlayed =
 library.length
 ?
 [...library].sort(
-(a,b)=>
-(
-(b.hours||0)*60+
-(b.minutes||0)
-)-
-(
+(a,b)=>{
+
+const aTime =
 (a.hours||0)*60+
-(a.minutes||0)
-)
+(a.minutes||0);
+
+const bTime =
+(b.hours||0)*60+
+(b.minutes||0);
+
+return bTime-aTime;
+
+}
 )[0]
 :
 null;
@@ -1738,7 +1674,7 @@ null;
 
 container.innerHTML = `
 
-<div class="stats">
+<div class="stats-grid">
 
 <div class="stat">
 <div class="stat-icon">🎮</div>
@@ -1772,14 +1708,14 @@ container.innerHTML = `
 <h3>📊 Progression moyenne</h3>
 
 <div class="big">
-${progress}%
+${averageProgress}%
 </div>
 
 <div class="bar">
 <div
 class="fill"
-style="width:${progress}%"
-></div>
+style="width:${averageProgress}%">
+</div>
 </div>
 
 <p>
@@ -1793,7 +1729,7 @@ ${completion}% de ta bibliothèque est terminée.
 
 <h3>🎯 Répartition</h3>
 
-<p>📌 À jouer : <strong>${waiting}</strong></p>
+<p>📌 À jouer : <strong>${toPlay}</strong></p>
 
 <p>🎮 En cours : <strong>${playing}</strong></p>
 
@@ -1806,6 +1742,7 @@ ${
 best
 ?
 `
+
 <div class="stats-box">
 
 <h3>⭐ Jeu le mieux noté</h3>
@@ -1832,6 +1769,7 @@ ${best.note}/10
 </div>
 
 </div>
+
 `
 :
 ""
@@ -1841,11 +1779,12 @@ ${best.note}/10
 ${
 mostPlayed &&
 (
-mostPlayed.hours ||
-mostPlayed.minutes
+mostPlayed.hours > 0 ||
+mostPlayed.minutes > 0
 )
 ?
 `
+
 <div class="stats-box">
 
 <h3>🕐 Jeu le plus joué</h3>
@@ -1873,6 +1812,7 @@ ${mostPlayed.minutes||0}min
 </div>
 
 </div>
+
 `
 :
 ""
@@ -1887,7 +1827,7 @@ ${mostPlayed.minutes||0}min
    NAVIGATION
 ========================= */
 
-function hideAll(){
+function hideSections(){
 
 [
 "searchSection",
@@ -1895,36 +1835,36 @@ function hideAll(){
 "librarySection",
 "statsSection"
 ]
-.forEach(id=>
+.forEach(id=>{
 document
 .getElementById(id)
-.classList.add("hidden")
-);
+.classList.add("hidden");
+});
 
 [
-"navSearch",
-"navLibrary",
-"navStats"
+"tabSearch",
+"tabLibrary",
+"tabStats"
 ]
-.forEach(id=>
+.forEach(id=>{
 document
 .getElementById(id)
-.classList.remove("active")
-);
+.classList.remove("active");
+});
 
 }
 
 
 function showSearch(){
 
-hideAll();
+hideSections();
 
 document
 .getElementById("searchSection")
 .classList.remove("hidden");
 
 document
-.getElementById("navSearch")
+.getElementById("tabSearch")
 .classList.add("active");
 
 }
@@ -1932,14 +1872,14 @@ document
 
 function showLibrary(){
 
-hideAll();
+hideSections();
 
 document
 .getElementById("librarySection")
 .classList.remove("hidden");
 
 document
-.getElementById("navLibrary")
+.getElementById("tabLibrary")
 .classList.add("active");
 
 renderLibrary();
@@ -1949,14 +1889,14 @@ renderLibrary();
 
 function showStats(){
 
-hideAll();
+hideSections();
 
 document
 .getElementById("statsSection")
 .classList.remove("hidden");
 
 document
-.getElementById("navStats")
+.getElementById("tabStats")
 .classList.add("active");
 
 renderStats();
@@ -1968,37 +1908,32 @@ renderStats();
    UTILITAIRES
 ========================= */
 
-function cleanDescription(value){
-
-if(!value)
-return "";
+function stripHtml(html){
 
 const div =
 document.createElement("div");
 
 div.innerHTML =
-value;
+html || "";
 
-return (
-div.textContent ||
+return div.textContent ||
 div.innerText ||
-""
-).trim();
+"";
 
 }
 
 
-function escapeHtml(value){
+function escapeHtml(text){
 
 const div =
 document.createElement("div");
 
 div.textContent =
-value == null
+text == null
 ?
 ""
 :
-String(value);
+String(text);
 
 return div.innerHTML;
 
@@ -2023,4 +1958,3 @@ searchGames();
 
 </body>
 </html>
-```
