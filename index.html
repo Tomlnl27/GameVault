@@ -38,9 +38,11 @@ nav {
     gap: 10px;
     padding: 15px 18px;
     background: #111118;
+    overflow-x: auto;
 }
 
 nav button {
+    white-space: nowrap;
     background: #1b1b23;
     color: white;
     border: 1px solid #2b2b35;
@@ -189,6 +191,12 @@ main {
     color: black;
 }
 
+.delete {
+    background: #2a1a1d;
+    color: #ff8d96;
+    border: 1px solid #563036 !important;
+}
+
 .back {
     background: #292933;
     color: white;
@@ -272,6 +280,28 @@ main {
     cursor: pointer;
 }
 
+.library-tools {
+    display: grid;
+    grid-template-columns: 1fr 180px 180px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.library-tools input,
+.library-tools select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #30303a;
+    background: #17171f;
+    color: white;
+}
+
+.library-count {
+    color: #888894;
+    margin-bottom: 15px;
+}
+
 .library-item {
     display: flex;
     gap: 15px;
@@ -281,11 +311,16 @@ main {
     background: #15151c;
     border: 1px solid #24242d;
     border-radius: 12px;
+    cursor: pointer;
+}
+
+.library-item:hover {
+    border-color: #444451;
 }
 
 .library-item img {
-    width: 60px;
-    height: 80px;
+    width: 70px;
+    height: 90px;
     object-fit: cover;
     border-radius: 8px;
 }
@@ -301,15 +336,17 @@ main {
     font-weight: 700;
 }
 
-select {
+.status-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 8px;
+    border-radius: 7px;
     background: #20202a;
-    color: white;
-    border: 1px solid #33333e;
-    border-radius: 8px;
-    padding: 8px;
+    color: #bdbdc7;
+    font-size: 12px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
     .search {
         flex-direction: column;
@@ -324,8 +361,8 @@ select {
         width: 220px;
     }
 
-    .library-item {
-        align-items: flex-start;
+    .library-tools {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -399,6 +436,70 @@ select {
 <section id="librarySection" class="hidden">
 
     <h2>📚 Ma bibliothèque</h2>
+
+    <div class="library-tools">
+
+        <input
+            id="librarySearch"
+            type="text"
+            placeholder="🔎 Rechercher dans ma bibliothèque..."
+            oninput="renderLibrary()"
+        >
+
+        <select
+            id="statusFilter"
+            onchange="renderLibrary()">
+
+            <option value="Tous">
+                Tous les statuts
+            </option>
+
+            <option value="À jouer">
+                À jouer
+            </option>
+
+            <option value="En cours">
+                En cours
+            </option>
+
+            <option value="Terminé">
+                Terminé
+            </option>
+
+        </select>
+
+        <select
+            id="sortFilter"
+            onchange="renderLibrary()">
+
+            <option value="recent">
+                Plus récent
+            </option>
+
+            <option value="name">
+                Nom A → Z
+            </option>
+
+            <option value="rating">
+                Meilleure note
+            </option>
+
+            <option value="progress">
+                Progression
+            </option>
+
+            <option value="time">
+                Temps de jeu
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="libraryCount"
+        class="library-count">
+    </div>
 
     <div id="library"></div>
 
@@ -788,6 +889,50 @@ function renderDetail() {
         </div>
 
 
+        <div class="panel">
+
+            <div class="panel-title">
+                🎮 Statut
+            </div>
+
+            <select
+                onchange="changeStatus(
+                    ${currentGame.id},
+                    this.value
+                )">
+
+                <option
+                    ${
+                        savedGame?.status === "À jouer"
+                        ? "selected"
+                        : ""
+                    }>
+                    À jouer
+                </option>
+
+                <option
+                    ${
+                        savedGame?.status === "En cours"
+                        ? "selected"
+                        : ""
+                    }>
+                    En cours
+                </option>
+
+                <option
+                    ${
+                        savedGame?.status === "Terminé"
+                        ? "selected"
+                        : ""
+                    }>
+                    Terminé
+                </option>
+
+            </select>
+
+        </div>
+
+
         <div class="actions">
 
             ${
@@ -804,6 +949,22 @@ function renderDetail() {
                     ➕ Ajouter à ma bibliothèque
 
                 </button>`
+            }
+
+            ${
+                alreadyAdded
+                ?
+                `<button
+                    class="delete"
+                    onclick="deleteGame(
+                        ${currentGame.id}
+                    )">
+
+                    🗑️ Supprimer
+
+                </button>`
+                :
+                ""
             }
 
         </div>
@@ -853,7 +1014,10 @@ function ensureGameInLibrary() {
                 0,
 
             minutes:
-                0
+                0,
+
+            addedAt:
+                Date.now()
 
         };
 
@@ -1026,6 +1190,34 @@ function updateProgress(value) {
 }
 
 
+function deleteGame(id) {
+
+    const game =
+        library.find(
+            item => item.id === id
+        );
+
+    if (!game) return;
+
+    const confirmed =
+        confirm(
+            `Supprimer "${game.name}" de ta bibliothèque ?`
+        );
+
+    if (!confirmed) return;
+
+    library =
+        library.filter(
+            item => item.id !== id
+        );
+
+    saveLibrary();
+
+    showLibrary();
+
+}
+
+
 function saveLibrary() {
 
     localStorage.setItem(
@@ -1100,18 +1292,129 @@ function renderLibrary() {
     const container =
         document.getElementById("library");
 
-    if (library.length === 0) {
+    const searchInput =
+        document.getElementById(
+            "librarySearch"
+        );
+
+    const statusFilter =
+        document.getElementById(
+            "statusFilter"
+        );
+
+    const sortFilter =
+        document.getElementById(
+            "sortFilter"
+        );
+
+    const query =
+        searchInput
+        ? searchInput.value
+            .trim()
+            .toLowerCase()
+        : "";
+
+    const selectedStatus =
+        statusFilter
+        ? statusFilter.value
+        : "Tous";
+
+    const selectedSort =
+        sortFilter
+        ? sortFilter.value
+        : "recent";
+
+    let filtered =
+        library.filter(game => {
+
+            const matchesName =
+                game.name
+                    .toLowerCase()
+                    .includes(query);
+
+            const matchesStatus =
+                selectedStatus === "Tous" ||
+                game.status === selectedStatus;
+
+            return matchesName &&
+                   matchesStatus;
+
+        });
+
+
+    filtered.sort((a, b) => {
+
+        if (selectedSort === "name") {
+
+            return a.name.localeCompare(
+                b.name
+            );
+
+        }
+
+        if (selectedSort === "rating") {
+
+            return (b.note || 0) -
+                   (a.note || 0);
+
+        }
+
+        if (selectedSort === "progress") {
+
+            return (b.progress || 0) -
+                   (a.progress || 0);
+
+        }
+
+        if (selectedSort === "time") {
+
+            const timeA =
+                (a.hours || 0) * 60 +
+                (a.minutes || 0);
+
+            const timeB =
+                (b.hours || 0) * 60 +
+                (b.minutes || 0);
+
+            return timeB - timeA;
+
+        }
+
+        return (
+            (b.addedAt || 0) -
+            (a.addedAt || 0)
+        );
+
+    });
+
+
+    const count =
+        document.getElementById(
+            "libraryCount"
+        );
+
+    if (count) {
+
+        count.textContent =
+            `${filtered.length} jeu(x) affiché(s) sur ${library.length}`;
+
+    }
+
+
+    if (filtered.length === 0) {
 
         container.innerHTML =
-            '<div class="empty">Ta bibliothèque est vide 🎮</div>';
+            '<div class="empty">Aucun jeu ne correspond à ta recherche.</div>';
 
         return;
 
     }
 
+
     container.innerHTML = "";
 
-    library.forEach(game => {
+
+    filtered.forEach(game => {
 
         const item =
             document.createElement("div");
@@ -1130,6 +1433,7 @@ function renderLibrary() {
             `${game.hours} h ${game.minutes} min`
             :
             "Aucun temps enregistré";
+
 
         item.innerHTML = `
 
@@ -1175,50 +1479,82 @@ function renderLibrary() {
 
                 </div>
 
-                <br>
+                <div class="status-badge">
 
-                <select
-                    onchange="changeStatus(
-                        ${game.id},
-                        this.value
-                    )">
+                    ${escapeHtml(
+                        game.status ||
+                        "À jouer"
+                    )}
 
-                    <option
-                        ${
-                            game.status === "À jouer"
-                            ? "selected"
-                            : ""
-                        }>
-                        À jouer
-                    </option>
-
-                    <option
-                        ${
-                            game.status === "En cours"
-                            ? "selected"
-                            : ""
-                        }>
-                        En cours
-                    </option>
-
-                    <option
-                        ${
-                            game.status === "Terminé"
-                            ? "selected"
-                            : ""
-                        }>
-                        Terminé
-                    </option>
-
-                </select>
+                </div>
 
             </div>
 
         `;
 
+
+        item.onclick = () => {
+
+            openSavedGame(game);
+
+        };
+
+
         container.appendChild(item);
 
     });
+
+}
+
+
+async function openSavedGame(game) {
+
+    currentGame = game;
+
+    document
+        .getElementById("searchSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("librarySection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("detailSection")
+        .classList.remove("hidden");
+
+
+    try {
+
+        const response =
+            await fetch(
+                WORKER_URL +
+                "/game/" +
+                game.id
+            );
+
+        if (response.ok) {
+
+            const freshGame =
+                await response.json();
+
+            currentGame = {
+                ...game,
+                ...freshGame
+            };
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Infos détaillées indisponibles"
+        );
+
+    }
+
+
+    renderDetail();
 
 }
 
@@ -1230,14 +1566,20 @@ function changeStatus(id, status) {
             game => game.id === id
         );
 
-    if (!game) return;
+    if (!game) {
+
+        ensureGameInLibrary();
+
+        return;
+
+    }
 
     game.status =
         status;
 
     saveLibrary();
 
-    renderLibrary();
+    renderDetail();
 
 }
 
