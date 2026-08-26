@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d0f14">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="GameVault">
-
-<title>GameVault V1</title>
+<title>GameVault</title>
 
 <style>
 * {
@@ -16,1149 +12,234 @@
 
 body {
     margin: 0;
-    background: #0d0f14;
-    color: #f5f7fb;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.app {
-    max-width: 720px;
-    margin: auto;
-    min-height: 100vh;
-    padding-bottom: 95px;
+    background: #0b0b0f;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
 header {
-    padding: 30px 18px 12px;
+    padding: 22px 18px;
+    background: #111118;
+    border-bottom: 1px solid #24242d;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 30px;
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-.muted {
-    color: #9299a7;
-    font-size: 13px;
+.subtitle {
+    color: #888894;
+    margin-top: 5px;
 }
 
 main {
-    padding: 8px 15px;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search input {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #30303a;
+    background: #17171f;
+    color: white;
+    font-size: 16px;
+}
+
+.search button {
+    padding: 14px 18px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #000;
+    font-weight: 700;
+}
+
+.status {
+    color: #8f8f9b;
+    margin-bottom: 18px;
+}
+
+.games {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 18px;
 }
 
 .card {
-    background: #171a21;
-    border: 1px solid #282d38;
-    border-radius: 18px;
-    padding: 16px;
-    margin: 10px 0;
+    background: #15151c;
+    border: 1px solid #24242d;
+    border-radius: 14px;
+    overflow: hidden;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.stat {
-    font-size: 27px;
-    font-weight: 750;
-}
-
-.row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.game {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #282d38;
-}
-
-.game:last-child {
-    border-bottom: none;
-}
-
-.cover {
-    width: 55px;
-    height: 70px;
-    border-radius: 9px;
-    background: #2a303c;
-    display: grid;
-    place-items: center;
-    font-size: 25px;
-    flex-shrink: 0;
-}
-
-.grow {
-    flex: 1;
-    min-width: 0;
-}
-
-.badge {
-    font-size: 11px;
-    color: #cbd1dc;
-    background: #292f3a;
-    border-radius: 7px;
-    padding: 4px 7px;
-    display: inline-block;
-    margin-top: 4px;
-}
-
-button {
-    background: #2a303b;
-    border: 0;
-    border-radius: 11px;
-    color: white;
-    padding: 10px 13px;
-    font-weight: 650;
-}
-
-button.primary {
-    background: white;
-    color: #111;
-}
-
-button.danger {
-    background: #4b252b;
-}
-
-input,
-select,
-textarea {
+.card img {
     width: 100%;
-    background: #101319;
-    color: white;
-    border: 1px solid #303642;
-    border-radius: 10px;
-    padding: 11px;
-    margin: 5px 0 12px;
-    font-size: 15px;
+    height: 230px;
+    object-fit: cover;
+    display: block;
 }
 
-label {
-    display: block;
+.card-content {
+    padding: 12px;
+}
+
+.card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.date {
+    color: #8d8d99;
     font-size: 13px;
-    color: #b9bfca;
 }
 
 .empty {
+    color: #777783;
     text-align: center;
-    color: #9299a7;
-    padding: 35px 5px;
-}
-
-.actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #15181e;
-    border-top: 1px solid #292e38;
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    padding: 9px 5px;
-    padding-bottom: calc(9px + env(safe-area-inset-bottom));
-    z-index: 9;
-}
-
-nav button {
-    background: transparent;
-    color: #9299a7;
-    font-size: 12px;
-    padding: 7px 14px;
-}
-
-nav button.active {
-    color: white;
-}
-
-.progress {
-    height: 7px;
-    background: #292e38;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 7px;
-}
-
-.progressBar {
-    height: 100%;
-    background: white;
-    width: 0%;
+    padding: 50px 10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
 <header>
-    <h1>🎮 GameVault</h1>
-    <div class="muted">
-        Ma bibliothèque gaming personnelle
-    </div>
+    <div class="logo">🎮 GameVault</div>
+    <div class="subtitle">Ta bibliothèque gaming</div>
 </header>
 
-<main id="content"></main>
+<main>
 
-<nav>
+    <div class="search">
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Rechercher un jeu..."
+        >
+        <button onclick="searchGames()">Rechercher</button>
+    </div>
 
-<button id="homeNav" onclick="showPage('home')">
-🏠<br>Accueil
-</button>
+    <div id="status" class="status">
+        Prêt à rechercher.
+    </div>
 
-<button id="libraryNav" onclick="showPage('library')">
-🎮<br>Bibliothèque
-</button>
+    <div id="games" class="games">
+        <div class="empty">
+            Recherche ton premier jeu 🎮
+        </div>
+    </div>
 
-<button id="addNav" onclick="showPage('add')">
-➕<br>Ajouter
-</button>
-
-<button id="settingsNav" onclick="showPage('settings')">
-⚙️<br>Réglages
-</button>
-
-</nav>
-
-</div>
+</main>
 
 <script>
 
-const STORAGE_KEY = "gamevault_v1";
+const WORKER_URL = "https://gamevault-api.tom-lunel27200.workers.dev";
 
-let games = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-);
+async function searchGames() {
 
-function saveGames() {
+    const input = document.getElementById("searchInput");
+    const gamesContainer = document.getElementById("games");
+    const status = document.getElementById("status");
 
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(games)
-    );
+    const query = input.value.trim();
 
-}
+    if (!query) {
+        status.textContent = "Écris le nom d'un jeu.";
+        return;
+    }
 
-function $(id) {
+    status.textContent = "Recherche en cours...";
+    gamesContainer.innerHTML = "";
 
-    return document.getElementById(id);
+    try {
 
-}
+        const response = await fetch(
+            WORKER_URL + "/search?q=" + encodeURIComponent(query)
+        );
 
-function escapeHTML(text) {
+        if (!response.ok) {
+            throw new Error("Erreur serveur");
+        }
 
-    return String(text ?? "")
-        .replace(/[&<>"']/g, function(char) {
+        const data = await response.json();
 
-            return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
+        if (!data.results || data.results.length === 0) {
+            gamesContainer.innerHTML =
+                '<div class="empty">Aucun jeu trouvé.</div>';
 
-            }[char];
+            status.textContent = "Aucun résultat.";
+            return;
+        }
 
+        status.textContent =
+            data.results.length + " résultat(s) trouvé(s).";
+
+        data.results.forEach(game => {
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const image =
+                game.background_image ||
+                "https://via.placeholder.com/300x450?text=No+Image";
+
+            card.innerHTML = `
+                <img src="${image}" alt="">
+                <div class="card-content">
+                    <h3>${escapeHtml(game.name || "Jeu sans nom")}</h3>
+                    <div class="date">
+                        ${game.released || "Date inconnue"}
+                    </div>
+                </div>
+            `;
+
+            gamesContainer.appendChild(card);
         });
 
-}
+    } catch (error) {
 
-function showPage(page) {
+        console.error(error);
 
-    document.querySelectorAll("nav button")
-        .forEach(button => button.classList.remove("active"));
+        status.textContent =
+            "Impossible de contacter le serveur.";
 
-    const navigation = {
-
-        home: "homeNav",
-        library: "libraryNav",
-        add: "addNav",
-        settings: "settingsNav"
-
-    };
-
-    $(navigation[page]).classList.add("active");
-
-    if (page === "home") {
-        showHome();
-    }
-
-    if (page === "library") {
-        showLibrary();
-    }
-
-    if (page === "add") {
-        showAdd();
-    }
-
-    if (page === "settings") {
-        showSettings();
-    }
-
-}
-
-function showHome() {
-
-    const total = games.length;
-
-    const completed =
-        games.filter(game => game.status === "Terminé").length;
-
-    const playing =
-        games.filter(game => game.status === "En cours").length;
-
-    const totalHours =
-        games.reduce(
-            (sum, game) =>
-                sum + Number(game.hours || 0),
-            0
-        );
-
-    const average =
-        total === 0
-            ? 0
-            : (
-                games.reduce(
-                    (sum, game) =>
-                        sum + Number(game.rating || 0),
-                    0
-                ) / total
-            ).toFixed(1);
-
-    $("content").innerHTML = `
-
-        <div class="grid">
-
-            <div class="card">
-                <div class="muted">
-                    JEUX
-                </div>
-
-                <div class="stat">
-                    ${total}
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="muted">
-                    TERMINÉS
-                </div>
-
-                <div class="stat">
-                    ${completed}
-                </div>
-            </div>
-
-        </div>
-
-        <div class="grid">
-
-            <div class="card">
-                <div class="muted">
-                    EN COURS
-                </div>
-
-                <div class="stat">
-                    ${playing}
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="muted">
-                    MOYENNE
-                </div>
-
-                <div class="stat">
-                    ⭐ ${average}
-                </div>
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <div class="muted">
-                TEMPS DE JEU TOTAL
-            </div>
-
-            <div class="stat">
-                ${totalHours.toFixed(1)} h
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <div class="row">
-
-                <b>
-                    Mes derniers jeux
-                </b>
-
-                <button onclick="showPage('add')">
-                    + Ajouter
-                </button>
-
-            </div>
-
-            ${
-                games.length
-                ? games
-                    .slice()
-                    .reverse()
-                    .slice(0, 8)
-                    .map(gameCard)
-                    .join("")
-                : `
-                    <div class="empty">
-                        Ta bibliothèque est vide.<br><br>
-                        Ajoute ton premier jeu 🎮
-                    </div>
-                `
-            }
-
-        </div>
-
-    `;
-
-}
-
-function gameCard(game) {
-
-    const progress =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                Number(game.progress || 0)
-            )
-        );
-
-    return `
-
-        <div class="game">
-
-            <div class="cover">
-                🎮
-            </div>
-
-            <div class="grow">
-
-                <b>
-                    ${escapeHTML(game.name)}
-                </b>
-
-                <br>
-
-                <span class="badge">
-                    ${escapeHTML(game.platform)}
-                </span>
-
-                <span class="badge">
-                    ${escapeHTML(game.status)}
-                </span>
-
-                <br>
-
-                <span class="muted">
-
-                    ⭐ ${game.rating || 0}/10
-
-                    ·
-
-                    🕐 ${game.hours || 0} h
-
-                    ·
-
-                    🏆 ${game.trophies || 0}/${game.totalTrophies || 0}
-
-                </span>
-
-                <div class="progress">
-
-                    <div
-                        class="progressBar"
-                        style="width:${progress}%"
-                    ></div>
-
-                </div>
-
-                <span class="muted">
-                    ${progress}% terminé
-                </span>
-
-            </div>
-
-            <button onclick="editGame('${game.id}')">
-                ✏️
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-function showLibrary() {
-
-    $("content").innerHTML = `
-
-        <div class="card">
-
-            <input
-                id="searchInput"
-                placeholder="🔎 Rechercher un jeu..."
-                oninput="renderLibrary()"
-            >
-
-        </div>
-
-        <div id="libraryList"></div>
-
-    `;
-
-    renderLibrary();
-
-}
-
-function renderLibrary() {
-
-    const search =
-        ($("searchInput")?.value || "")
-        .toLowerCase();
-
-    const filtered =
-        games.filter(game =>
-            game.name
-                .toLowerCase()
-                .includes(search)
-        );
-
-    $("libraryList").innerHTML =
-        filtered.length
-        ? filtered.map(gameCard).join("")
-        : `
+        gamesContainer.innerHTML = `
             <div class="empty">
-                Aucun jeu trouvé.
+                Vérifie que ton Worker Cloudflare fonctionne.
             </div>
         `;
-
-}
-
-function showAdd() {
-
-    $("content").innerHTML = `
-
-        <div class="card">
-
-            <h2>
-                Ajouter un jeu
-            </h2>
-
-            <label>
-                Nom du jeu
-            </label>
-
-            <input
-                id="gameName"
-                placeholder="Ex : Metro Exodus"
-            >
-
-            <label>
-                Plateforme
-            </label>
-
-            <select id="gamePlatform">
-
-                <option>PS5</option>
-                <option>PS4</option>
-                <option>Steam</option>
-                <option>PC</option>
-                <option>Autre</option>
-
-            </select>
-
-            <label>
-                Statut
-            </label>
-
-            <select id="gameStatus">
-
-                <option>À faire</option>
-                <option>En cours</option>
-                <option>Terminé</option>
-                <option>Abandonné</option>
-
-            </select>
-
-            <label>
-                Note /10
-            </label>
-
-            <input
-                id="gameRating"
-                type="number"
-                min="0"
-                max="10"
-                step="0.5"
-                value="0"
-            >
-
-            <label>
-                Progression %
-            </label>
-
-            <input
-                id="gameProgress"
-                type="number"
-                min="0"
-                max="100"
-                value="0"
-            >
-
-            <label>
-                Temps de jeu en heures
-            </label>
-
-            <input
-                id="gameHours"
-                type="number"
-                min="0"
-                step="0.1"
-                value="0"
-            >
-
-            <label>
-                Trophées / succès obtenus
-            </label>
-
-            <input
-                id="gameTrophies"
-                type="number"
-                min="0"
-                value="0"
-            >
-
-            <label>
-                Total trophées / succès
-            </label>
-
-            <input
-                id="gameTotalTrophies"
-                type="number"
-                min="0"
-                value="0"
-            >
-
-            <label>
-                Mon avis
-            </label>
-
-            <textarea
-                id="gameReview"
-                rows="5"
-                placeholder="Qu'est-ce que tu penses du jeu ?"
-            ></textarea>
-
-            <button
-                class="primary"
-                onclick="createGame()"
-            >
-                Ajouter à GameVault
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-function createGame() {
-
-    const name =
-        $("gameName").value.trim();
-
-    if (!name) {
-
-        alert(
-            "Entre le nom du jeu."
-        );
-
-        return;
-
     }
-
-    const game = {
-
-        id: Date.now().toString(),
-
-        name: name,
-
-        platform:
-            $("gamePlatform").value,
-
-        status:
-            $("gameStatus").value,
-
-        rating:
-            $("gameRating").value,
-
-        progress:
-            $("gameProgress").value,
-
-        hours:
-            $("gameHours").value,
-
-        trophies:
-            $("gameTrophies").value,
-
-        totalTrophies:
-            $("gameTotalTrophies").value,
-
-        review:
-            $("gameReview").value,
-
-        createdAt:
-            new Date().toISOString()
-
-    };
-
-    games.push(game);
-
-    saveGames();
-
-    showPage("library");
-
 }
 
-function editGame(id) {
+function escapeHtml(text) {
 
-    const game =
-        games.find(
-            game => game.id === id
-        );
+    const div = document.createElement("div");
 
-    if (!game) return;
+    div.textContent = text;
 
-    $("content").innerHTML = `
-
-        <div class="card">
-
-            <h2>
-                ${escapeHTML(game.name)}
-            </h2>
-
-            <label>
-                Plateforme
-            </label>
-
-            <select id="editPlatform">
-
-                ${platformOption("PS5", game.platform)}
-                ${platformOption("PS4", game.platform)}
-                ${platformOption("Steam", game.platform)}
-                ${platformOption("PC", game.platform)}
-                ${platformOption("Autre", game.platform)}
-
-            </select>
-
-            <label>
-                Statut
-            </label>
-
-            <select id="editStatus">
-
-                ${statusOption("À faire", game.status)}
-                ${statusOption("En cours", game.status)}
-                ${statusOption("Terminé", game.status)}
-                ${statusOption("Abandonné", game.status)}
-
-            </select>
-
-            <label>
-                Note /10
-            </label>
-
-            <input
-                id="editRating"
-                type="number"
-                min="0"
-                max="10"
-                step="0.5"
-                value="${game.rating}"
-            >
-
-            <label>
-                Progression %
-            </label>
-
-            <input
-                id="editProgress"
-                type="number"
-                min="0"
-                max="100"
-                value="${game.progress}"
-            >
-
-            <label>
-                Temps de jeu en heures
-            </label>
-
-            <input
-                id="editHours"
-                type="number"
-                min="0"
-                step="0.1"
-                value="${game.hours}"
-            >
-
-            <label>
-                Trophées / succès obtenus
-            </label>
-
-            <input
-                id="editTrophies"
-                type="number"
-                min="0"
-                value="${game.trophies}"
-            >
-
-            <label>
-                Total trophées / succès
-            </label>
-
-            <input
-                id="editTotalTrophies"
-                type="number"
-                min="0"
-                value="${game.totalTrophies}"
-            >
-
-            <label>
-                Mon avis
-            </label>
-
-            <textarea
-                id="editReview"
-                rows="6"
-            >${escapeHTML(game.review || "")}</textarea>
-
-            <div class="actions">
-
-                <button
-                    class="primary"
-                    onclick="updateGame('${game.id}')"
-                >
-                    Enregistrer
-                </button>
-
-                <button
-                    class="danger"
-                    onclick="deleteGame('${game.id}')"
-                >
-                    Supprimer
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
+    return div.innerHTML;
 }
 
-function platformOption(name, selected) {
-
-    return `
-        <option
-            ${name === selected ? "selected" : ""}
-        >
-            ${name}
-        </option>
-    `;
-
-}
-
-function statusOption(name, selected) {
-
-    return `
-        <option
-            ${name === selected ? "selected" : ""}
-        >
-            ${name}
-        </option>
-    `;
-
-}
-
-function updateGame(id) {
-
-    const game =
-        games.find(
-            game => game.id === id
-        );
-
-    if (!game) return;
-
-    game.platform =
-        $("editPlatform").value;
-
-    game.status =
-        $("editStatus").value;
-
-    game.rating =
-        $("editRating").value;
-
-    game.progress =
-        $("editProgress").value;
-
-    game.hours =
-        $("editHours").value;
-
-    game.trophies =
-        $("editTrophies").value;
-
-    game.totalTrophies =
-        $("editTotalTrophies").value;
-
-    game.review =
-        $("editReview").value;
-
-    saveGames();
-
-    showPage("library");
-
-}
-
-function deleteGame(id) {
-
-    if (
-        !confirm(
-            "Supprimer ce jeu de GameVault ?"
-        )
-    ) {
-
-        return;
-
-    }
-
-    games =
-        games.filter(
-            game => game.id !== id
-        );
-
-    saveGames();
-
-    showPage("library");
-
-}
-
-function showSettings() {
-
-    $("content").innerHTML = `
-
-        <div class="card">
-
-            <h2>
-                ⚙️ Réglages
-            </h2>
-
-            <p class="muted">
-
-                GameVault V1 fonctionne sans compte.
-                Tes données sont conservées localement
-                dans le navigateur.
-
-            </p>
-
-            <div class="actions">
-
-                <button onclick="exportData()">
-                    📤 Exporter ma bibliothèque
-                </button>
-
-                <button onclick="importData()">
-                    📥 Importer une sauvegarde
-                </button>
-
-                <button
-                    class="danger"
-                    onclick="clearAllData()"
-                >
-                    🗑️ Tout supprimer
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="card">
-
-            <h2>
-                🔄 Synchronisation
-            </h2>
-
-            <p>
-                🔵 Steam
-            </p>
-
-            <p class="muted">
-                Synchronisation Steam prévue dans la prochaine version.
-            </p>
-
-            <p>
-                🎮 PSN
-            </p>
-
-            <p class="muted">
-                Synchronisation PSN prévue dans la prochaine version.
-            </p>
-
-            <p class="muted">
-                Aucun mot de passe PSN ou Steam ne sera enregistré
-                dans GameVault.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-function exportData() {
-
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    games,
-                    null,
-                    2
-                )
-            ],
-            {
-                type: "application/json"
-            }
-        );
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-        "GameVault-sauvegarde.json";
-
-    link.click();
-
-    URL.revokeObjectURL(url);
-
-}
-
-function importData() {
-
-    const input =
-        document.createElement("input");
-
-    input.type = "file";
-
-    input.accept =
-        ".json,application/json";
-
-    input.onchange =
-        function() {
-
-            const file =
-                input.files[0];
-
-            if (!file) return;
-
-            const reader =
-                new FileReader();
-
-            reader.onload =
-                function(event) {
-
-                    try {
-
-                        const imported =
-                            JSON.parse(
-                                event.target.result
-                            );
-
-                        if (!Array.isArray(imported)) {
-
-                            throw new Error();
-
-                        }
-
-                        games =
-                            imported;
-
-                        saveGames();
-
-                        showPage("home");
-
-                        alert(
-                            "Bibliothèque importée !"
-                        );
-
-                    } catch {
-
-                        alert(
-                            "Cette sauvegarde n'est pas valide."
-                        );
-
-                    }
-
-                };
-
-            reader.readAsText(file);
-
-        };
-
-    input.click();
-
-}
-
-function clearAllData() {
-
-    if (
-        !confirm(
-            "ATTENTION : supprimer toute ta bibliothèque ?"
-        )
-    ) {
-
-        return;
-
-    }
-
-    games = [];
-
-    saveGames();
-
-    showPage("home");
-
-}
-
-showPage("home");
+document
+    .getElementById("searchInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            searchGames();
+        }
+
+    });
 
 </script>
 
