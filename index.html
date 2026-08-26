@@ -13,7 +13,7 @@
 body {
     margin: 0;
     background: #0b0b0f;
-    color: #fff;
+    color: white;
     font-family: Arial, sans-serif;
 }
 
@@ -194,6 +194,47 @@ main {
     color: white;
 }
 
+.rating-box {
+    margin-top: 22px;
+    padding: 16px;
+    background: #101016;
+    border-radius: 14px;
+    border: 1px solid #292934;
+}
+
+.rating-title {
+    color: #aaaab5;
+    margin-bottom: 8px;
+}
+
+.rating-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.rating-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-controls button {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #33333d;
+    background: #20202a;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.rating-controls button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
 .library-item {
     display: flex;
     gap: 15px;
@@ -214,6 +255,11 @@ main {
 
 .library-info {
     flex: 1;
+}
+
+.library-rating {
+    margin-top: 6px;
+    font-weight: 700;
 }
 
 select {
@@ -254,63 +300,73 @@ select {
 </header>
 
 <nav>
-    <button id="searchTab" class="active" onclick="showSearch()">
+
+    <button id="searchTab"
+            class="active"
+            onclick="showSearch()">
         🔎 Recherche
     </button>
 
-    <button id="libraryTab" onclick="showLibrary()">
+    <button id="libraryTab"
+            onclick="showLibrary()">
         📚 Ma bibliothèque
     </button>
+
 </nav>
 
 <main>
 
-    <section id="searchSection">
+<section id="searchSection">
 
-        <div class="search">
-            <input
-                id="searchInput"
-                type="text"
-                placeholder="Rechercher un jeu..."
-            >
+    <div class="search">
 
-            <button onclick="searchGames()">
-                Rechercher
-            </button>
-        </div>
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Rechercher un jeu..."
+        >
 
-        <div id="status" class="status">
-            Recherche ton premier jeu 🎮
-        </div>
-
-        <div id="games" class="games">
-        </div>
-
-    </section>
-
-    <section id="detailSection" class="hidden">
-
-        <button class="back" onclick="backToSearch()">
-            ← Retour
+        <button onclick="searchGames()">
+            Rechercher
         </button>
 
-        <br><br>
+    </div>
 
-        <div id="detail" class="detail">
-        </div>
+    <div id="status" class="status">
+        Recherche ton premier jeu 🎮
+    </div>
 
-    </section>
+    <div id="games" class="games"></div>
 
-    <section id="librarySection" class="hidden">
+</section>
 
-        <h2>📚 Ma bibliothèque</h2>
 
-        <div id="library">
-        </div>
+<section id="detailSection" class="hidden">
 
-    </section>
+    <button class="back"
+            onclick="backToSearch()">
+        ← Retour
+    </button>
+
+    <br><br>
+
+    <div id="detail"
+         class="detail">
+    </div>
+
+</section>
+
+
+<section id="librarySection" class="hidden">
+
+    <h2>📚 Ma bibliothèque</h2>
+
+    <div id="library"></div>
+
+</section>
 
 </main>
+
 
 <script>
 
@@ -320,7 +376,9 @@ const WORKER_URL =
 let currentGame = null;
 
 let library =
-    JSON.parse(localStorage.getItem("gamevault_library")) || [];
+    JSON.parse(
+        localStorage.getItem("gamevault_library")
+    ) || [];
 
 
 async function searchGames() {
@@ -360,7 +418,11 @@ async function searchGames() {
             );
 
         if (!response.ok) {
-            throw new Error("Erreur serveur");
+
+            throw new Error(
+                "Erreur serveur"
+            );
+
         }
 
         const data =
@@ -394,13 +456,30 @@ async function searchGames() {
                 "https://via.placeholder.com/300x450?text=No+Image";
 
             card.innerHTML = `
-                <img src="${image}" alt="">
+
+                <img
+                    src="${image}"
+                    alt=""
+                >
+
                 <div class="card-content">
-                    <h3>${escapeHtml(game.name || "Jeu sans nom")}</h3>
+
+                    <h3>
+                        ${escapeHtml(
+                            game.name ||
+                            "Jeu sans nom"
+                        )}
+                    </h3>
+
                     <div class="date">
-                        ${game.released || "Date inconnue"}
+                        ${
+                            game.released ||
+                            "Date inconnue"
+                        }
                     </div>
+
                 </div>
+
             `;
 
             card.onclick = () => {
@@ -423,7 +502,9 @@ async function searchGames() {
                 Erreur lors de la recherche.
             </div>
         `;
+
     }
+
 }
 
 
@@ -443,22 +524,43 @@ function openGame(game) {
         .getElementById("detailSection")
         .classList.remove("hidden");
 
+    renderDetail();
+
+}
+
+
+function renderDetail() {
+
+    if (!currentGame) return;
+
     const detail =
         document.getElementById("detail");
 
     const image =
-        game.background_image ||
+        currentGame.background_image ||
         "https://via.placeholder.com/300x450?text=No+Image";
 
     const platforms =
-        game.platforms
-        ? game.platforms
+        currentGame.platforms
+        ? currentGame.platforms
             .map(p => p.platform.name)
             .join(", ")
         : "Inconnues";
 
     const alreadyAdded =
-        library.some(item => item.id === game.id);
+        library.some(
+            item => item.id === currentGame.id
+        );
+
+    const savedGame =
+        library.find(
+            item => item.id === currentGame.id
+        );
+
+    const personalRating =
+        savedGame
+        ? savedGame.note
+        : 0;
 
     detail.innerHTML = `
 
@@ -473,50 +575,54 @@ function openGame(game) {
             <div>
 
                 <h1>
-                    ${escapeHtml(game.name || "Jeu")}
+                    ${escapeHtml(
+                        currentGame.name ||
+                        "Jeu"
+                    )}
                 </h1>
 
                 <div class="info">
 
-                    <strong>Date de sortie :</strong>
-                    ${game.released || "Inconnue"}
+                    <strong>
+                        Date de sortie :
+                    </strong>
+
+                    ${
+                        currentGame.released ||
+                        "Inconnue"
+                    }
 
                     <br>
 
-                    <strong>Note RAWG :</strong>
-                    ${game.rating || "N/A"} / 5
+                    <strong>
+                        Note RAWG :
+                    </strong>
+
+                    ${
+                        currentGame.rating ||
+                        "N/A"
+                    } / 5
 
                     <br>
 
-                    <strong>Plateformes :</strong>
+                    <strong>
+                        Plateformes :
+                    </strong>
+
                     ${escapeHtml(platforms)}
 
                     <br>
 
-                    <strong>Genres :</strong>
+                    <strong>
+                        Genres :
+                    </strong>
+
                     ${
-                        game.genres
-                        ? game.genres.map(g => g.name).join(", ")
+                        currentGame.genres
+                        ? currentGame.genres
+                            .map(g => g.name)
+                            .join(", ")
                         : "Inconnus"
-                    }
-
-                </div>
-
-                <div class="actions">
-
-                    ${
-                        alreadyAdded
-                        ?
-                        `<button class="add">
-                            ✅ Déjà dans ta bibliothèque
-                        </button>`
-                        :
-                        `<button
-                            class="add"
-                            onclick="addToLibrary()"
-                        >
-                            ➕ Ajouter à ma bibliothèque
-                        </button>`
                     }
 
                 </div>
@@ -525,7 +631,67 @@ function openGame(game) {
 
         </div>
 
+
+        <div class="rating-box">
+
+            <div class="rating-title">
+                ⭐ Ma note
+            </div>
+
+            <div class="rating-value"
+                 id="ratingValue">
+
+                ${personalRating} / 10
+
+            </div>
+
+            <div class="rating-controls">
+
+                <button
+                    id="minusRating"
+                    onclick="changeRating(-0.5)">
+                    −
+                </button>
+
+                <span>
+                    Pas de note
+                </span>
+
+                <button
+                    id="plusRating"
+                    onclick="changeRating(0.5)">
+                    +
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            ${
+                alreadyAdded
+                ?
+                `<button class="add">
+                    ✅ Dans ma bibliothèque
+                </button>`
+                :
+                `<button
+                    class="add"
+                    onclick="addToLibrary()">
+
+                    ➕ Ajouter à ma bibliothèque
+
+                </button>`
+            }
+
+        </div>
+
     `;
+
+    updateRatingButtons();
+
 }
 
 
@@ -542,9 +708,11 @@ function addToLibrary() {
 
     library.push({
 
-        id: currentGame.id,
+        id:
+            currentGame.id,
 
-        name: currentGame.name,
+        name:
+            currentGame.name,
 
         background_image:
             currentGame.background_image,
@@ -562,7 +730,85 @@ function addToLibrary() {
 
     saveLibrary();
 
-    openGame(currentGame);
+    renderDetail();
+
+}
+
+
+function changeRating(amount) {
+
+    if (!currentGame) return;
+
+    let game =
+        library.find(
+            item => item.id === currentGame.id
+        );
+
+    if (!game) {
+
+        addToLibrary();
+
+        game =
+            library.find(
+                item => item.id === currentGame.id
+            );
+
+    }
+
+    let newRating =
+        Number(game.note || 0) + amount;
+
+    newRating =
+        Math.round(newRating * 2) / 2;
+
+    newRating =
+        Math.max(
+            0,
+            Math.min(10, newRating)
+        );
+
+    game.note =
+        newRating;
+
+    saveLibrary();
+
+    renderDetail();
+
+}
+
+
+function updateRatingButtons() {
+
+    const game =
+        library.find(
+            item => item.id === currentGame.id
+        );
+
+    if (!game) return;
+
+    const minus =
+        document.getElementById(
+            "minusRating"
+        );
+
+    const plus =
+        document.getElementById(
+            "plusRating"
+        );
+
+    if (minus) {
+
+        minus.disabled =
+            game.note <= 0;
+
+    }
+
+    if (plus) {
+
+        plus.disabled =
+            game.note >= 10;
+
+    }
 
 }
 
@@ -647,6 +893,7 @@ function renderLibrary() {
             '<div class="empty">Ta bibliothèque est vide 🎮</div>';
 
         return;
+
     }
 
     container.innerHTML = "";
@@ -665,7 +912,10 @@ function renderLibrary() {
 
         item.innerHTML = `
 
-            <img src="${image}" alt="">
+            <img
+                src="${image}"
+                alt=""
+            >
 
             <div class="library-info">
 
@@ -679,22 +929,31 @@ function renderLibrary() {
                     ${game.released || ""}
                 </small>
 
-                <br><br>
+                <div class="library-rating">
+
+                    ⭐
+                    ${
+                        game.note > 0
+                        ? game.note + " / 10"
+                        : "Pas encore noté"
+                    }
+
+                </div>
+
+                <br>
 
                 <select
                     onchange="changeStatus(
                         ${game.id},
                         this.value
-                    )"
-                >
+                    )">
 
                     <option
                         ${
                             game.status === "À jouer"
                             ? "selected"
                             : ""
-                        }
-                    >
+                        }>
                         À jouer
                     </option>
 
@@ -703,8 +962,7 @@ function renderLibrary() {
                             game.status === "En cours"
                             ? "selected"
                             : ""
-                        }
-                    >
+                        }>
                         En cours
                     </option>
 
@@ -713,8 +971,7 @@ function renderLibrary() {
                             game.status === "Terminé"
                             ? "selected"
                             : ""
-                        }
-                    >
+                        }>
                         Terminé
                     </option>
 
@@ -740,7 +997,8 @@ function changeStatus(id, status) {
 
     if (!game) return;
 
-    game.status = status;
+    game.status =
+        status;
 
     saveLibrary();
 
