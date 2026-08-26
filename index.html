@@ -4,707 +4,621 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>GameVault</title>
 
 <style>
+*{box-sizing:border-box}
 
-* {
-    box-sizing: border-box;
+body{
+margin:0;
+background:#09090d;
+color:#fff;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
 
-body {
-    margin: 0;
-    background: #0b0b0f;
-    color: white;
-    font-family: Arial, sans-serif;
+header{
+padding:22px 18px 18px;
+background:#101016;
+border-bottom:1px solid #24242d
 }
 
-header {
-    padding: 22px 18px;
-    background: #111118;
-    border-bottom: 1px solid #24242d;
+.logo{
+font-size:29px;
+font-weight:900;
+letter-spacing:-1px
 }
 
-.logo {
-    font-size: 28px;
-    font-weight: 800;
+.subtitle{
+color:#858590;
+font-size:14px;
+margin-top:4px
 }
 
-.subtitle {
-    color: #888894;
-    margin-top: 5px;
+nav{
+display:flex;
+gap:8px;
+padding:12px 16px;
+background:#101016;
+border-bottom:1px solid #20202a;
+overflow-x:auto
 }
 
-nav {
-    display: flex;
-    gap: 10px;
-    padding: 15px 18px;
-    background: #111118;
-    overflow-x: auto;
+nav button{
+border:1px solid #2b2b35;
+background:#191920;
+color:#ddd;
+padding:10px 14px;
+border-radius:10px;
+white-space:nowrap;
+font-weight:700;
+cursor:pointer
 }
 
-nav button {
-    white-space: nowrap;
-    background: #1b1b23;
-    color: white;
-    border: 1px solid #2b2b35;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
+nav button.active{
+background:#fff;
+color:#000
 }
 
-nav button.active {
-    background: white;
-    color: black;
+main{
+max-width:1100px;
+margin:auto;
+padding:20px
 }
 
-main {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
+.hidden{display:none!important}
+
+.search{
+display:flex;
+gap:10px;
+margin-bottom:18px
 }
 
-.search {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+.search input{
+flex:1;
+min-width:0;
+background:#15151c;
+color:#fff;
+border:1px solid #30303a;
+border-radius:12px;
+padding:14px;
+font-size:16px;
+outline:none
 }
 
-.search input {
-    flex: 1;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #30303a;
-    background: #17171f;
-    color: white;
-    font-size: 16px;
+.search button{
+border:0;
+background:#fff;
+color:#000;
+border-radius:12px;
+padding:0 18px;
+font-weight:800;
+cursor:pointer
 }
 
-.search button {
-    padding: 14px 18px;
-    border: 0;
-    border-radius: 12px;
-    background: white;
-    color: black;
-    font-weight: 700;
-    cursor: pointer;
+.status{
+color:#858590;
+font-size:14px;
+margin-bottom:18px
 }
 
-.status {
-    color: #8f8f9b;
-    margin-bottom: 18px;
+.games{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:16px
 }
 
-.games {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 18px;
+.card{
+background:#14141b;
+border:1px solid #25252f;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+transition:.15s
 }
 
-.card {
-    background: #15151c;
-    border: 1px solid #24242d;
-    border-radius: 14px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.15s;
+.card:hover{
+transform:translateY(-3px)
 }
 
-.card:hover {
-    transform: translateY(-3px);
+.card img{
+display:block;
+width:100%;
+height:225px;
+object-fit:cover
 }
 
-.card img {
-    width: 100%;
-    height: 230px;
-    object-fit: cover;
-    display: block;
+.card-content{
+padding:12px
 }
 
-.card-content {
-    padding: 12px;
+.card-title{
+font-weight:800;
+line-height:1.25
 }
 
-.card h3 {
-    margin: 0 0 8px;
-    font-size: 16px;
+.card-date{
+font-size:12px;
+color:#777783;
+margin-top:6px
 }
 
-.date {
-    color: #8d8d99;
-    font-size: 13px;
+.empty{
+text-align:center;
+color:#777783;
+padding:50px 15px
 }
 
-.empty {
-    color: #777783;
-    text-align: center;
-    padding: 50px 10px;
+/* DETAIL */
+
+.back{
+border:0;
+background:#20202a;
+color:#fff;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+font-weight:700
 }
 
-.hidden {
-    display: none;
+.detail{
+margin-top:18px;
+background:#14141b;
+border:1px solid #292933;
+border-radius:18px;
+overflow:hidden
 }
 
-/* ============================= */
-/* FICHE DU JEU */
-/* ============================= */
-
-.detail {
-    background: #15151c;
-    border: 1px solid #292934;
-    border-radius: 18px;
-    padding: 20px;
+.detail-top{
+display:grid;
+grid-template-columns:300px 1fr;
+gap:25px;
+padding:20px
 }
 
-.back {
-    background: #292933;
-    color: white;
-    border: 0;
-    padding: 11px 15px;
-    border-radius: 10px;
-    cursor: pointer;
+.cover{
+width:100%;
+max-height:460px;
+object-fit:cover;
+border-radius:13px
 }
 
-.hero {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 28px;
-    margin-top: 20px;
+.detail-title{
+font-size:35px;
+line-height:1.05;
+margin:5px 0 8px
 }
 
-.detail-cover {
-    width: 100%;
-    max-height: 450px;
-    object-fit: cover;
-    border-radius: 14px;
+.release{
+color:#858590;
+font-size:14px;
+margin-bottom:18px
 }
 
-.detail-title {
-    margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 34px;
+.description{
+color:#c9c9d0;
+line-height:1.65;
+font-size:15px
 }
 
-.release {
-    color: #8f8f9b;
-    margin-bottom: 18px;
+.meta{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:20px
 }
 
-.description {
-    color: #c0c0c8;
-    line-height: 1.65;
-    font-size: 15px;
+.meta-box{
+background:#0d0d12;
+border:1px solid #292933;
+border-radius:11px;
+padding:12px
 }
 
-.meta-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 20px;
+.meta-label{
+font-size:11px;
+color:#777783;
+margin-bottom:5px
 }
 
-.meta {
-    background: #101016;
-    border: 1px solid #292934;
-    padding: 12px;
-    border-radius: 10px;
+.meta-value{
+font-size:14px;
+font-weight:700
 }
 
-.meta-label {
-    color: #777783;
-    font-size: 12px;
-    margin-bottom: 5px;
+.panel{
+margin:0 20px 15px;
+padding:16px;
+background:#0d0d12;
+border:1px solid #292933;
+border-radius:13px
 }
 
-.meta-value {
-    font-weight: 700;
+.panel-title{
+font-weight:800;
+margin-bottom:12px
 }
 
-.panel {
-    margin-top: 22px;
-    padding: 16px;
-    background: #101016;
-    border-radius: 14px;
-    border: 1px solid #292934;
+.rating{
+font-size:30px;
+font-weight:900;
+margin-bottom:12px
 }
 
-.panel-title {
-    color: #aaaab5;
-    margin-bottom: 10px;
+.rating-controls{
+display:flex;
+align-items:center;
+gap:12px
 }
 
-.rating-value {
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 12px;
+.rating-controls button{
+width:43px;
+height:43px;
+border-radius:10px;
+border:1px solid #34343f;
+background:#20202a;
+color:#fff;
+font-size:23px;
+cursor:pointer
 }
 
-.rating-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.rating-controls button:disabled{
+opacity:.3
 }
 
-.rating-controls button {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    border: 1px solid #33333d;
-    background: #20202a;
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
+select{
+background:#1b1b23;
+color:#fff;
+border:1px solid #353540;
+border-radius:9px;
+padding:10px;
+outline:none
 }
 
-.rating-controls button:disabled {
-    opacity: 0.35;
-    cursor: default;
+.slider{
+width:100%;
+margin-top:8px
 }
 
-.playtime {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+.progress-number{
+font-size:24px;
+font-weight:900
 }
 
-.playtime input {
-    width: 100px;
-    padding: 10px;
-    border-radius: 9px;
-    border: 1px solid #33333d;
-    background: #20202a;
-    color: white;
+.time-inputs{
+display:flex;
+gap:8px;
+flex-wrap:wrap
 }
 
-.save-button {
-    margin-top: 12px;
-    padding: 10px 15px;
-    border: 0;
-    border-radius: 9px;
-    background: white;
-    color: black;
-    font-weight: 700;
-    cursor: pointer;
+.time-inputs input{
+width:100px;
+padding:10px;
+background:#1b1b23;
+color:#fff;
+border:1px solid #353540;
+border-radius:9px
 }
 
-.progress-value {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 10px;
+.action{
+margin:0 20px 20px;
+display:flex;
+gap:10px;
+flex-wrap:wrap
 }
 
-.progress-slider {
-    width: 100%;
-    cursor: pointer;
+.action button{
+padding:12px 15px;
+border-radius:10px;
+border:0;
+font-weight:800;
+cursor:pointer
 }
 
-.actions {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+.add{
+background:#fff;
+color:#000
 }
 
-.actions button {
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 0;
-    cursor: pointer;
-    font-weight: 700;
+.delete{
+background:#2a171a;
+color:#ff929b
 }
 
-.add {
-    background: white;
-    color: black;
+.in-library{
+background:#20202a!important;
+color:#fff!important;
+cursor:default!important
 }
 
-.delete {
-    background: #2a1a1d;
-    color: #ff8d96;
-    border: 1px solid #563036 !important;
-}
+/* LIBRARY */
 
-/* ============================= */
-/* BIBLIOTHÈQUE */
-/* ============================= */
-
-.library-tools {
-    display: grid;
-    grid-template-columns: 1fr 180px 180px;
-    gap: 10px;
-    margin-bottom: 20px;
+.library-tools{
+display:grid;
+grid-template-columns:1fr 180px 180px;
+gap:10px;
+margin-bottom:15px
 }
 
 .library-tools input,
-.library-tools select {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #30303a;
-    background: #17171f;
-    color: white;
+.library-tools select{
+width:100%;
+padding:11px;
+background:#15151c;
+color:#fff;
+border:1px solid #30303a;
+border-radius:10px
 }
 
-.library-count {
-    color: #888894;
-    margin-bottom: 15px;
+.count{
+color:#858590;
+font-size:14px;
+margin-bottom:15px
 }
 
-.library-item {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    padding: 12px;
-    margin-bottom: 10px;
-    background: #15151c;
-    border: 1px solid #24242d;
-    border-radius: 12px;
-    cursor: pointer;
+.library-item{
+display:flex;
+gap:14px;
+align-items:center;
+padding:12px;
+margin-bottom:10px;
+background:#14141b;
+border:1px solid #25252f;
+border-radius:13px;
+cursor:pointer
 }
 
-.library-item:hover {
-    border-color: #444451;
+.library-item:hover{
+border-color:#444451
 }
 
-.library-item img {
-    width: 70px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 8px;
+.library-item img{
+width:65px;
+height:85px;
+object-fit:cover;
+border-radius:8px
 }
 
-.library-info {
-    flex: 1;
+.library-info{
+flex:1;
+min-width:0
 }
 
-.library-rating,
-.library-progress,
-.library-time {
-    margin-top: 6px;
-    font-weight: 700;
+.library-name{
+font-weight:850
 }
 
-.status-badge {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 5px 8px;
-    border-radius: 7px;
-    background: #20202a;
-    color: #bdbdc7;
-    font-size: 12px;
+.library-small{
+color:#777783;
+font-size:12px;
+margin-top:4px
 }
 
-/* ============================= */
-/* STATISTIQUES */
-/* ============================= */
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 25px;
+.library-line{
+font-size:13px;
+margin-top:5px
 }
 
-.stat-card {
-    background: #15151c;
-    border: 1px solid #292934;
-    border-radius: 15px;
-    padding: 18px;
+.badge{
+display:inline-block;
+margin-top:7px;
+padding:5px 8px;
+background:#20202a;
+border-radius:7px;
+font-size:11px;
+color:#bbb
 }
 
-.stat-icon {
-    font-size: 25px;
-    margin-bottom: 10px;
+/* STATS */
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px
 }
 
-.stat-number {
-    font-size: 26px;
-    font-weight: 800;
+.stat{
+background:#14141b;
+border:1px solid #292933;
+border-radius:14px;
+padding:17px
 }
 
-.stat-label {
-    color: #888894;
-    margin-top: 5px;
-    font-size: 14px;
+.stat-icon{
+font-size:24px
 }
 
-.stats-section {
-    background: #15151c;
-    border: 1px solid #292934;
-    border-radius: 15px;
-    padding: 18px;
-    margin-bottom: 15px;
+.stat-number{
+font-size:28px;
+font-weight:900;
+margin-top:7px
 }
 
-.stats-section h3 {
-    margin-top: 0;
+.stat-label{
+font-size:12px;
+color:#858590;
+margin-top:4px
 }
 
-.big-stat {
-    font-size: 32px;
-    font-weight: 800;
+.stats-box{
+margin-top:15px;
+background:#14141b;
+border:1px solid #292933;
+border-radius:14px;
+padding:18px
 }
 
-.small-text {
-    color: #888894;
-    margin-top: 5px;
+.big{
+font-size:32px;
+font-weight:900
 }
 
-.progress-bar {
-    height: 14px;
-    background: #292933;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 12px;
+.bar{
+height:13px;
+background:#292933;
+border-radius:20px;
+overflow:hidden;
+margin-top:12px
 }
 
-.progress-fill {
-    height: 100%;
-    background: white;
-    border-radius: 20px;
+.fill{
+height:100%;
+background:#fff
 }
 
-.best-game {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.best{
+display:flex;
+align-items:center;
+gap:14px
 }
 
-.best-game img {
-    width: 65px;
-    height: 85px;
-    object-fit: cover;
-    border-radius: 9px;
+.best img{
+width:60px;
+height:80px;
+object-fit:cover;
+border-radius:8px
 }
 
-/* ============================= */
-/* MOBILE */
-/* ============================= */
+@media(max-width:800px){
 
-@media (max-width: 800px) {
+.detail-top{
+grid-template-columns:1fr
+}
 
-    .hero {
-        grid-template-columns: 1fr;
-    }
+.cover{
+max-width:280px
+}
 
-    .detail-cover {
-        max-width: 280px;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.stats-grid{
+grid-template-columns:repeat(2,1fr)
+}
 
 }
 
-@media (max-width: 600px) {
+@media(max-width:600px){
 
-    .search {
-        flex-direction: column;
-    }
-
-    .library-tools {
-        grid-template-columns: 1fr;
-    }
-
-    .meta-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .detail-title {
-        font-size: 27px;
-    }
-
+main{
+padding:15px
 }
 
+.search{
+flex-direction:column
+}
+
+.search button{
+height:48px
+}
+
+.games{
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+
+.card img{
+height:230px
+}
+
+.detail-title{
+font-size:28px
+}
+
+.meta{
+grid-template-columns:1fr
+}
+
+.library-tools{
+grid-template-columns:1fr
+}
+
+.stats-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
+}
 </style>
 </head>
 
 <body>
 
 <header>
-
-    <div class="logo">
-        🎮 GameVault
-    </div>
-
-    <div class="subtitle">
-        Ta bibliothèque gaming
-    </div>
-
+<div class="logo">🎮 GameVault</div>
+<div class="subtitle">Ta bibliothèque gaming</div>
 </header>
 
-
 <nav>
-
-    <button
-        id="searchTab"
-        class="active"
-        onclick="showSearch()">
-        🔎 Recherche
-    </button>
-
-    <button
-        id="libraryTab"
-        onclick="showLibrary()">
-        📚 Ma bibliothèque
-    </button>
-
-    <button
-        id="statsTab"
-        onclick="showStats()">
-        📊 Statistiques
-    </button>
-
+<button id="tabSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
+<button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
+<button id="tabStats" onclick="showStats()">📊 Statistiques</button>
 </nav>
-
 
 <main>
 
-
 <section id="searchSection">
 
-    <div class="search">
+<div class="search">
+<input id="searchInput" placeholder="Rechercher un jeu...">
+<button onclick="searchGames()">Rechercher</button>
+</div>
 
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="Rechercher un jeu..."
-        >
+<div id="status" class="status">
+Recherche ton prochain jeu 🎮
+</div>
 
-        <button onclick="searchGames()">
-            Rechercher
-        </button>
-
-    </div>
-
-    <div
-        id="status"
-        class="status">
-        Recherche ton premier jeu 🎮
-    </div>
-
-    <div
-        id="games"
-        class="games">
-    </div>
+<div id="games" class="games"></div>
 
 </section>
 
 
-<section
-    id="detailSection"
-    class="hidden">
+<section id="detailSection" class="hidden">
 
-    <button
-        class="back"
-        onclick="backToSearch()">
-        ← Retour
-    </button>
+<button class="back" onclick="showSearch()">← Retour</button>
 
-    <div
-        id="detail">
-    </div>
+<div id="detail"></div>
 
 </section>
 
 
-<section
-    id="librarySection"
-    class="hidden">
+<section id="librarySection" class="hidden">
 
-    <h2>
-        📚 Ma bibliothèque
-    </h2>
+<h2>📚 Ma bibliothèque</h2>
 
-    <div class="library-tools">
+<div class="library-tools">
 
-        <input
-            id="librarySearch"
-            type="text"
-            placeholder="🔎 Rechercher dans ma bibliothèque..."
-            oninput="renderLibrary()"
-        >
+<input
+id="librarySearch"
+placeholder="🔎 Rechercher..."
+oninput="renderLibrary()"
+>
 
-        <select
-            id="statusFilter"
-            onchange="renderLibrary()">
+<select id="statusFilter" onchange="renderLibrary()">
+<option value="Tous">Tous les statuts</option>
+<option value="À jouer">À jouer</option>
+<option value="En cours">En cours</option>
+<option value="Terminé">Terminé</option>
+</select>
 
-            <option value="Tous">
-                Tous les statuts
-            </option>
+<select id="sortFilter" onchange="renderLibrary()">
+<option value="recent">Plus récent</option>
+<option value="name">Nom A → Z</option>
+<option value="rating">Meilleure note</option>
+<option value="progress">Progression</option>
+<option value="time">Temps de jeu</option>
+</select>
 
-            <option value="À jouer">
-                À jouer
-            </option>
+</div>
 
-            <option value="En cours">
-                En cours
-            </option>
-
-            <option value="Terminé">
-                Terminé
-            </option>
-
-        </select>
-
-        <select
-            id="sortFilter"
-            onchange="renderLibrary()">
-
-            <option value="recent">
-                Plus récent
-            </option>
-
-            <option value="name">
-                Nom A → Z
-            </option>
-
-            <option value="rating">
-                Meilleure note
-            </option>
-
-            <option value="progress">
-                Progression
-            </option>
-
-            <option value="time">
-                Temps de jeu
-            </option>
-
-        </select>
-
-    </div>
-
-    <div
-        id="libraryCount"
-        class="library-count">
-    </div>
-
-    <div id="library"></div>
+<div id="libraryCount" class="count"></div>
+<div id="library"></div>
 
 </section>
 
 
-<section
-    id="statsSection"
-    class="hidden">
+<section id="statsSection" class="hidden">
 
-    <h2>
-        📊 Mes statistiques
-    </h2>
+<h2>📊 Mes statistiques</h2>
 
-    <div
-        id="statsContent">
-    </div>
+<div id="statsContent"></div>
 
 </section>
-
 
 </main>
 
@@ -712,2084 +626,1334 @@ main {
 <script>
 
 const WORKER_URL =
-    "https://gamevault-api.tom-lunel27200.workers.dev";
+"https://gamevault-api.tom-lunel27200.workers.dev";
 
 let currentGame = null;
 
 let library =
-    JSON.parse(
-        localStorage.getItem(
-            "gamevault_library"
-        )
-    ) || [];
+JSON.parse(
+localStorage.getItem("gamevault_library")
+) || [];
 
 
-/* ============================= */
-/* RECHERCHE */
-/* ============================= */
+/* =========================
+   RECHERCHE
+========================= */
 
-async function searchGames() {
+async function searchGames(){
 
-    const input =
-        document.getElementById(
-            "searchInput"
-        );
+const input =
+document.getElementById("searchInput");
 
-    const gamesContainer =
-        document.getElementById(
-            "games"
-        );
+const games =
+document.getElementById("games");
 
-    const status =
-        document.getElementById(
-            "status"
-        );
+const status =
+document.getElementById("status");
 
-    const query =
-        input.value.trim();
+const query =
+input.value.trim();
 
-    if (!query) {
+if(query.length < 2){
 
-        status.textContent =
-            "Écris le nom d'un jeu.";
+status.textContent =
+"Écris au moins 2 caractères.";
 
-        return;
+return;
+}
 
-    }
+status.textContent =
+"Recherche en cours...";
 
-    status.textContent =
-        "Recherche en cours...";
+games.innerHTML =
+'<div class="empty">🔎 Recherche...</div>';
 
-    gamesContainer.innerHTML = "";
+try{
 
-    try {
+const response =
+await fetch(
+WORKER_URL +
+"/search?q=" +
+encodeURIComponent(query)
+);
 
-        const response =
-            await fetch(
-                WORKER_URL +
-                "/search?q=" +
-                encodeURIComponent(query)
-            );
+const data =
+await response.json();
 
-        if (!response.ok) {
+if(!response.ok ||
+!data.results){
 
-            throw new Error(
-                "Erreur serveur"
-            );
+throw new Error("Erreur RAWG");
+}
 
-        }
+if(data.results.length === 0){
 
-        const data =
-            await response.json();
+games.innerHTML =
+'<div class="empty">Aucun jeu trouvé.</div>';
 
-        if (
-            !data.results ||
-            data.results.length === 0
-        ) {
+status.textContent =
+"Aucun résultat.";
 
-            gamesContainer.innerHTML =
-                '<div class="empty">Aucun jeu trouvé.</div>';
+return;
+}
 
-            status.textContent =
-                "Aucun résultat.";
+status.textContent =
+data.results.length +
+" jeu(x) trouvé(s).";
 
-            return;
+games.innerHTML = "";
 
-        }
+data.results.forEach(game => {
 
-        status.textContent =
-            data.results.length +
-            " résultat(s) trouvé(s).";
+const card =
+document.createElement("div");
 
-        data.results.forEach(
-            game => {
+card.className =
+"card";
 
-                const card =
-                    document.createElement(
-                        "div"
-                    );
+const image =
+game.background_image ||
+"https://via.placeholder.com/400x600?text=Game";
 
-                card.className =
-                    "card";
+card.innerHTML = `
+<img src="${image}" alt="">
+<div class="card-content">
+<div class="card-title">
+${escapeHtml(game.name || "Jeu")}
+</div>
+<div class="card-date">
+${game.released || "Date inconnue"}
+</div>
+</div>
+`;
 
-                const image =
-                    game.background_image ||
-                    "https://via.placeholder.com/300x450?text=No+Image";
+card.onclick =
+() => openGame(game);
 
-                card.innerHTML = `
+games.appendChild(card);
 
-                    <img
-                        src="${image}"
-                        alt=""
-                    >
+});
 
-                    <div class="card-content">
+}catch(error){
 
-                        <h3>
-                            ${escapeHtml(
-                                game.name ||
-                                "Jeu sans nom"
-                            )}
-                        </h3>
+console.error(error);
 
-                        <div class="date">
-                            ${
-                                game.released ||
-                                "Date inconnue"
-                            }
-                        </div>
+status.textContent =
+"Erreur lors de la recherche.";
 
-                    </div>
+games.innerHTML =
+'<div class="empty">Impossible de contacter GameVault.</div>';
 
-                `;
-
-                card.onclick =
-                    () => openGame(game);
-
-                gamesContainer.appendChild(
-                    card
-                );
-
-            }
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        status.textContent =
-            "Impossible de contacter le serveur.";
-
-        gamesContainer.innerHTML = `
-            <div class="empty">
-                Erreur lors de la recherche.
-            </div>
-        `;
-
-    }
+}
 
 }
 
 
-/* ============================= */
-/* FICHE */
-/* ============================= */
+/* =========================
+   FICHE DÉTAILLÉE
+========================= */
 
-async function openGame(game) {
+async function openGame(game){
 
-    currentGame = game;
+currentGame = game;
 
-    hideAllSections();
-
-    document
-        .getElementById(
-            "detailSection"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-    renderDetail();
-
-}
-
-
-async function renderDetail() {
-
-    if (!currentGame) return;
-
-    const detail =
-        document.getElementById(
-            "detail"
-        );
-
-    detail.innerHTML = `
-        <div class="empty">
-            Chargement des informations du jeu...
-        </div>
-    `;
-
-    let freshGame =
-        currentGame;
-
-
-    try {
-
-        const response =
-            await fetch(
-                WORKER_URL +
-                "/game/" +
-                currentGame.id
-            );
-
-        if (response.ok) {
-
-            const data =
-                await response.json();
-
-            freshGame = {
-                ...currentGame,
-                ...data
-            };
-
-            currentGame =
-                freshGame;
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Informations détaillées indisponibles"
-        );
-
-    }
-
-
-    const savedGame =
-        library.find(
-            item =>
-                item.id ===
-                currentGame.id
-        );
-
-
-    const image =
-        currentGame.background_image ||
-        "https://via.placeholder.com/300x450?text=No+Image";
-
-
-    const platforms =
-        currentGame.platforms
-        ?
-        currentGame.platforms
-            .map(
-                p =>
-                    p.platform
-                    ?
-                    p.platform.name
-                    :
-                    p.name
-            )
-            .join(", ")
-        :
-        "Inconnues";
-
-
-    const genres =
-        currentGame.genres
-        ?
-        currentGame.genres
-            .map(
-                g =>
-                    g.name ||
-                    g
-            )
-            .join(", ")
-        :
-        "Inconnus";
-
-
-    const developers =
-        currentGame.developers
-        ?
-        currentGame.developers
-            .map(
-                d =>
-                    d.name ||
-                    d
-            )
-            .join(", ")
-        :
-        "Inconnu";
-
-
-    const publishers =
-        currentGame.publishers
-        ?
-        currentGame.publishers
-            .map(
-                p =>
-                    p.name ||
-                    p
-            )
-            .join(", ")
-        :
-        "Inconnu";
-
-
-    const description =
-        currentGame.description_raw ||
-        currentGame.description ||
-        "Aucune description disponible pour ce jeu.";
-
-
-    const personalRating =
-        savedGame
-        ?
-        savedGame.note
-        :
-        0;
-
-
-    const playHours =
-        savedGame
-        ?
-        savedGame.hours
-        :
-        0;
-
-
-    const playMinutes =
-        savedGame
-        ?
-        savedGame.minutes
-        :
-        0;
-
-
-    const progress =
-        savedGame
-        ?
-        savedGame.progress
-        :
-        0;
-
-
-    const status =
-        savedGame
-        ?
-        savedGame.status
-        :
-        "À jouer";
-
-
-    detail.innerHTML = `
-
-        <div class="hero">
-
-            <img
-                class="detail-cover"
-                src="${image}"
-                alt=""
-            >
-
-            <div>
-
-                <h1 class="detail-title">
-
-                    ${escapeHtml(
-                        currentGame.name ||
-                        "Jeu"
-                    )}
-
-                </h1>
-
-
-                <div class="release">
-
-                    📅
-                    ${
-                        currentGame.released ||
-                        "Date de sortie inconnue"
-                    }
-
-                </div>
-
-
-                <div class="description">
-
-                    ${escapeHtml(
-                        stripHtml(
-                            description
-                        )
-                    )}
-
-                </div>
-
-
-                <div class="meta-grid">
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            🎮 Plateformes
-                        </div>
-
-                        <div class="meta-value">
-                            ${escapeHtml(
-                                platforms
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            🎭 Genres
-                        </div>
-
-                        <div class="meta-value">
-                            ${escapeHtml(
-                                genres
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            🛠️ Développeur
-                        </div>
-
-                        <div class="meta-value">
-                            ${escapeHtml(
-                                developers
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            🏢 Éditeur
-                        </div>
-
-                        <div class="meta-value">
-                            ${escapeHtml(
-                                publishers
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            ⭐ Note RAWG
-                        </div>
-
-                        <div class="meta-value">
-
-                            ${
-                                currentGame.rating
-                                ?
-                                currentGame.rating +
-                                " / 5"
-                                :
-                                "N/A"
-                            }
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <div class="meta-label">
-                            👥 Avis
-                        </div>
-
-                        <div class="meta-value">
-
-                            ${
-                                currentGame.ratings_count
-                                ?
-                                currentGame.ratings_count
-                                :
-                                "N/A"
-                            }
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="panel-title">
-                ⭐ Ma note
-            </div>
-
-            <div class="rating-value">
-
-                <span id="ratingValue">
-                    ${personalRating}
-                </span>
-
-                / 10
-
-            </div>
-
-
-            <div class="rating-controls">
-
-                <button
-                    id="minusRating"
-                    onclick="changeRating(-0.5)">
-
-                    −
-
-                </button>
-
-
-                <span>
-                    Par 0,5
-                </span>
-
-
-                <button
-                    id="plusRating"
-                    onclick="changeRating(0.5)">
-
-                    +
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="panel-title">
-                🕐 Temps de jeu
-            </div>
-
-            <div class="playtime">
-
-                <input
-                    id="hoursInput"
-                    type="number"
-                    min="0"
-                    value="${playHours}"
-                    placeholder="Heures"
-                >
-
-                <input
-                    id="minutesInput"
-                    type="number"
-                    min="0"
-                    max="59"
-                    value="${playMinutes}"
-                    placeholder="Minutes"
-                >
-
-            </div>
-
-
-            <button
-                class="save-button"
-                onclick="savePlaytime()">
-
-                💾 Enregistrer
-
-            </button>
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="panel-title">
-                📊 Progression
-            </div>
-
-
-            <div class="progress-value">
-
-                <span id="progressValue">
-                    ${progress}
-                </span>%
-
-            </div>
-
-
-            <input
-                id="progressSlider"
-                class="progress-slider"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="${progress}"
-                oninput="updateProgress(this.value)"
-            >
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="panel-title">
-                🎮 Statut
-            </div>
-
-
-            <select
-                onchange="changeStatus(
-                    ${currentGame.id},
-                    this.value
-                )">
-
-                <option
-                    value="À jouer"
-                    ${
-                        status ===
-                        "À jouer"
-                        ?
-                        "selected"
-                        :
-                        ""
-                    }>
-
-                    À jouer
-
-                </option>
-
-
-                <option
-                    value="En cours"
-                    ${
-                        status ===
-                        "En cours"
-                        ?
-                        "selected"
-                        :
-                        ""
-                    }>
-
-                    En cours
-
-                </option>
-
-
-                <option
-                    value="Terminé"
-                    ${
-                        status ===
-                        "Terminé"
-                        ?
-                        "selected"
-                        :
-                        ""
-                    }>
-
-                    Terminé
-
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="actions">
-
-            ${
-                savedGame
-                ?
-
-                `<button class="add">
-
-                    ✅ Dans ma bibliothèque
-
-                </button>`
-
-                :
-
-                `<button
-                    class="add"
-                    onclick="addToLibrary()">
-
-                    ➕ Ajouter à ma bibliothèque
-
-                </button>`
-
-            }
-
-
-            ${
-                savedGame
-                ?
-
-                `<button
-                    class="delete"
-                    onclick="deleteGame(
-                        ${currentGame.id}
-                    )">
-
-                    🗑️ Supprimer
-
-                </button>`
-
-                :
-
-                ""
-
-            }
-
-        </div>
-
-    `;
-
-
-    updateRatingButtons();
-
-}
-
-
-/* ============================= */
-/* BIBLIOTHÈQUE */
-/* ============================= */
-
-function ensureGameInLibrary() {
-
-    if (!currentGame) return null;
-
-
-    let game =
-        library.find(
-            item =>
-                item.id ===
-                currentGame.id
-        );
-
-
-    if (!game) {
-
-        game = {
-
-            id:
-                currentGame.id,
-
-            name:
-                currentGame.name,
-
-            background_image:
-                currentGame.background_image,
-
-            released:
-                currentGame.released,
-
-            status:
-                "À jouer",
-
-            note:
-                0,
-
-            progress:
-                0,
-
-            hours:
-                0,
-
-            minutes:
-                0,
-
-            addedAt:
-                Date.now()
-
-        };
-
-
-        library.push(
-            game
-        );
-
-
-        saveLibrary();
-
-    }
-
-
-    return game;
-
-}
-
-
-function addToLibrary() {
-
-    ensureGameInLibrary();
-
-    renderDetail();
-
-}
-
-
-function changeRating(amount) {
-
-    const game =
-        ensureGameInLibrary();
-
-    if (!game) return;
-
-
-    let newRating =
-        Number(game.note || 0) +
-        amount;
-
-
-    newRating =
-        Math.round(
-            newRating * 2
-        ) / 2;
-
-
-    newRating =
-        Math.max(
-            0,
-            Math.min(
-                10,
-                newRating
-            )
-        );
-
-
-    game.note =
-        newRating;
-
-
-    saveLibrary();
-
-    renderDetail();
-
-}
-
-
-function updateRatingButtons() {
-
-    const game =
-        library.find(
-            item =>
-                item.id ===
-                currentGame.id
-        );
-
-
-    if (!game) return;
-
-
-    const minus =
-        document.getElementById(
-            "minusRating"
-        );
-
-
-    const plus =
-        document.getElementById(
-            "plusRating"
-        );
-
-
-    if (minus) {
-
-        minus.disabled =
-            game.note <= 0;
-
-    }
-
-
-    if (plus) {
-
-        plus.disabled =
-            game.note >= 10;
-
-    }
-
-}
-
-
-function savePlaytime() {
-
-    const game =
-        ensureGameInLibrary();
-
-    if (!game) return;
-
-
-    let hours =
-        Number(
-            document.getElementById(
-                "hoursInput"
-            ).value
-        );
-
-
-    let minutes =
-        Number(
-            document.getElementById(
-                "minutesInput"
-            ).value
-        );
-
-
-    if (
-        isNaN(hours) ||
-        hours < 0
-    ) {
-
-        hours = 0;
-
-    }
-
-
-    if (
-        isNaN(minutes) ||
-        minutes < 0
-    ) {
-
-        minutes = 0;
-
-    }
-
-
-    hours =
-        Math.floor(
-            hours
-        );
-
-
-    minutes =
-        Math.floor(
-            minutes
-        );
-
-
-    hours +=
-        Math.floor(
-            minutes / 60
-        );
-
-
-    minutes =
-        minutes % 60;
-
-
-    game.hours =
-        hours;
-
-
-    game.minutes =
-        minutes;
-
-
-    saveLibrary();
-
-    renderDetail();
-
-}
-
-
-function updateProgress(value) {
-
-    const game =
-        ensureGameInLibrary();
-
-    if (!game) return;
-
-
-    game.progress =
-        Number(value);
-
-
-    const display =
-        document.getElementById(
-            "progressValue"
-        );
-
-
-    if (display) {
-
-        display.textContent =
-            value;
-
-    }
-
-
-    saveLibrary();
-
-}
-
-
-function changeStatus(
-    id,
-    status
-) {
-
-    let game =
-        library.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!game) {
-
-        game =
-            ensureGameInLibrary();
-
-    }
-
-
-    if (!game) return;
-
-
-    game.status =
-        status;
-
-
-    saveLibrary();
-
-    renderDetail();
-
-}
-
-
-function deleteGame(id) {
-
-    const game =
-        library.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!game) return;
-
-
-    const confirmed =
-        confirm(
-            `Supprimer "${game.name}" de ta bibliothèque ?`
-        );
-
-
-    if (!confirmed) return;
-
-
-    library =
-        library.filter(
-            item =>
-                item.id !== id
-        );
-
-
-    saveLibrary();
-
-    showLibrary();
-
-}
-
-
-function saveLibrary() {
-
-    localStorage.setItem(
-        "gamevault_library",
-        JSON.stringify(
-            library
-        )
-    );
-
-}
-
-
-/* ============================= */
-/* AFFICHAGE */
-/* ============================= */
-
-function hideAllSections() {
-
-    document
-        .getElementById(
-            "searchSection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "detailSection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "librarySection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "statsSection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-}
-
-
-function resetTabs() {
-
-    document
-        .getElementById(
-            "searchTab"
-        )
-        .classList.remove(
-            "active"
-        );
-
-
-    document
-        .getElementById(
-            "libraryTab"
-        )
-        .classList.remove(
-            "active"
-        );
-
-
-    document
-        .getElementById(
-            "statsTab"
-        )
-        .classList.remove(
-            "active"
-        );
-
-}
-
-
-function showSearch() {
-
-    hideAllSections();
-
-    resetTabs();
-
-
-    document
-        .getElementById(
-            "searchSection"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "searchTab"
-        )
-        .classList.add(
-            "active"
-        );
-
-}
-
-
-function showLibrary() {
-
-    hideAllSections();
-
-    resetTabs();
-
-
-    document
-        .getElementById(
-            "librarySection"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "libraryTab"
-        )
-        .classList.add(
-            "active"
-        );
-
-
-    renderLibrary();
-
-}
-
-
-function showStats() {
-
-    hideAllSections();
-
-    resetTabs();
-
-
-    document
-        .getElementById(
-            "statsSection"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-
-    document
-        .getElementById(
-            "statsTab"
-        )
-        .classList.add(
-            "active"
-        );
-
-
-    renderStats();
-
-}
-
-
-function backToSearch() {
-
-    showSearch();
-
-}
-
-
-/* ============================= */
-/* RENDU BIBLIOTHÈQUE */
-/* ============================= */
-
-function renderLibrary() {
-
-    const container =
-        document.getElementById(
-            "library"
-        );
-
-
-    const searchInput =
-        document.getElementById(
-            "librarySearch"
-        );
-
-
-    const statusFilter =
-        document.getElementById(
-            "statusFilter"
-        );
-
-
-    const sortFilter =
-        document.getElementById(
-            "sortFilter"
-        );
-
-
-    const query =
-        searchInput
-        ?
-        searchInput.value
-            .trim()
-            .toLowerCase()
-        :
-        "";
-
-
-    const selectedStatus =
-        statusFilter
-        ?
-        statusFilter.value
-        :
-        "Tous";
-
-
-    const selectedSort =
-        sortFilter
-        ?
-        sortFilter.value
-        :
-        "recent";
-
-
-    let filtered =
-        library.filter(
-            game => {
-
-                const matchesName =
-                    game.name
-                        .toLowerCase()
-                        .includes(
-                            query
-                        );
-
-
-                const matchesStatus =
-                    selectedStatus ===
-                    "Tous" ||
-                    game.status ===
-                    selectedStatus;
-
-
-                return (
-                    matchesName &&
-                    matchesStatus
-                );
-
-            }
-        );
-
-
-    filtered.sort(
-        (a, b) => {
-
-            if (
-                selectedSort ===
-                "name"
-            ) {
-
-                return a.name.localeCompare(
-                    b.name
-                );
-
-            }
-
-
-            if (
-                selectedSort ===
-                "rating"
-            ) {
-
-                return (
-                    (b.note || 0) -
-                    (a.note || 0)
-                );
-
-            }
-
-
-            if (
-                selectedSort ===
-                "progress"
-            ) {
-
-                return (
-                    (b.progress || 0) -
-                    (a.progress || 0)
-                );
-
-            }
-
-
-            if (
-                selectedSort ===
-                "time"
-            ) {
-
-                const timeA =
-                    (a.hours || 0) * 60 +
-                    (a.minutes || 0);
-
-
-                const timeB =
-                    (b.hours || 0) * 60 +
-                    (b.minutes || 0);
-
-
-                return timeB - timeA;
-
-            }
-
-
-            return (
-                (b.addedAt || 0) -
-                (a.addedAt || 0)
-            );
-
-        }
-    );
-
-
-    const count =
-        document.getElementById(
-            "libraryCount"
-        );
-
-
-    if (count) {
-
-        count.textContent =
-            `${filtered.length} jeu(x) affiché(s) sur ${library.length}`;
-
-    }
-
-
-    if (
-        filtered.length === 0
-    ) {
-
-        container.innerHTML =
-            '<div class="empty">Aucun jeu ne correspond à ta recherche.</div>';
-
-        return;
-
-    }
-
-
-    container.innerHTML = "";
-
-
-    filtered.forEach(
-        game => {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "library-item";
-
-
-            const image =
-                game.background_image ||
-                "https://via.placeholder.com/100x150?text=No+Image";
-
-
-            const playtime =
-                game.hours > 0 ||
-                game.minutes > 0
-                ?
-                `${game.hours} h ${game.minutes} min`
-                :
-                "Aucun temps enregistré";
-
-
-            item.innerHTML = `
-
-                <img
-                    src="${image}"
-                    alt=""
-                >
-
-
-                <div class="library-info">
-
-                    <strong>
-                        ${escapeHtml(
-                            game.name
-                        )}
-                    </strong>
-
-
-                    <br>
-
-
-                    <small>
-                        ${
-                            game.released ||
-                            ""
-                        }
-                    </small>
-
-
-                    <div class="library-rating">
-
-                        ⭐
-                        ${
-                            game.note > 0
-                            ?
-                            game.note +
-                            " / 10"
-                            :
-                            "Pas encore noté"
-                        }
-
-                    </div>
-
-
-                    <div class="library-progress">
-
-                        📊
-                        ${
-                            game.progress ||
-                            0
-                        }%
-
-                    </div>
-
-
-                    <div class="library-time">
-
-                        🕐
-                        ${playtime}
-
-                    </div>
-
-
-                    <div class="status-badge">
-
-                        ${escapeHtml(
-                            game.status ||
-                            "À jouer"
-                        )}
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            item.onclick =
-                () => openSavedGame(
-                    game
-                );
-
-
-            container.appendChild(
-                item
-            );
-
-        }
-    );
-
-}
-
-
-async function openSavedGame(game) {
-
-    currentGame =
-        game;
-
-
-    hideAllSections();
-
-
-    document
-        .getElementById(
-            "detailSection"
-        )
-        .classList.remove(
-            "hidden"
-        );
-
-
-    renderDetail();
-
-}
-
-
-/* ============================= */
-/* STATISTIQUES */
-/* ============================= */
-
-function renderStats() {
-
-    const container =
-        document.getElementById(
-            "statsContent"
-        );
-
-
-    const total =
-        library.length;
-
-
-    const completed =
-        library.filter(
-            game =>
-                game.status ===
-                "Terminé"
-        ).length;
-
-
-    const inProgress =
-        library.filter(
-            game =>
-                game.status ===
-                "En cours"
-        ).length;
-
-
-    const toPlay =
-        library.filter(
-            game =>
-                game.status ===
-                "À jouer"
-        ).length;
-
-
-    const ratedGames =
-        library.filter(
-            game =>
-                Number(game.note) > 0
-        );
-
-
-    const averageRating =
-        ratedGames.length
-        ?
-        (
-            ratedGames.reduce(
-                (sum, game) =>
-                    sum +
-                    Number(game.note),
-                0
-            ) /
-            ratedGames.length
-        ).toFixed(1)
-        :
-        "—";
-
-
-    const totalMinutes =
-        library.reduce(
-            (sum, game) =>
-                sum +
-                Number(game.hours || 0) * 60 +
-                Number(game.minutes || 0),
-            0
-        );
-
-
-    const totalHours =
-        Math.floor(
-            totalMinutes / 60
-        );
-
-
-    const averageProgress =
-        total
-        ?
-        Math.round(
-            library.reduce(
-                (sum, game) =>
-                    sum +
-                    Number(
-                        game.progress || 0
-                    ),
-                0
-            ) / total
-        )
-        :
-        0;
-
-
-    const completionRate =
-        total
-        ?
-        Math.round(
-            completed /
-            total *
-            100
-        )
-        :
-        0;
-
-
-    const bestRated =
-        ratedGames.length
-        ?
-        [...ratedGames].sort(
-            (a, b) =>
-                b.note -
-                a.note
-        )[0]
-        :
-        null;
-
-
-    const mostPlayed =
-        library.length
-        ?
-        [...library].sort(
-            (a, b) => {
-
-                const aTime =
-                    (a.hours || 0) * 60 +
-                    (a.minutes || 0);
-
-
-                const bTime =
-                    (b.hours || 0) * 60 +
-                    (b.minutes || 0);
-
-
-                return bTime - aTime;
-
-            }
-        )[0]
-        :
-        null;
-
-
-    container.innerHTML = `
-
-        <div class="stats-grid">
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🎮
-                </div>
-
-                <div class="stat-number">
-                    ${total}
-                </div>
-
-                <div class="stat-label">
-                    Jeux
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🏆
-                </div>
-
-                <div class="stat-number">
-                    ${completed}
-                </div>
-
-                <div class="stat-label">
-                    Terminés
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ⭐
-                </div>
-
-                <div class="stat-number">
-                    ${averageRating}
-                </div>
-
-                <div class="stat-label">
-                    Note moyenne
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🕐
-                </div>
-
-                <div class="stat-number">
-                    ${totalHours}h
-                </div>
-
-                <div class="stat-label">
-                    Temps total
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="stats-section">
-
-            <h3>
-                📊 Progression moyenne
-            </h3>
-
-
-            <div class="big-stat">
-                ${averageProgress}%
-            </div>
-
-
-            <div class="progress-bar">
-
-                <div
-                    class="progress-fill"
-                    style="width:${averageProgress}%">
-                </div>
-
-            </div>
-
-
-            <div class="small-text">
-
-                ${completionRate}%
-                de ta bibliothèque est terminée.
-
-            </div>
-
-        </div>
-
-
-        <div class="stats-section">
-
-            <h3>
-                🎮 Répartition
-            </h3>
-
-
-            <div>
-
-                📌 À jouer :
-                <strong>
-                    ${toPlay}
-                </strong>
-
-            </div>
-
-
-            <br>
-
-
-            <div>
-
-                🎮 En cours :
-                <strong>
-                    ${inProgress}
-                </strong>
-
-            </div>
-
-
-            <br>
-
-
-            <div>
-
-                🏆 Terminés :
-                <strong>
-                    ${completed}
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        ${
-            bestRated
-            ?
-
-            `
-
-            <div class="stats-section">
-
-                <h3>
-                    ⭐ Jeu le mieux noté
-                </h3>
-
-
-                <div class="best-game">
-
-                    <img
-                        src="${
-                            bestRated.background_image
-                        }"
-                        alt=""
-                    >
-
-
-                    <div>
-
-                        <strong>
-                            ${escapeHtml(
-                                bestRated.name
-                            )}
-                        </strong>
-
-
-                        <div class="big-stat">
-
-                            ${bestRated.note}
-                            / 10
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            `
-
-            :
-
-            ""
-
-        }
-
-
-        ${
-            mostPlayed &&
-            (
-                mostPlayed.hours > 0 ||
-                mostPlayed.minutes > 0
-            )
-
-            ?
-
-            `
-
-            <div class="stats-section">
-
-                <h3>
-                    🕐 Jeu le plus joué
-                </h3>
-
-
-                <div class="best-game">
-
-                    <img
-                        src="${
-                            mostPlayed.background_image
-                        }"
-                        alt=""
-                    >
-
-
-                    <div>
-
-                        <strong>
-                            ${escapeHtml(
-                                mostPlayed.name
-                            )}
-                        </strong>
-
-
-                        <div class="big-stat">
-
-                            ${
-                                mostPlayed.hours ||
-                                0
-                            }
-                            h
-
-                            ${
-                                mostPlayed.minutes ||
-                                0
-                            }
-                            min
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            `
-
-            :
-
-            ""
-
-        }
-
-    `;
-
-}
-
-
-/* ============================= */
-/* UTILITAIRES */
-/* ============================= */
-
-function stripHtml(
-    html
-) {
-
-    const temp =
-        document.createElement(
-            "div"
-        );
-
-
-    temp.innerHTML =
-        html;
-
-
-    return temp.textContent ||
-        temp.innerText ||
-        "";
-
-}
-
-
-function escapeHtml(
-    text
-) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
-
-
-/* ============================= */
-/* ENTRÉE CLAVIER */
-/* ============================= */
+hideSections();
 
 document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "keydown",
-        function(event) {
+.getElementById("detailSection")
+.classList.remove("hidden");
 
-            if (
-                event.key ===
-                "Enter"
-            ) {
+await renderDetail();
 
-                searchGames();
+}
 
-            }
 
-        }
-    );
+async function renderDetail(){
+
+if(!currentGame) return;
+
+const detail =
+document.getElementById("detail");
+
+detail.innerHTML =
+'<div class="empty">Chargement de la fiche...</div>';
+
+let game =
+currentGame;
+
+
+/*
+   TON WORKER UTILISE :
+   /game/ID
+*/
+
+try{
+
+const response =
+await fetch(
+WORKER_URL +
+"/game/" +
+encodeURIComponent(game.id)
+);
+
+if(response.ok){
+
+const data =
+await response.json();
+
+game = {
+...game,
+...data
+};
+
+currentGame = game;
+
+}
+
+}catch(error){
+
+console.log(error);
+
+}
+
+
+/* Jeu déjà sauvegardé ? */
+
+const saved =
+library.find(
+item => item.id === game.id
+);
+
+
+/* Informations */
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/400x600?text=Game";
+
+const description =
+game.description_raw ||
+stripHtml(game.description) ||
+"Aucune description disponible.";
+
+const developers =
+game.developers &&
+game.developers.length
+?
+game.developers
+.map(x => x.name)
+.join(", ")
+:
+"Inconnu";
+
+const publishers =
+game.publishers &&
+game.publishers.length
+?
+game.publishers
+.map(x => x.name)
+.join(", ")
+:
+"Inconnu";
+
+const genres =
+game.genres &&
+game.genres.length
+?
+game.genres
+.map(x => x.name)
+.join(", ")
+:
+"Inconnu";
+
+const platforms =
+game.platforms &&
+game.platforms.length
+?
+game.platforms
+.map(x =>
+x.platform
+?
+x.platform.name
+:
+x.name
+)
+.join(", ")
+:
+"Inconnues";
+
+const rating =
+saved
+?
+Number(saved.note || 0)
+:
+0;
+
+const progress =
+saved
+?
+Number(saved.progress || 0)
+:
+0;
+
+const hours =
+saved
+?
+Number(saved.hours || 0)
+:
+0;
+
+const minutes =
+saved
+?
+Number(saved.minutes || 0)
+:
+0;
+
+const status =
+saved
+?
+saved.status
+:
+"À jouer";
+
+
+detail.innerHTML = `
+
+<div class="detail">
+
+<div class="detail-top">
+
+<img
+class="cover"
+src="${image}"
+alt=""
+>
+
+<div>
+
+<h1 class="detail-title">
+${escapeHtml(game.name || "Jeu")}
+</h1>
+
+<div class="release">
+📅 ${game.released || "Date inconnue"}
+</div>
+
+<div class="description">
+${escapeHtml(description)}
+</div>
+
+<div class="meta">
+
+<div class="meta-box">
+<div class="meta-label">🛠️ DÉVELOPPEUR</div>
+<div class="meta-value">
+${escapeHtml(developers)}
+</div>
+</div>
+
+<div class="meta-box">
+<div class="meta-label">🏢 ÉDITEUR</div>
+<div class="meta-value">
+${escapeHtml(publishers)}
+</div>
+</div>
+
+<div class="meta-box">
+<div class="meta-label">🎭 GENRES</div>
+<div class="meta-value">
+${escapeHtml(genres)}
+</div>
+</div>
+
+<div class="meta-box">
+<div class="meta-label">🎮 PLATEFORMES</div>
+<div class="meta-value">
+${escapeHtml(platforms)}
+</div>
+</div>
+
+<div class="meta-box">
+<div class="meta-label">⭐ NOTE RAWG</div>
+<div class="meta-value">
+${game.rating ? game.rating + " / 5" : "N/A"}
+</div>
+</div>
+
+<div class="meta-box">
+<div class="meta-label">👥 AVIS</div>
+<div class="meta-value">
+${game.ratings_count || "N/A"}
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+⭐ Ma note
+</div>
+
+<div class="rating">
+<span id="ratingValue">
+${rating}
+</span>
+ / 10
+</div>
+
+<div class="rating-controls">
+
+<button
+id="minusRating"
+onclick="changeRating(-0.5)">
+−
+</button>
+
+<span>par 0,5</span>
+
+<button
+id="plusRating"
+onclick="changeRating(0.5)">
++
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+📊 Ma progression
+</div>
+
+<div class="progress-number">
+<span id="progressValue">
+${progress}
+</span>%
+</div>
+
+<input
+class="slider"
+type="range"
+min="0"
+max="100"
+step="1"
+value="${progress}"
+oninput="changeProgress(this.value)"
+>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+🕐 Temps de jeu
+</div>
+
+<div class="time-inputs">
+
+<input
+id="hoursInput"
+type="number"
+min="0"
+value="${hours}"
+placeholder="Heures"
+>
+
+<input
+id="minutesInput"
+type="number"
+min="0"
+max="59"
+value="${minutes}"
+placeholder="Minutes"
+>
+
+<button
+class="add"
+onclick="saveTime()">
+Enregistrer
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+🎯 Statut
+</div>
+
+<select
+onchange="changeStatus(this.value)">
+
+<option
+value="À jouer"
+${status === "À jouer" ? "selected" : ""}>
+À jouer
+</option>
+
+<option
+value="En cours"
+${status === "En cours" ? "selected" : ""}>
+En cours
+</option>
+
+<option
+value="Terminé"
+${status === "Terminé" ? "selected" : ""}>
+Terminé
+</option>
+
+</select>
+
+</div>
+
+
+<div class="action">
+
+${
+saved
+?
+`
+<button class="in-library">
+✅ Dans ma bibliothèque
+</button>
+
+<button
+class="delete"
+onclick="deleteCurrentGame()">
+🗑️ Supprimer
+</button>
+`
+:
+`
+<button
+class="add"
+onclick="addCurrentGame()">
+➕ Ajouter à ma bibliothèque
+</button>
+`
+}
+
+</div>
+
+</div>
+`;
+
+
+updateRatingButtons();
+
+}
+
+
+/* =========================
+   BIBLIOTHÈQUE
+========================= */
+
+function getCurrentSaved(){
+
+if(!currentGame) return null;
+
+return library.find(
+item => item.id === currentGame.id
+);
+
+}
+
+
+function ensureSaved(){
+
+let game =
+getCurrentSaved();
+
+if(game) return game;
+
+game = {
+
+id:currentGame.id,
+
+name:currentGame.name,
+
+background_image:
+currentGame.background_image,
+
+released:
+currentGame.released,
+
+note:0,
+
+progress:0,
+
+hours:0,
+
+minutes:0,
+
+status:"À jouer",
+
+addedAt:Date.now()
+
+};
+
+library.push(game);
+
+saveLibrary();
+
+return game;
+
+}
+
+
+function addCurrentGame(){
+
+ensureSaved();
+
+renderDetail();
+
+}
+
+
+function changeRating(amount){
+
+const game =
+ensureSaved();
+
+let rating =
+Number(game.note || 0) +
+amount;
+
+rating =
+Math.round(rating * 2) / 2;
+
+rating =
+Math.max(
+0,
+Math.min(
+10,
+rating
+)
+);
+
+game.note =
+rating;
+
+saveLibrary();
+
+document.getElementById(
+"ratingValue"
+).textContent =
+rating;
+
+updateRatingButtons();
+
+}
+
+
+function updateRatingButtons(){
+
+const game =
+getCurrentSaved();
+
+if(!game) return;
+
+const minus =
+document.getElementById(
+"minusRating"
+);
+
+const plus =
+document.getElementById(
+"plusRating"
+);
+
+if(minus)
+minus.disabled =
+game.note <= 0;
+
+if(plus)
+plus.disabled =
+game.note >= 10;
+
+}
+
+
+function changeProgress(value){
+
+const game =
+ensureSaved();
+
+game.progress =
+Number(value);
+
+const display =
+document.getElementById(
+"progressValue"
+);
+
+if(display)
+display.textContent =
+value;
+
+saveLibrary();
+
+}
+
+
+function saveTime(){
+
+const game =
+ensureSaved();
+
+let hours =
+parseInt(
+document.getElementById(
+"hoursInput"
+).value
+) || 0;
+
+let minutes =
+parseInt(
+document.getElementById(
+"minutesInput"
+).value
+) || 0;
+
+hours +=
+Math.floor(minutes / 60);
+
+minutes =
+minutes % 60;
+
+game.hours =
+Math.max(0,hours);
+
+game.minutes =
+Math.max(0,minutes);
+
+saveLibrary();
+
+renderDetail();
+
+}
+
+
+function changeStatus(value){
+
+const game =
+ensureSaved();
+
+game.status =
+value;
+
+saveLibrary();
+
+renderDetail();
+
+}
+
+
+function deleteCurrentGame(){
+
+if(!currentGame) return;
+
+if(
+!confirm(
+"Supprimer ce jeu de ta bibliothèque ?"
+)
+) return;
+
+library =
+library.filter(
+item => item.id !== currentGame.id
+);
+
+saveLibrary();
+
+showLibrary();
+
+}
+
+
+function saveLibrary(){
+
+localStorage.setItem(
+"gamevault_library",
+JSON.stringify(library)
+);
+
+}
+
+
+/* =========================
+   BIBLIOTHÈQUE
+========================= */
+
+function renderLibrary(){
+
+const container =
+document.getElementById(
+"library"
+);
+
+const search =
+(
+document.getElementById(
+"librarySearch"
+).value || ""
+)
+.toLowerCase()
+.trim();
+
+const statusFilter =
+document.getElementById(
+"statusFilter"
+).value;
+
+const sort =
+document.getElementById(
+"sortFilter"
+).value;
+
+let games =
+library.filter(game => {
+
+const nameMatch =
+game.name
+.toLowerCase()
+.includes(search);
+
+const statusMatch =
+statusFilter === "Tous" ||
+game.status === statusFilter;
+
+return nameMatch &&
+statusMatch;
+
+});
+
+
+games.sort((a,b)=>{
+
+if(sort === "name")
+return a.name.localeCompare(b.name);
+
+if(sort === "rating")
+return (b.note||0)-(a.note||0);
+
+if(sort === "progress")
+return (b.progress||0)-(a.progress||0);
+
+if(sort === "time"){
+
+const aTime =
+(a.hours||0)*60+(a.minutes||0);
+
+const bTime =
+(b.hours||0)*60+(b.minutes||0);
+
+return bTime-aTime;
+
+}
+
+return (b.addedAt||0) -
+(a.addedAt||0);
+
+});
+
+
+document.getElementById(
+"libraryCount"
+).textContent =
+`${games.length} jeu(x) affiché(s) sur ${library.length}`;
+
+
+if(!games.length){
+
+container.innerHTML =
+'<div class="empty">Ta bibliothèque est vide ou aucun jeu ne correspond.</div>';
+
+return;
+
+}
+
+
+container.innerHTML = "";
+
+games.forEach(game=>{
+
+const item =
+document.createElement("div");
+
+item.className =
+"library-item";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/100x150?text=Game";
+
+const time =
+(game.hours||0) ||
+(game.minutes||0)
+?
+`${game.hours||0} h ${game.minutes||0} min`
+:
+"Aucun temps";
+
+
+item.innerHTML = `
+
+<img src="${image}" alt="">
+
+<div class="library-info">
+
+<div class="library-name">
+${escapeHtml(game.name)}
+</div>
+
+<div class="library-small">
+${game.released || ""}
+</div>
+
+<div class="library-line">
+⭐ ${game.note > 0 ? game.note + " / 10" : "Pas noté"}
+</div>
+
+<div class="library-line">
+📊 ${game.progress || 0}%
+</div>
+
+<div class="library-line">
+🕐 ${time}
+</div>
+
+<div class="badge">
+${escapeHtml(game.status || "À jouer")}
+</div>
+
+</div>
+
+`;
+
+item.onclick =
+()=>openGame(game);
+
+container.appendChild(item);
+
+});
+
+}
+
+
+/* =========================
+   STATISTIQUES
+========================= */
+
+function renderStats(){
+
+const container =
+document.getElementById(
+"statsContent"
+);
+
+const total =
+library.length;
+
+const completed =
+library.filter(
+g=>g.status==="Terminé"
+).length;
+
+const playing =
+library.filter(
+g=>g.status==="En cours"
+).length;
+
+const toPlay =
+library.filter(
+g=>g.status==="À jouer"
+).length;
+
+const rated =
+library.filter(
+g=>Number(g.note)>0
+);
+
+const average =
+rated.length
+?
+(
+rated.reduce(
+(sum,g)=>sum+Number(g.note),
+0
+) /
+rated.length
+).toFixed(1)
+:
+"—";
+
+const totalMinutes =
+library.reduce(
+(sum,g)=>
+sum+
+Number(g.hours||0)*60+
+Number(g.minutes||0),
+0
+);
+
+const totalHours =
+Math.floor(
+totalMinutes / 60
+);
+
+const averageProgress =
+total
+?
+Math.round(
+library.reduce(
+(sum,g)=>
+sum+Number(g.progress||0),
+0
+) /
+total
+)
+:
+0;
+
+const completion =
+total
+?
+Math.round(
+completed/total*100
+)
+:
+0;
+
+const best =
+rated.length
+?
+[...rated].sort(
+(a,b)=>
+(b.note||0)-
+(a.note||0)
+)[0]
+:
+null;
+
+const mostPlayed =
+library.length
+?
+[...library].sort(
+(a,b)=>{
+
+const aTime =
+(a.hours||0)*60+
+(a.minutes||0);
+
+const bTime =
+(b.hours||0)*60+
+(b.minutes||0);
+
+return bTime-aTime;
+
+}
+)[0]
+:
+null;
+
+
+container.innerHTML = `
+
+<div class="stats-grid">
+
+<div class="stat">
+<div class="stat-icon">🎮</div>
+<div class="stat-number">${total}</div>
+<div class="stat-label">Jeux</div>
+</div>
+
+<div class="stat">
+<div class="stat-icon">🏆</div>
+<div class="stat-number">${completed}</div>
+<div class="stat-label">Terminés</div>
+</div>
+
+<div class="stat">
+<div class="stat-icon">⭐</div>
+<div class="stat-number">${average}</div>
+<div class="stat-label">Note moyenne</div>
+</div>
+
+<div class="stat">
+<div class="stat-icon">🕐</div>
+<div class="stat-number">${totalHours}h</div>
+<div class="stat-label">Temps total</div>
+</div>
+
+</div>
+
+
+<div class="stats-box">
+
+<h3>📊 Progression moyenne</h3>
+
+<div class="big">
+${averageProgress}%
+</div>
+
+<div class="bar">
+<div
+class="fill"
+style="width:${averageProgress}%">
+</div>
+</div>
+
+<p>
+${completion}% de ta bibliothèque est terminée.
+</p>
+
+</div>
+
+
+<div class="stats-box">
+
+<h3>🎯 Répartition</h3>
+
+<p>📌 À jouer : <strong>${toPlay}</strong></p>
+
+<p>🎮 En cours : <strong>${playing}</strong></p>
+
+<p>🏆 Terminés : <strong>${completed}</strong></p>
+
+</div>
+
+
+${
+best
+?
+`
+
+<div class="stats-box">
+
+<h3>⭐ Jeu le mieux noté</h3>
+
+<div class="best">
+
+<img
+src="${best.background_image || ""}"
+alt=""
+>
+
+<div>
+
+<strong>
+${escapeHtml(best.name)}
+</strong>
+
+<div class="big">
+${best.note}/10
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`
+:
+""
+}
+
+
+${
+mostPlayed &&
+(
+mostPlayed.hours > 0 ||
+mostPlayed.minutes > 0
+)
+?
+`
+
+<div class="stats-box">
+
+<h3>🕐 Jeu le plus joué</h3>
+
+<div class="best">
+
+<img
+src="${mostPlayed.background_image || ""}"
+alt=""
+>
+
+<div>
+
+<strong>
+${escapeHtml(mostPlayed.name)}
+</strong>
+
+<div class="big">
+${mostPlayed.hours||0}h
+${mostPlayed.minutes||0}min
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`
+:
+""
+}
+
+`;
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function hideSections(){
+
+[
+"searchSection",
+"detailSection",
+"librarySection",
+"statsSection"
+]
+.forEach(id=>{
+document
+.getElementById(id)
+.classList.add("hidden");
+});
+
+[
+"tabSearch",
+"tabLibrary",
+"tabStats"
+]
+.forEach(id=>{
+document
+.getElementById(id)
+.classList.remove("active");
+});
+
+}
+
+
+function showSearch(){
+
+hideSections();
+
+document
+.getElementById("searchSection")
+.classList.remove("hidden");
+
+document
+.getElementById("tabSearch")
+.classList.add("active");
+
+}
+
+
+function showLibrary(){
+
+hideSections();
+
+document
+.getElementById("librarySection")
+.classList.remove("hidden");
+
+document
+.getElementById("tabLibrary")
+.classList.add("active");
+
+renderLibrary();
+
+}
+
+
+function showStats(){
+
+hideSections();
+
+document
+.getElementById("statsSection")
+.classList.remove("hidden");
+
+document
+.getElementById("tabStats")
+.classList.add("active");
+
+renderStats();
+
+}
+
+
+/* =========================
+   UTILITAIRES
+========================= */
+
+function stripHtml(html){
+
+const div =
+document.createElement("div");
+
+div.innerHTML =
+html || "";
+
+return div.textContent ||
+div.innerText ||
+"";
+
+}
+
+
+function escapeHtml(text){
+
+const div =
+document.createElement("div");
+
+div.textContent =
+text == null
+?
+""
+:
+String(text);
+
+return div.innerHTML;
+
+}
+
+
+/* ENTER */
+
+document
+.getElementById("searchInput")
+.addEventListener(
+"keydown",
+event=>{
+
+if(event.key==="Enter")
+searchGames();
+
+}
+);
 
 </script>
 
