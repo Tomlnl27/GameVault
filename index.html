@@ -4,9 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GameVault</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -144,6 +146,10 @@ main {
     display: none;
 }
 
+/* ============================= */
+/* FICHE DU JEU */
+/* ============================= */
+
 .detail {
     background: #15151c;
     border: 1px solid #292934;
@@ -151,56 +157,68 @@ main {
     padding: 20px;
 }
 
-.detail-top {
-    display: flex;
-    gap: 25px;
-}
-
-.detail-cover {
-    width: 260px;
-    max-width: 40%;
-    border-radius: 14px;
-    object-fit: cover;
-}
-
-.detail h1 {
-    margin-top: 0;
-}
-
-.info {
-    color: #b0b0ba;
-    line-height: 1.6;
-}
-
-.actions {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.actions button {
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 0;
-    cursor: pointer;
-    font-weight: 700;
-}
-
-.add {
-    background: white;
-    color: black;
-}
-
-.delete {
-    background: #2a1a1d;
-    color: #ff8d96;
-    border: 1px solid #563036 !important;
-}
-
 .back {
     background: #292933;
     color: white;
+    border: 0;
+    padding: 11px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 28px;
+    margin-top: 20px;
+}
+
+.detail-cover {
+    width: 100%;
+    max-height: 450px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.detail-title {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 34px;
+}
+
+.release {
+    color: #8f8f9b;
+    margin-bottom: 18px;
+}
+
+.description {
+    color: #c0c0c8;
+    line-height: 1.65;
+    font-size: 15px;
+}
+
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.meta {
+    background: #101016;
+    border: 1px solid #292934;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.meta-label {
+    color: #777783;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.meta-value {
+    font-weight: 700;
 }
 
 .panel {
@@ -281,6 +299,36 @@ main {
     cursor: pointer;
 }
 
+.actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.add {
+    background: white;
+    color: black;
+}
+
+.delete {
+    background: #2a1a1d;
+    color: #ff8d96;
+    border: 1px solid #563036 !important;
+}
+
+/* ============================= */
+/* BIBLIOTHÈQUE */
+/* ============================= */
+
 .library-tools {
     display: grid;
     grid-template-columns: 1fr 180px 180px;
@@ -347,8 +395,9 @@ main {
     font-size: 12px;
 }
 
-
+/* ============================= */
 /* STATISTIQUES */
+/* ============================= */
 
 .stats-grid {
     display: grid;
@@ -429,29 +478,19 @@ main {
     border-radius: 9px;
 }
 
-.best-game-info {
-    flex: 1;
-}
-
-.stat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 10px 0;
-    border-bottom: 1px solid #292934;
-}
-
-.stat-row:last-child {
-    border-bottom: 0;
-}
+/* ============================= */
+/* MOBILE */
+/* ============================= */
 
 @media (max-width: 800px) {
+
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-cover {
+        max-width: 280px;
+    }
 
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -465,16 +504,11 @@ main {
         flex-direction: column;
     }
 
-    .detail-top {
-        flex-direction: column;
-    }
-
-    .detail-cover {
-        max-width: 100%;
-        width: 220px;
-    }
-
     .library-tools {
+        grid-template-columns: 1fr;
+    }
+
+    .meta-grid {
         grid-template-columns: 1fr;
     }
 
@@ -482,11 +516,12 @@ main {
         grid-template-columns: 1fr 1fr;
     }
 
-    .stat-number {
-        font-size: 22px;
+    .detail-title {
+        font-size: 27px;
     }
 
 }
+
 </style>
 </head>
 
@@ -572,11 +607,8 @@ main {
         ← Retour
     </button>
 
-    <br><br>
-
     <div
-        id="detail"
-        class="detail">
+        id="detail">
     </div>
 
 </section>
@@ -691,6 +723,10 @@ let library =
         )
     ) || [];
 
+
+/* ============================= */
+/* RECHERCHE */
+/* ============================= */
 
 async function searchGames() {
 
@@ -835,7 +871,11 @@ async function searchGames() {
 }
 
 
-function openGame(game) {
+/* ============================= */
+/* FICHE */
+/* ============================= */
+
+async function openGame(game) {
 
     currentGame = game;
 
@@ -854,7 +894,7 @@ function openGame(game) {
 }
 
 
-function renderDetail() {
+async function renderDetail() {
 
     if (!currentGame) return;
 
@@ -863,20 +903,48 @@ function renderDetail() {
             "detail"
         );
 
-    const image =
-        currentGame.background_image ||
-        "https://via.placeholder.com/300x450?text=No+Image";
+    detail.innerHTML = `
+        <div class="empty">
+            Chargement des informations du jeu...
+        </div>
+    `;
 
-    const platforms =
-        currentGame.platforms
-        ?
-        currentGame.platforms
-            .map(
-                p => p.platform.name
-            )
-            .join(", ")
-        :
-        "Inconnues";
+    let freshGame =
+        currentGame;
+
+
+    try {
+
+        const response =
+            await fetch(
+                WORKER_URL +
+                "/game/" +
+                currentGame.id
+            );
+
+        if (response.ok) {
+
+            const data =
+                await response.json();
+
+            freshGame = {
+                ...currentGame,
+                ...data
+            };
+
+            currentGame =
+                freshGame;
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Informations détaillées indisponibles"
+        );
+
+    }
+
 
     const savedGame =
         library.find(
@@ -885,8 +953,76 @@ function renderDetail() {
                 currentGame.id
         );
 
-    const alreadyAdded =
-        Boolean(savedGame);
+
+    const image =
+        currentGame.background_image ||
+        "https://via.placeholder.com/300x450?text=No+Image";
+
+
+    const platforms =
+        currentGame.platforms
+        ?
+        currentGame.platforms
+            .map(
+                p =>
+                    p.platform
+                    ?
+                    p.platform.name
+                    :
+                    p.name
+            )
+            .join(", ")
+        :
+        "Inconnues";
+
+
+    const genres =
+        currentGame.genres
+        ?
+        currentGame.genres
+            .map(
+                g =>
+                    g.name ||
+                    g
+            )
+            .join(", ")
+        :
+        "Inconnus";
+
+
+    const developers =
+        currentGame.developers
+        ?
+        currentGame.developers
+            .map(
+                d =>
+                    d.name ||
+                    d
+            )
+            .join(", ")
+        :
+        "Inconnu";
+
+
+    const publishers =
+        currentGame.publishers
+        ?
+        currentGame.publishers
+            .map(
+                p =>
+                    p.name ||
+                    p
+            )
+            .join(", ")
+        :
+        "Inconnu";
+
+
+    const description =
+        currentGame.description_raw ||
+        currentGame.description ||
+        "Aucune description disponible pour ce jeu.";
+
 
     const personalRating =
         savedGame
@@ -895,12 +1031,14 @@ function renderDetail() {
         :
         0;
 
+
     const playHours =
         savedGame
         ?
         savedGame.hours
         :
         0;
+
 
     const playMinutes =
         savedGame
@@ -909,6 +1047,7 @@ function renderDetail() {
         :
         0;
 
+
     const progress =
         savedGame
         ?
@@ -916,9 +1055,18 @@ function renderDetail() {
         :
         0;
 
+
+    const status =
+        savedGame
+        ?
+        savedGame.status
+        :
+        "À jouer";
+
+
     detail.innerHTML = `
 
-        <div class="detail-top">
+        <div class="hero">
 
             <img
                 class="detail-cover"
@@ -928,60 +1076,141 @@ function renderDetail() {
 
             <div>
 
-                <h1>
+                <h1 class="detail-title">
+
                     ${escapeHtml(
                         currentGame.name ||
                         "Jeu"
                     )}
+
                 </h1>
 
-                <div class="info">
 
-                    <strong>
-                        Date de sortie :
-                    </strong>
+                <div class="release">
 
+                    📅
                     ${
                         currentGame.released ||
-                        "Inconnue"
+                        "Date de sortie inconnue"
                     }
 
-                    <br>
+                </div>
 
-                    <strong>
-                        Note RAWG :
-                    </strong>
 
-                    ${
-                        currentGame.rating ||
-                        "N/A"
-                    } / 5
+                <div class="description">
 
-                    <br>
+                    ${escapeHtml(
+                        stripHtml(
+                            description
+                        )
+                    )}
 
-                    <strong>
-                        Plateformes :
-                    </strong>
+                </div>
 
-                    ${escapeHtml(platforms)}
 
-                    <br>
+                <div class="meta-grid">
 
-                    <strong>
-                        Genres :
-                    </strong>
+                    <div class="meta">
 
-                    ${
-                        currentGame.genres
-                        ?
-                        currentGame.genres
-                            .map(
-                                g => g.name
-                            )
-                            .join(", ")
-                        :
-                        "Inconnus"
-                    }
+                        <div class="meta-label">
+                            🎮 Plateformes
+                        </div>
+
+                        <div class="meta-value">
+                            ${escapeHtml(
+                                platforms
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <div class="meta-label">
+                            🎭 Genres
+                        </div>
+
+                        <div class="meta-value">
+                            ${escapeHtml(
+                                genres
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <div class="meta-label">
+                            🛠️ Développeur
+                        </div>
+
+                        <div class="meta-value">
+                            ${escapeHtml(
+                                developers
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <div class="meta-label">
+                            🏢 Éditeur
+                        </div>
+
+                        <div class="meta-value">
+                            ${escapeHtml(
+                                publishers
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <div class="meta-label">
+                            ⭐ Note RAWG
+                        </div>
+
+                        <div class="meta-value">
+
+                            ${
+                                currentGame.rating
+                                ?
+                                currentGame.rating +
+                                " / 5"
+                                :
+                                "N/A"
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <div class="meta-label">
+                            👥 Avis
+                        </div>
+
+                        <div class="meta-value">
+
+                            ${
+                                currentGame.ratings_count
+                                ?
+                                currentGame.ratings_count
+                                :
+                                "N/A"
+                            }
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -1001,26 +1230,34 @@ function renderDetail() {
                 <span id="ratingValue">
                     ${personalRating}
                 </span>
+
                 / 10
 
             </div>
+
 
             <div class="rating-controls">
 
                 <button
                     id="minusRating"
                     onclick="changeRating(-0.5)">
+
                     −
+
                 </button>
+
 
                 <span>
                     Par 0,5
                 </span>
 
+
                 <button
                     id="plusRating"
                     onclick="changeRating(0.5)">
+
                     +
+
                 </button>
 
             </div>
@@ -1055,6 +1292,7 @@ function renderDetail() {
 
             </div>
 
+
             <button
                 class="save-button"
                 onclick="savePlaytime()">
@@ -1072,6 +1310,7 @@ function renderDetail() {
                 📊 Progression
             </div>
 
+
             <div class="progress-value">
 
                 <span id="progressValue">
@@ -1079,6 +1318,7 @@ function renderDetail() {
                 </span>%
 
             </div>
+
 
             <input
                 id="progressSlider"
@@ -1100,6 +1340,7 @@ function renderDetail() {
                 🎮 Statut
             </div>
 
+
             <select
                 onchange="changeStatus(
                     ${currentGame.id},
@@ -1107,33 +1348,50 @@ function renderDetail() {
                 )">
 
                 <option
+                    value="À jouer"
                     ${
-                        savedGame?.status ===
+                        status ===
                         "À jouer"
-                        ? "selected"
-                        : ""
+                        ?
+                        "selected"
+                        :
+                        ""
                     }>
+
                     À jouer
+
                 </option>
 
+
                 <option
+                    value="En cours"
                     ${
-                        savedGame?.status ===
+                        status ===
                         "En cours"
-                        ? "selected"
-                        : ""
+                        ?
+                        "selected"
+                        :
+                        ""
                     }>
+
                     En cours
+
                 </option>
 
+
                 <option
+                    value="Terminé"
                     ${
-                        savedGame?.status ===
+                        status ===
                         "Terminé"
-                        ? "selected"
-                        : ""
+                        ?
+                        "selected"
+                        :
+                        ""
                     }>
+
                     Terminé
+
                 </option>
 
             </select>
@@ -1144,12 +1402,17 @@ function renderDetail() {
         <div class="actions">
 
             ${
-                alreadyAdded
+                savedGame
                 ?
+
                 `<button class="add">
+
                     ✅ Dans ma bibliothèque
+
                 </button>`
+
                 :
+
                 `<button
                     class="add"
                     onclick="addToLibrary()">
@@ -1157,11 +1420,14 @@ function renderDetail() {
                     ➕ Ajouter à ma bibliothèque
 
                 </button>`
+
             }
 
+
             ${
-                alreadyAdded
+                savedGame
                 ?
+
                 `<button
                     class="delete"
                     onclick="deleteGame(
@@ -1171,22 +1437,31 @@ function renderDetail() {
                     🗑️ Supprimer
 
                 </button>`
+
                 :
+
                 ""
+
             }
 
         </div>
 
     `;
 
+
     updateRatingButtons();
 
 }
 
 
+/* ============================= */
+/* BIBLIOTHÈQUE */
+/* ============================= */
+
 function ensureGameInLibrary() {
 
     if (!currentGame) return null;
+
 
     let game =
         library.find(
@@ -1194,6 +1469,7 @@ function ensureGameInLibrary() {
                 item.id ===
                 currentGame.id
         );
+
 
     if (!game) {
 
@@ -1231,11 +1507,16 @@ function ensureGameInLibrary() {
 
         };
 
-        library.push(game);
+
+        library.push(
+            game
+        );
+
 
         saveLibrary();
 
     }
+
 
     return game;
 
@@ -1258,14 +1539,17 @@ function changeRating(amount) {
 
     if (!game) return;
 
+
     let newRating =
         Number(game.note || 0) +
         amount;
+
 
     newRating =
         Math.round(
             newRating * 2
         ) / 2;
+
 
     newRating =
         Math.max(
@@ -1276,8 +1560,10 @@ function changeRating(amount) {
             )
         );
 
+
     game.note =
         newRating;
+
 
     saveLibrary();
 
@@ -1295,17 +1581,21 @@ function updateRatingButtons() {
                 currentGame.id
         );
 
+
     if (!game) return;
+
 
     const minus =
         document.getElementById(
             "minusRating"
         );
 
+
     const plus =
         document.getElementById(
             "plusRating"
         );
+
 
     if (minus) {
 
@@ -1313,6 +1603,7 @@ function updateRatingButtons() {
             game.note <= 0;
 
     }
+
 
     if (plus) {
 
@@ -1331,6 +1622,7 @@ function savePlaytime() {
 
     if (!game) return;
 
+
     let hours =
         Number(
             document.getElementById(
@@ -1338,12 +1630,14 @@ function savePlaytime() {
             ).value
         );
 
+
     let minutes =
         Number(
             document.getElementById(
                 "minutesInput"
             ).value
         );
+
 
     if (
         isNaN(hours) ||
@@ -1354,6 +1648,7 @@ function savePlaytime() {
 
     }
 
+
     if (
         isNaN(minutes) ||
         minutes < 0
@@ -1363,25 +1658,36 @@ function savePlaytime() {
 
     }
 
+
     hours =
-        Math.floor(hours);
+        Math.floor(
+            hours
+        );
+
 
     minutes =
-        Math.floor(minutes);
+        Math.floor(
+            minutes
+        );
+
 
     hours +=
         Math.floor(
             minutes / 60
         );
 
+
     minutes =
         minutes % 60;
+
 
     game.hours =
         hours;
 
+
     game.minutes =
         minutes;
+
 
     saveLibrary();
 
@@ -1397,25 +1703,60 @@ function updateProgress(value) {
 
     if (!game) return;
 
-    const progress =
-        Number(value);
 
     game.progress =
-        progress;
+        Number(value);
+
 
     const display =
         document.getElementById(
             "progressValue"
         );
 
+
     if (display) {
 
         display.textContent =
-            progress;
+            value;
 
     }
 
+
     saveLibrary();
+
+}
+
+
+function changeStatus(
+    id,
+    status
+) {
+
+    let game =
+        library.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!game) {
+
+        game =
+            ensureGameInLibrary();
+
+    }
+
+
+    if (!game) return;
+
+
+    game.status =
+        status;
+
+
+    saveLibrary();
+
+    renderDetail();
 
 }
 
@@ -1428,20 +1769,25 @@ function deleteGame(id) {
                 item.id === id
         );
 
+
     if (!game) return;
+
 
     const confirmed =
         confirm(
             `Supprimer "${game.name}" de ta bibliothèque ?`
         );
 
+
     if (!confirmed) return;
+
 
     library =
         library.filter(
             item =>
                 item.id !== id
         );
+
 
     saveLibrary();
 
@@ -1462,6 +1808,10 @@ function saveLibrary() {
 }
 
 
+/* ============================= */
+/* AFFICHAGE */
+/* ============================= */
+
 function hideAllSections() {
 
     document
@@ -1472,6 +1822,7 @@ function hideAllSections() {
             "hidden"
         );
 
+
     document
         .getElementById(
             "detailSection"
@@ -1480,6 +1831,7 @@ function hideAllSections() {
             "hidden"
         );
 
+
     document
         .getElementById(
             "librarySection"
@@ -1487,6 +1839,7 @@ function hideAllSections() {
         .classList.add(
             "hidden"
         );
+
 
     document
         .getElementById(
@@ -1509,6 +1862,7 @@ function resetTabs() {
             "active"
         );
 
+
     document
         .getElementById(
             "libraryTab"
@@ -1516,6 +1870,7 @@ function resetTabs() {
         .classList.remove(
             "active"
         );
+
 
     document
         .getElementById(
@@ -1534,6 +1889,7 @@ function showSearch() {
 
     resetTabs();
 
+
     document
         .getElementById(
             "searchSection"
@@ -1541,6 +1897,7 @@ function showSearch() {
         .classList.remove(
             "hidden"
         );
+
 
     document
         .getElementById(
@@ -1559,6 +1916,7 @@ function showLibrary() {
 
     resetTabs();
 
+
     document
         .getElementById(
             "librarySection"
@@ -1567,6 +1925,7 @@ function showLibrary() {
             "hidden"
         );
 
+
     document
         .getElementById(
             "libraryTab"
@@ -1574,6 +1933,7 @@ function showLibrary() {
         .classList.add(
             "active"
         );
+
 
     renderLibrary();
 
@@ -1586,6 +1946,7 @@ function showStats() {
 
     resetTabs();
 
+
     document
         .getElementById(
             "statsSection"
@@ -1594,6 +1955,7 @@ function showStats() {
             "hidden"
         );
 
+
     document
         .getElementById(
             "statsTab"
@@ -1601,6 +1963,7 @@ function showStats() {
         .classList.add(
             "active"
         );
+
 
     renderStats();
 
@@ -1614,6 +1977,10 @@ function backToSearch() {
 }
 
 
+/* ============================= */
+/* RENDU BIBLIOTHÈQUE */
+/* ============================= */
+
 function renderLibrary() {
 
     const container =
@@ -1621,20 +1988,24 @@ function renderLibrary() {
             "library"
         );
 
+
     const searchInput =
         document.getElementById(
             "librarySearch"
         );
+
 
     const statusFilter =
         document.getElementById(
             "statusFilter"
         );
 
+
     const sortFilter =
         document.getElementById(
             "sortFilter"
         );
+
 
     const query =
         searchInput
@@ -1645,12 +2016,14 @@ function renderLibrary() {
         :
         "";
 
+
     const selectedStatus =
         statusFilter
         ?
         statusFilter.value
         :
         "Tous";
+
 
     const selectedSort =
         sortFilter
@@ -1671,11 +2044,13 @@ function renderLibrary() {
                             query
                         );
 
+
                 const matchesStatus =
                     selectedStatus ===
                     "Tous" ||
                     game.status ===
                     selectedStatus;
+
 
                 return (
                     matchesName &&
@@ -1700,6 +2075,7 @@ function renderLibrary() {
 
             }
 
+
             if (
                 selectedSort ===
                 "rating"
@@ -1711,6 +2087,7 @@ function renderLibrary() {
                 );
 
             }
+
 
             if (
                 selectedSort ===
@@ -1724,6 +2101,7 @@ function renderLibrary() {
 
             }
 
+
             if (
                 selectedSort ===
                 "time"
@@ -1733,13 +2111,16 @@ function renderLibrary() {
                     (a.hours || 0) * 60 +
                     (a.minutes || 0);
 
+
                 const timeB =
                     (b.hours || 0) * 60 +
                     (b.minutes || 0);
 
+
                 return timeB - timeA;
 
             }
+
 
             return (
                 (b.addedAt || 0) -
@@ -1754,6 +2135,7 @@ function renderLibrary() {
         document.getElementById(
             "libraryCount"
         );
+
 
     if (count) {
 
@@ -1786,8 +2168,10 @@ function renderLibrary() {
                     "div"
                 );
 
+
             item.className =
                 "library-item";
+
 
             const image =
                 game.background_image ||
@@ -1810,6 +2194,7 @@ function renderLibrary() {
                     alt=""
                 >
 
+
                 <div class="library-info">
 
                     <strong>
@@ -1818,7 +2203,9 @@ function renderLibrary() {
                         )}
                     </strong>
 
+
                     <br>
+
 
                     <small>
                         ${
@@ -1826,6 +2213,7 @@ function renderLibrary() {
                             ""
                         }
                     </small>
+
 
                     <div class="library-rating">
 
@@ -1841,6 +2229,7 @@ function renderLibrary() {
 
                     </div>
 
+
                     <div class="library-progress">
 
                         📊
@@ -1851,12 +2240,14 @@ function renderLibrary() {
 
                     </div>
 
+
                     <div class="library-time">
 
                         🕐
                         ${playtime}
 
                     </div>
+
 
                     <div class="status-badge">
 
@@ -1893,7 +2284,9 @@ async function openSavedGame(game) {
     currentGame =
         game;
 
+
     hideAllSections();
+
 
     document
         .getElementById(
@@ -1904,71 +2297,14 @@ async function openSavedGame(game) {
         );
 
 
-    try {
-
-        const response =
-            await fetch(
-                WORKER_URL +
-                "/game/" +
-                game.id
-            );
-
-        if (
-            response.ok
-        ) {
-
-            const freshGame =
-                await response.json();
-
-            currentGame = {
-                ...game,
-                ...freshGame
-            };
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Infos détaillées indisponibles"
-        );
-
-    }
-
     renderDetail();
 
 }
 
 
-function changeStatus(
-    id,
-    status
-) {
-
-    let game =
-        library.find(
-            item =>
-                item.id === id
-        );
-
-    if (!game) {
-
-        game =
-            ensureGameInLibrary();
-
-    }
-
-    if (!game) return;
-
-    game.status =
-        status;
-
-    saveLibrary();
-
-    renderDetail();
-
-}
-
+/* ============================= */
+/* STATISTIQUES */
+/* ============================= */
 
 function renderStats() {
 
@@ -1977,15 +2313,18 @@ function renderStats() {
             "statsContent"
         );
 
+
     const total =
         library.length;
 
-    const toPlay =
+
+    const completed =
         library.filter(
             game =>
                 game.status ===
-                "À jouer"
+                "Terminé"
         ).length;
+
 
     const inProgress =
         library.filter(
@@ -1994,11 +2333,12 @@ function renderStats() {
                 "En cours"
         ).length;
 
-    const completed =
+
+    const toPlay =
         library.filter(
             game =>
                 game.status ===
-                "Terminé"
+                "À jouer"
         ).length;
 
 
@@ -2010,7 +2350,7 @@ function renderStats() {
 
 
     const averageRating =
-        ratedGames.length > 0
+        ratedGames.length
         ?
         (
             ratedGames.reduce(
@@ -2029,10 +2369,7 @@ function renderStats() {
         library.reduce(
             (sum, game) =>
                 sum +
-                (
-                    Number(game.hours || 0) *
-                    60
-                ) +
+                Number(game.hours || 0) * 60 +
                 Number(game.minutes || 0),
             0
         );
@@ -2043,12 +2380,9 @@ function renderStats() {
             totalMinutes / 60
         );
 
-    const remainingMinutes =
-        totalMinutes % 60;
-
 
     const averageProgress =
-        total > 0
+        total
         ?
         Math.round(
             library.reduce(
@@ -2065,186 +2399,51 @@ function renderStats() {
 
 
     const completionRate =
-        total > 0
+        total
         ?
         Math.round(
-            (
-                completed /
-                total
-            ) * 100
+            completed /
+            total *
+            100
         )
         :
         0;
 
 
     const bestRated =
-        ratedGames.length > 0
+        ratedGames.length
         ?
         [...ratedGames].sort(
             (a, b) =>
-                Number(b.note) -
-                Number(a.note)
+                b.note -
+                a.note
         )[0]
         :
         null;
 
 
     const mostPlayed =
-        library.length > 0
+        library.length
         ?
         [...library].sort(
             (a, b) => {
 
-                const timeA =
-                    Number(a.hours || 0) *
-                    60 +
-                    Number(a.minutes || 0);
+                const aTime =
+                    (a.hours || 0) * 60 +
+                    (a.minutes || 0);
 
-                const timeB =
-                    Number(b.hours || 0) *
-                    60 +
-                    Number(b.minutes || 0);
 
-                return timeB - timeA;
+                const bTime =
+                    (b.hours || 0) * 60 +
+                    (b.minutes || 0);
+
+
+                return bTime - aTime;
 
             }
         )[0]
         :
         null;
-
-
-    const totalRated =
-        ratedGames.length;
-
-
-    let ratingSection = "";
-
-    if (bestRated) {
-
-        ratingSection = `
-
-            <div class="stats-section">
-
-                <h3>
-                    ⭐ Jeu le mieux noté
-                </h3>
-
-                <div class="best-game">
-
-                    <img
-                        src="${
-                            bestRated.background_image ||
-                            "https://via.placeholder.com/100x150?text=No+Image"
-                        }"
-                        alt=""
-                    >
-
-                    <div class="best-game-info">
-
-                        <strong>
-                            ${escapeHtml(
-                                bestRated.name
-                            )}
-                        </strong>
-
-                        <div class="big-stat">
-
-                            ${bestRated.note}
-                            / 10
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
-
-    } else {
-
-        ratingSection = `
-
-            <div class="stats-section">
-
-                <h3>
-                    ⭐ Notes
-                </h3>
-
-                <div class="small-text">
-
-                    Note un jeu pour commencer
-                    à remplir tes statistiques.
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    let playedSection = "";
-
-    if (
-        mostPlayed &&
-        (
-            Number(mostPlayed.hours || 0) >
-            0 ||
-            Number(mostPlayed.minutes || 0) >
-            0
-        )
-    ) {
-
-        playedSection = `
-
-            <div class="stats-section">
-
-                <h3>
-                    🕐 Jeu le plus joué
-                </h3>
-
-                <div class="best-game">
-
-                    <img
-                        src="${
-                            mostPlayed.background_image ||
-                            "https://via.placeholder.com/100x150?text=No+Image"
-                        }"
-                        alt=""
-                    >
-
-                    <div class="best-game-info">
-
-                        <strong>
-                            ${escapeHtml(
-                                mostPlayed.name
-                            )}
-                        </strong>
-
-                        <div class="big-stat">
-
-                            ${
-                                mostPlayed.hours ||
-                                0
-                            } h ${
-                                mostPlayed.minutes ||
-                                0
-                            } min
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
 
 
     container.innerHTML = `
@@ -2262,7 +2461,7 @@ function renderStats() {
                 </div>
 
                 <div class="stat-label">
-                    Jeux dans la bibliothèque
+                    Jeux
                 </div>
 
             </div>
@@ -2279,7 +2478,7 @@ function renderStats() {
                 </div>
 
                 <div class="stat-label">
-                    Jeux terminés
+                    Terminés
                 </div>
 
             </div>
@@ -2313,58 +2512,7 @@ function renderStats() {
                 </div>
 
                 <div class="stat-label">
-                    Temps de jeu total
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="stats-section">
-
-            <h3>
-                🎮 Répartition de ta bibliothèque
-            </h3>
-
-            <div class="stat-list">
-
-                <div class="stat-row">
-
-                    <span>
-                        📌 À jouer
-                    </span>
-
-                    <strong>
-                        ${toPlay}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-row">
-
-                    <span>
-                        🎮 En cours
-                    </span>
-
-                    <strong>
-                        ${inProgress}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-row">
-
-                    <span>
-                        🏆 Terminés
-                    </span>
-
-                    <strong>
-                        ${completed}
-                    </strong>
-
+                    Temps total
                 </div>
 
             </div>
@@ -2378,9 +2526,11 @@ function renderStats() {
                 📊 Progression moyenne
             </h3>
 
+
             <div class="big-stat">
                 ${averageProgress}%
             </div>
+
 
             <div class="progress-bar">
 
@@ -2391,65 +2541,235 @@ function renderStats() {
 
             </div>
 
+
             <div class="small-text">
 
-                ${completionRate}% de tes jeux sont
-                indiqués comme terminés.
+                ${completionRate}%
+                de ta bibliothèque est terminée.
 
             </div>
 
         </div>
-
-
-        ${ratingSection}
-
-        ${playedSection}
 
 
         <div class="stats-section">
 
             <h3>
-                ⭐ Notes
+                🎮 Répartition
             </h3>
 
-            <div class="small-text">
 
-                ${totalRated}
-                jeu(x) noté(s) sur
-                ${total}.
+            <div>
 
-                ${
-                    ratedGames.length > 0
-                    ?
-                    `Ta moyenne est de
-                    ${averageRating}/10.`
-                    :
-                    ""
-                }
+                📌 À jouer :
+                <strong>
+                    ${toPlay}
+                </strong>
+
+            </div>
+
+
+            <br>
+
+
+            <div>
+
+                🎮 En cours :
+                <strong>
+                    ${inProgress}
+                </strong>
+
+            </div>
+
+
+            <br>
+
+
+            <div>
+
+                🏆 Terminés :
+                <strong>
+                    ${completed}
+                </strong>
 
             </div>
 
         </div>
+
+
+        ${
+            bestRated
+            ?
+
+            `
+
+            <div class="stats-section">
+
+                <h3>
+                    ⭐ Jeu le mieux noté
+                </h3>
+
+
+                <div class="best-game">
+
+                    <img
+                        src="${
+                            bestRated.background_image
+                        }"
+                        alt=""
+                    >
+
+
+                    <div>
+
+                        <strong>
+                            ${escapeHtml(
+                                bestRated.name
+                            )}
+                        </strong>
+
+
+                        <div class="big-stat">
+
+                            ${bestRated.note}
+                            / 10
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `
+
+            :
+
+            ""
+
+        }
+
+
+        ${
+            mostPlayed &&
+            (
+                mostPlayed.hours > 0 ||
+                mostPlayed.minutes > 0
+            )
+
+            ?
+
+            `
+
+            <div class="stats-section">
+
+                <h3>
+                    🕐 Jeu le plus joué
+                </h3>
+
+
+                <div class="best-game">
+
+                    <img
+                        src="${
+                            mostPlayed.background_image
+                        }"
+                        alt=""
+                    >
+
+
+                    <div>
+
+                        <strong>
+                            ${escapeHtml(
+                                mostPlayed.name
+                            )}
+                        </strong>
+
+
+                        <div class="big-stat">
+
+                            ${
+                                mostPlayed.hours ||
+                                0
+                            }
+                            h
+
+                            ${
+                                mostPlayed.minutes ||
+                                0
+                            }
+                            min
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `
+
+            :
+
+            ""
+
+        }
 
     `;
 
 }
 
 
-function escapeHtml(text) {
+/* ============================= */
+/* UTILITAIRES */
+/* ============================= */
+
+function stripHtml(
+    html
+) {
+
+    const temp =
+        document.createElement(
+            "div"
+        );
+
+
+    temp.innerHTML =
+        html;
+
+
+    return temp.textContent ||
+        temp.innerText ||
+        "";
+
+}
+
+
+function escapeHtml(
+    text
+) {
 
     const div =
         document.createElement(
             "div"
         );
 
+
     div.textContent =
         text;
+
 
     return div.innerHTML;
 
 }
 
+
+/* ============================= */
+/* ENTRÉE CLAVIER */
+/* ============================= */
 
 document
     .getElementById(
