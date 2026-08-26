@@ -13,7 +13,7 @@
 body {
     margin: 0;
     background: #0b0b0f;
-    color: white;
+    color: #fff;
     font-family: Arial, sans-serif;
 }
 
@@ -26,7 +26,6 @@ header {
 .logo {
     font-size: 28px;
     font-weight: 800;
-    letter-spacing: 1px;
 }
 
 .subtitle {
@@ -34,8 +33,29 @@ header {
     margin-top: 5px;
 }
 
+nav {
+    display: flex;
+    gap: 10px;
+    padding: 15px 18px;
+    background: #111118;
+}
+
+nav button {
+    background: #1b1b23;
+    color: white;
+    border: 1px solid #2b2b35;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+nav button.active {
+    background: white;
+    color: black;
+}
+
 main {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: auto;
     padding: 20px;
 }
@@ -43,7 +63,7 @@ main {
 .search {
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .search input {
@@ -60,9 +80,10 @@ main {
     padding: 14px 18px;
     border: 0;
     border-radius: 12px;
-    background: #ffffff;
-    color: #000;
+    background: white;
+    color: black;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .status {
@@ -81,6 +102,12 @@ main {
     border: 1px solid #24242d;
     border-radius: 14px;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
 }
 
 .card img {
@@ -109,6 +136,113 @@ main {
     text-align: center;
     padding: 50px 10px;
 }
+
+.hidden {
+    display: none;
+}
+
+.detail {
+    background: #15151c;
+    border: 1px solid #292934;
+    border-radius: 18px;
+    padding: 20px;
+}
+
+.detail-top {
+    display: flex;
+    gap: 25px;
+}
+
+.detail-cover {
+    width: 260px;
+    max-width: 40%;
+    border-radius: 14px;
+    object-fit: cover;
+}
+
+.detail h1 {
+    margin-top: 0;
+}
+
+.info {
+    color: #b0b0ba;
+    line-height: 1.6;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.add {
+    background: white;
+    color: black;
+}
+
+.back {
+    background: #292933;
+    color: white;
+}
+
+.library-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #15151c;
+    border: 1px solid #24242d;
+    border-radius: 12px;
+}
+
+.library-item img {
+    width: 60px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.library-info {
+    flex: 1;
+}
+
+select {
+    background: #20202a;
+    color: white;
+    border: 1px solid #33333e;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+@media (max-width: 600px) {
+
+    .search {
+        flex-direction: column;
+    }
+
+    .detail-top {
+        flex-direction: column;
+    }
+
+    .detail-cover {
+        max-width: 100%;
+        width: 220px;
+    }
+
+    .library-item {
+        align-items: flex-start;
+    }
+}
 </style>
 </head>
 
@@ -119,75 +253,140 @@ main {
     <div class="subtitle">Ta bibliothèque gaming</div>
 </header>
 
+<nav>
+    <button id="searchTab" class="active" onclick="showSearch()">
+        🔎 Recherche
+    </button>
+
+    <button id="libraryTab" onclick="showLibrary()">
+        📚 Ma bibliothèque
+    </button>
+</nav>
+
 <main>
 
-    <div class="search">
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="Rechercher un jeu..."
-        >
-        <button onclick="searchGames()">Rechercher</button>
-    </div>
+    <section id="searchSection">
 
-    <div id="status" class="status">
-        Prêt à rechercher.
-    </div>
+        <div class="search">
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Rechercher un jeu..."
+            >
 
-    <div id="games" class="games">
-        <div class="empty">
+            <button onclick="searchGames()">
+                Rechercher
+            </button>
+        </div>
+
+        <div id="status" class="status">
             Recherche ton premier jeu 🎮
         </div>
-    </div>
+
+        <div id="games" class="games">
+        </div>
+
+    </section>
+
+    <section id="detailSection" class="hidden">
+
+        <button class="back" onclick="backToSearch()">
+            ← Retour
+        </button>
+
+        <br><br>
+
+        <div id="detail" class="detail">
+        </div>
+
+    </section>
+
+    <section id="librarySection" class="hidden">
+
+        <h2>📚 Ma bibliothèque</h2>
+
+        <div id="library">
+        </div>
+
+    </section>
 
 </main>
 
 <script>
 
-const WORKER_URL = "https://gamevault-api.tom-lunel27200.workers.dev";
+const WORKER_URL =
+    "https://gamevault-api.tom-lunel27200.workers.dev";
+
+let currentGame = null;
+
+let library =
+    JSON.parse(localStorage.getItem("gamevault_library")) || [];
+
 
 async function searchGames() {
 
-    const input = document.getElementById("searchInput");
-    const gamesContainer = document.getElementById("games");
-    const status = document.getElementById("status");
+    const input =
+        document.getElementById("searchInput");
 
-    const query = input.value.trim();
+    const gamesContainer =
+        document.getElementById("games");
+
+    const status =
+        document.getElementById("status");
+
+    const query =
+        input.value.trim();
 
     if (!query) {
-        status.textContent = "Écris le nom d'un jeu.";
+
+        status.textContent =
+            "Écris le nom d'un jeu.";
+
         return;
     }
 
-    status.textContent = "Recherche en cours...";
+    status.textContent =
+        "Recherche en cours...";
+
     gamesContainer.innerHTML = "";
 
     try {
 
-        const response = await fetch(
-            WORKER_URL + "/search?q=" + encodeURIComponent(query)
-        );
+        const response =
+            await fetch(
+                WORKER_URL +
+                "/search?q=" +
+                encodeURIComponent(query)
+            );
 
         if (!response.ok) {
             throw new Error("Erreur serveur");
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
-        if (!data.results || data.results.length === 0) {
+        if (!data.results ||
+            data.results.length === 0) {
+
             gamesContainer.innerHTML =
                 '<div class="empty">Aucun jeu trouvé.</div>';
 
-            status.textContent = "Aucun résultat.";
+            status.textContent =
+                "Aucun résultat.";
+
             return;
         }
 
         status.textContent =
-            data.results.length + " résultat(s) trouvé(s).";
+            data.results.length +
+            " résultat(s) trouvé(s).";
 
         data.results.forEach(game => {
 
-            const card = document.createElement("div");
+            const card =
+                document.createElement("div");
+
             card.className = "card";
 
             const image =
@@ -204,7 +403,12 @@ async function searchGames() {
                 </div>
             `;
 
+            card.onclick = () => {
+                openGame(game);
+            };
+
             gamesContainer.appendChild(card);
+
         });
 
     } catch (error) {
@@ -216,30 +420,362 @@ async function searchGames() {
 
         gamesContainer.innerHTML = `
             <div class="empty">
-                Vérifie que ton Worker Cloudflare fonctionne.
+                Erreur lors de la recherche.
             </div>
         `;
     }
 }
 
+
+function openGame(game) {
+
+    currentGame = game;
+
+    document
+        .getElementById("searchSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("librarySection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("detailSection")
+        .classList.remove("hidden");
+
+    const detail =
+        document.getElementById("detail");
+
+    const image =
+        game.background_image ||
+        "https://via.placeholder.com/300x450?text=No+Image";
+
+    const platforms =
+        game.platforms
+        ? game.platforms
+            .map(p => p.platform.name)
+            .join(", ")
+        : "Inconnues";
+
+    const alreadyAdded =
+        library.some(item => item.id === game.id);
+
+    detail.innerHTML = `
+
+        <div class="detail-top">
+
+            <img
+                class="detail-cover"
+                src="${image}"
+                alt=""
+            >
+
+            <div>
+
+                <h1>
+                    ${escapeHtml(game.name || "Jeu")}
+                </h1>
+
+                <div class="info">
+
+                    <strong>Date de sortie :</strong>
+                    ${game.released || "Inconnue"}
+
+                    <br>
+
+                    <strong>Note RAWG :</strong>
+                    ${game.rating || "N/A"} / 5
+
+                    <br>
+
+                    <strong>Plateformes :</strong>
+                    ${escapeHtml(platforms)}
+
+                    <br>
+
+                    <strong>Genres :</strong>
+                    ${
+                        game.genres
+                        ? game.genres.map(g => g.name).join(", ")
+                        : "Inconnus"
+                    }
+
+                </div>
+
+                <div class="actions">
+
+                    ${
+                        alreadyAdded
+                        ?
+                        `<button class="add">
+                            ✅ Déjà dans ta bibliothèque
+                        </button>`
+                        :
+                        `<button
+                            class="add"
+                            onclick="addToLibrary()"
+                        >
+                            ➕ Ajouter à ma bibliothèque
+                        </button>`
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+function addToLibrary() {
+
+    if (!currentGame) return;
+
+    const exists =
+        library.some(
+            game => game.id === currentGame.id
+        );
+
+    if (exists) return;
+
+    library.push({
+
+        id: currentGame.id,
+
+        name: currentGame.name,
+
+        background_image:
+            currentGame.background_image,
+
+        released:
+            currentGame.released,
+
+        status:
+            "À jouer",
+
+        note:
+            0
+
+    });
+
+    saveLibrary();
+
+    openGame(currentGame);
+
+}
+
+
+function saveLibrary() {
+
+    localStorage.setItem(
+        "gamevault_library",
+        JSON.stringify(library)
+    );
+
+}
+
+
+function showLibrary() {
+
+    document
+        .getElementById("searchSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("detailSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("librarySection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("searchTab")
+        .classList.remove("active");
+
+    document
+        .getElementById("libraryTab")
+        .classList.add("active");
+
+    renderLibrary();
+
+}
+
+
+function showSearch() {
+
+    document
+        .getElementById("librarySection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("detailSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("searchSection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("libraryTab")
+        .classList.remove("active");
+
+    document
+        .getElementById("searchTab")
+        .classList.add("active");
+
+}
+
+
+function backToSearch() {
+
+    showSearch();
+
+}
+
+
+function renderLibrary() {
+
+    const container =
+        document.getElementById("library");
+
+    if (library.length === 0) {
+
+        container.innerHTML =
+            '<div class="empty">Ta bibliothèque est vide 🎮</div>';
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    library.forEach(game => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "library-item";
+
+        const image =
+            game.background_image ||
+            "https://via.placeholder.com/100x150?text=No+Image";
+
+        item.innerHTML = `
+
+            <img src="${image}" alt="">
+
+            <div class="library-info">
+
+                <strong>
+                    ${escapeHtml(game.name)}
+                </strong>
+
+                <br>
+
+                <small>
+                    ${game.released || ""}
+                </small>
+
+                <br><br>
+
+                <select
+                    onchange="changeStatus(
+                        ${game.id},
+                        this.value
+                    )"
+                >
+
+                    <option
+                        ${
+                            game.status === "À jouer"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        À jouer
+                    </option>
+
+                    <option
+                        ${
+                            game.status === "En cours"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        En cours
+                    </option>
+
+                    <option
+                        ${
+                            game.status === "Terminé"
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        Terminé
+                    </option>
+
+                </select>
+
+            </div>
+
+        `;
+
+        container.appendChild(item);
+
+    });
+
+}
+
+
+function changeStatus(id, status) {
+
+    const game =
+        library.find(
+            game => game.id === id
+        );
+
+    if (!game) return;
+
+    game.status = status;
+
+    saveLibrary();
+
+    renderLibrary();
+
+}
+
+
 function escapeHtml(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
-    div.textContent = text;
+    div.textContent =
+        text;
 
     return div.innerHTML;
+
 }
+
 
 document
     .getElementById("searchInput")
-    .addEventListener("keydown", function(event) {
+    .addEventListener(
+        "keydown",
+        function(event) {
 
-        if (event.key === "Enter") {
-            searchGames();
+            if (event.key === "Enter") {
+
+                searchGames();
+
+            }
+
         }
-
-    });
+    );
 
 </script>
 
