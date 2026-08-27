@@ -323,6 +323,25 @@ background:#2a171a;
 color:#ff929b
 }
 
+/* CORBEILLES */
+.wishlist-delete,
+.library-delete{
+margin-left:auto;
+flex:none;
+padding:6px 8px;
+border:0;
+background:transparent;
+color:#fff;
+font-size:20px;
+line-height:1;
+cursor:pointer;
+border-radius:8px
+}
+.wishlist-delete:hover,
+.library-delete:hover{
+background:#20202a
+}
+
 .in-library{
 background:#20202a!important;
 color:#fff!important;
@@ -1471,10 +1490,11 @@ saved
 </button>
 
 <button
-  class="delete"
-  style="margin-left:auto"
-  onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
-  🗑️
+type="button"
+class="delete"
+title="Supprimer de la bibliothèque"
+onclick="deleteCurrentGame()">
+🗑️ Supprimer
 </button>
 `
 :
@@ -1748,20 +1768,38 @@ function deleteCurrentGame(){
 
 if(!currentGame) return;
 
-if(
-!confirm(
-"Supprimer ce jeu de ta bibliothèque ?"
-)
-) return;
+const gameId = Number(currentGame.id);
 
-library =
-library.filter(
-item => item.id !== currentGame.id
+if(!confirm("Supprimer ce jeu de ta bibliothèque ?")) return;
+
+library = library.filter(
+item => Number(item.id) !== gameId
 );
 
 saveLibrary();
 
 showLibrary();
+
+}
+
+function deleteLibraryGame(gameId){
+
+const id = Number(gameId);
+
+const game = library.find(
+item => Number(item.id) === id
+);
+
+if(!game) return;
+
+if(!confirm(`Supprimer "${game.name}" de ta bibliothèque ?`)) return;
+
+library = library.filter(
+item => Number(item.id) !== id
+);
+
+saveLibrary();
+renderLibrary();
 
 }
 
@@ -1953,10 +1991,10 @@ ${releaseLabel(game)}
 </div>
 
 <button
-  class="delete"
-  style="margin-left:auto"
-  onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
-  🗑️
+class="wishlist-delete"
+title="Retirer des souhaits"
+onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
+🗑️
 </button>
 
 `;
@@ -2262,6 +2300,13 @@ ${escapeHtml(game.status || "À jouer")}
 </div>
 
 </div>
+
+<button
+class="library-delete"
+title="Supprimer de la bibliothèque"
+onclick="event.stopPropagation();deleteLibraryGame(${Number(game.id)})">
+🗑️
+</button>
 
 `;
 
