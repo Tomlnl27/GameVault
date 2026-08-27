@@ -875,6 +875,7 @@ Chargement des prochains jeux...
 </div>
 
 <div id="upcoming" class="upcoming-grid"></div>
+<button id="upcomingMore" class="back hidden" style="margin-top:18px" onclick="loadMoreUpcoming()">Charger plus</button>
 
 </section>
 
@@ -887,7 +888,11 @@ Chargement des prochains jeux...
 <button onclick="loadGenre('action','Action')">🥷 Action</button>
 <button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
 <button onclick="loadGenre('rpg','RPG')">⚔️ RPG</button>
-<button onclick="loadGenre('shooter','FPS / Shooter')">🔫 FPS / Shooter</button>
+<button onclick="loadGenre('fps','FPS')">🔫 FPS</button>
+<button onclick="loadGenre('tps','TPS')">🎯 TPS</button>
+<button onclick="loadGenre('open-world','Monde ouvert')">🌍 Monde ouvert</button>
+<button onclick="loadGenre('metroidvania','Metroidvania')">🗺️ Metroidvania</button>
+<button onclick="loadGenre('soulslike','Soulslike')">💀 Soulslike</button>
 <button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
 <button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
 <button onclick="loadGenre('racing','Course')">🏎️ Course</button>
@@ -900,6 +905,7 @@ Chargement des prochains jeux...
 
 <div id="genreStatus" class="status">Choisis un genre 🎮</div>
 <div id="genreGames" class="games"></div>
+<button id="genreMore" class="back hidden" style="margin-top:18px" onclick="loadMoreGenre()">Charger plus</button>
 
 </section>
 
@@ -2044,583 +2050,60 @@ container.appendChild(item);
 }
 
 
-async function loadUpcoming(){
+let upcomingPage = 1;
+let upcomingHasMore = false;
 
-const container =
-document.getElementById("upcoming");
-
-const status =
-document.getElementById("upcomingStatus");
-
+async function fetchUpcomingPage(page=1, append=false){
+const container=document.getElementById("upcoming");
+const status=document.getElementById("upcomingStatus");
+const more=document.getElementById("upcomingMore");
 if(!container || !status) return;
 
-container.innerHTML =
-'<div class="upcoming-loading">📅 Chargement...</div>';
+if(!append){
+  container.innerHTML='<div class="upcoming-loading">📅 Chargement...</div>';
+  upcomingPage=1;
+}
 
-status.textContent =
-"Recherche des prochaines sorties...";
+status.textContent = append ? "Chargement de jeux supplémentaires..." : "Recherche des prochaines sorties...";
 
-const today =
-new Date();
-
-const from =
-today.toISOString().slice(0,10);
-
-const future =
-new Date(today);
-
-future.setDate(
-future.getDate() + 365
-);
-
-const to =
-future.toISOString().slice(0,10);
+const today=new Date();
+const from=today.toISOString().slice(0,10);
+const future=new Date(today);
+future.setDate(future.getDate()+365);
+const to=future.toISOString().slice(0,10);
 
 try{
+  const response=await fetch(WORKER_URL+"/upcoming?from="+encodeURIComponent(from)+"&to="+encodeURIComponent(to)+"&page="+page);
+  const data=await response.json();
+  if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger les sorties");
 
-const response =
-await fetch(
-WORKER_URL +
-"/upcoming?from=" +
-encodeURIComponent(from) +
-"&to=" +
-encodeURIComponent(to)
-);
+  const games=data.results.filter(game=>game.released).sort((a,b)=>a.released.localeCompare(b.released));
+  if(!append) container.innerHTML="";
 
-const data =
-await response.json();
+  games.forEach(game=>{
+    const card=document.createElement("div");
+    card.className="upcoming-card";
+    const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
+    card.innerHTML=`<img src="${image}" alt=""><div class="upcoming-body"><div class="upcoming-name">${escapeHtml(game.name || "Jeu")}</div><div class="upcoming-date">📅 ${game.released}</div><div class="countdown">${releaseLabel(game)}</div></div>`;
+    card.onclick=()=>openGame(game);
+    container.appendChild(card);
+  });
 
-if(!response.ok || !Array.isArray(data.results)){
+  upcomingHasMore=Boolean(data.next);
+  upcomingPage=page;
+  more.classList.toggle("hidden", !upcomingHasMore);
+  status.textContent=`${container.querySelectorAll('.upcoming-card').length} prochaine(s) sortie(s) affichée(s).`;
 
-throw new Error(
-data.error || "Impossible de charger les sorties"
-);
-
-}
-
-const games =
-data.results
-.filter(game => game.released)
-.sort((a,b)=>
-a.released.localeCompare(b.released)
-);
-
-status.textContent =
-`${games.length} prochaine(s) sortie(s) trouvée(s).`;
-
-if(!games.length){
-
-container.innerHTML =
-'<div class="empty">Aucune sortie trouvée.</div>';
-
-return;
-
-}
-
-container.innerHTML = "";
-
-games.forEach(game=>{
-
-const card =
-document.createElement("div");
-
-card.className =
-"upcoming-card";
-
-const image =
-game.background_image ||
-"https://via.placeholder.com/400x600?text=Game";
-
-card.innerHTML = `
-
-<img src="${image}" alt="">
-
-<div class="upcoming-body">
-
-<div class="upcoming-name">
-${escapeHtml(game.name || "Jeu")}
-</div>
-
-<div class="upcoming-date">
-📅 ${game.released}
-</div>
-
-<div class="countdown">
-${releaseLabel(game)}
-</div>
-
-</div>
-`;
-
-card.onclick =
-()=>openGame(game);
-
-container.appendChild(card);
-
-});
-
+  if(!container.querySelector('.upcoming-card')) container.innerHTML='<div class="empty">Aucune sortie trouvée.</div>';
 }catch(error){
-
-console.error(error);
-
-status.textContent =
-"Erreur lors du chargement des sorties.";
-
-container.innerHTML =
-`
-<div class="empty">
-❌ ${escapeHtml(error.message)}
-</div>
-`;
-
+  console.error(error);
+  status.textContent="Erreur lors du chargement des sorties.";
+  if(!append) container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
+}
 }
 
-}
-
-
-function saveLibrary(){
-
-localStorage.setItem(
-"gamevault_library",
-JSON.stringify(library)
-);
-
-}
-
-
-/* =========================
-   BIBLIOTHÈQUE
-========================= */
-
-function renderLibrary(){
-
-const container =
-document.getElementById(
-"library"
-);
-
-const search =
-(
-document.getElementById(
-"librarySearch"
-).value || ""
-)
-.toLowerCase()
-.trim();
-
-const statusFilter =
-document.getElementById(
-"statusFilter"
-).value;
-
-const sort =
-document.getElementById(
-"sortFilter"
-).value;
-
-let games =
-library.filter(game => {
-
-const nameMatch =
-game.name
-.toLowerCase()
-.includes(search);
-
-const statusMatch =
-statusFilter === "Tous" ||
-game.status === statusFilter;
-
-return nameMatch &&
-statusMatch;
-
-});
-
-
-games.sort((a,b)=>{
-
-if(sort === "name")
-return a.name.localeCompare(b.name);
-
-if(sort === "rating")
-return (b.note||0)-(a.note||0);
-
-if(sort === "progress")
-return (b.progress||0)-(a.progress||0);
-
-if(sort === "time"){
-
-const aTime =
-(a.hours||0)*60+(a.minutes||0);
-
-const bTime =
-(b.hours||0)*60+(b.minutes||0);
-
-return bTime-aTime;
-
-}
-
-return (b.addedAt||0) -
-(a.addedAt||0);
-
-});
-
-
-document.getElementById(
-"libraryCount"
-).textContent =
-`${games.length} jeu(x) affiché(s) sur ${library.length}`;
-
-
-if(!games.length){
-
-container.innerHTML =
-'<div class="empty">Ta bibliothèque est vide ou aucun jeu ne correspond.</div>';
-
-return;
-
-}
-
-
-container.innerHTML = "";
-
-games.forEach(game=>{
-
-const item =
-document.createElement("div");
-
-item.className =
-"library-item";
-
-const image =
-game.background_image ||
-"https://via.placeholder.com/100x150?text=Game";
-
-const time =
-(game.hours||0) ||
-(game.minutes||0)
-?
-`${game.hours||0} h ${game.minutes||0} min`
-:
-"Aucun temps";
-
-
-item.innerHTML = `
-
-<img src="${image}" alt="">
-
-<div class="library-info">
-
-<div class="library-name">
-${escapeHtml(game.name)}
-</div>
-
-<div class="library-small">
-${game.released || ""}
-</div>
-
-<div class="library-line">
-⭐ ${game.note > 0 ? game.note + " / 10" : "Pas noté"}
-</div>
-
-<div class="library-line">
-📊 ${game.progress || 0}%
-</div>
-
-<div class="library-line">
-🕐 ${time}
-</div>
-
-<div class="badge">
-${escapeHtml(game.status || "À jouer")}
-</div>
-
-</div>
-
-<button
-class="library-delete"
-title="Supprimer de la bibliothèque"
-onclick="event.stopPropagation();deleteLibraryGame(${Number(game.id)})">
-🗑️
-</button>
-
-`;
-
-item.onclick =
-()=>openGame(game);
-
-container.appendChild(item);
-
-});
-
-}
-
-
-/* =========================
-   STATISTIQUES
-========================= */
-
-function renderStats(){
-
-const container =
-document.getElementById(
-"statsContent"
-);
-
-const total =
-library.length;
-
-const completed =
-library.filter(
-g=>g.status==="Terminé"
-).length;
-
-const playing =
-library.filter(
-g=>g.status==="En cours"
-).length;
-
-const toPlay =
-library.filter(
-g=>g.status==="À jouer"
-).length;
-
-const rated =
-library.filter(
-g=>Number(g.note)>0
-);
-
-const average =
-rated.length
-?
-(
-rated.reduce(
-(sum,g)=>sum+Number(g.note),
-0
-) /
-rated.length
-).toFixed(1)
-:
-"—";
-
-const totalMinutes =
-library.reduce(
-(sum,g)=>
-sum+
-Number(g.hours||0)*60+
-Number(g.minutes||0),
-0
-);
-
-const totalHours =
-Math.floor(
-totalMinutes / 60
-);
-
-const averageProgress =
-total
-?
-Math.round(
-library.reduce(
-(sum,g)=>
-sum+Number(g.progress||0),
-0
-) /
-total
-)
-:
-0;
-
-const completion =
-total
-?
-Math.round(
-completed/total*100
-)
-:
-0;
-
-const best =
-rated.length
-?
-[...rated].sort(
-(a,b)=>
-(b.note||0)-
-(a.note||0)
-)[0]
-:
-null;
-
-const mostPlayed =
-library.length
-?
-[...library].sort(
-(a,b)=>{
-
-const aTime =
-(a.hours||0)*60+
-(a.minutes||0);
-
-const bTime =
-(b.hours||0)*60+
-(b.minutes||0);
-
-return bTime-aTime;
-
-}
-)[0]
-:
-null;
-
-
-container.innerHTML = `
-
-<div class="stats-grid">
-
-<div class="stat">
-<div class="stat-icon">🎮</div>
-<div class="stat-number">${total}</div>
-<div class="stat-label">Jeux</div>
-</div>
-
-<div class="stat">
-<div class="stat-icon">🏆</div>
-<div class="stat-number">${completed}</div>
-<div class="stat-label">Terminés</div>
-</div>
-
-<div class="stat">
-<div class="stat-icon">⭐</div>
-<div class="stat-number">${average}</div>
-<div class="stat-label">Note moyenne</div>
-</div>
-
-<div class="stat">
-<div class="stat-icon">🕐</div>
-<div class="stat-number">${totalHours}h</div>
-<div class="stat-label">Temps total</div>
-</div>
-
-</div>
-
-
-<div class="stats-box">
-
-<h3>📊 Progression moyenne</h3>
-
-<div class="big">
-${averageProgress}%
-</div>
-
-<div class="bar">
-<div
-class="fill"
-style="width:${averageProgress}%">
-</div>
-</div>
-
-<p>
-${completion}% de ta bibliothèque est terminée.
-</p>
-
-</div>
-
-
-<div class="stats-box">
-
-<h3>🎯 Répartition</h3>
-
-<p>📌 À jouer : <strong>${toPlay}</strong></p>
-
-<p>🎮 En cours : <strong>${playing}</strong></p>
-
-<p>🏆 Terminés : <strong>${completed}</strong></p>
-
-</div>
-
-
-${
-best
-?
-`
-
-<div class="stats-box">
-
-<h3>⭐ Jeu le mieux noté</h3>
-
-<div class="best">
-
-<img
-src="${best.background_image || ""}"
-alt=""
->
-
-<div>
-
-<strong>
-${escapeHtml(best.name)}
-</strong>
-
-<div class="big">
-${best.note}/10
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`
-:
-""
-}
-
-
-${
-mostPlayed &&
-(
-mostPlayed.hours > 0 ||
-mostPlayed.minutes > 0
-)
-?
-`
-
-<div class="stats-box">
-
-<h3>🕐 Jeu le plus joué</h3>
-
-<div class="best">
-
-<img
-src="${mostPlayed.background_image || ""}"
-alt=""
->
-
-<div>
-
-<strong>
-${escapeHtml(mostPlayed.name)}
-</strong>
-
-<div class="big">
-${mostPlayed.hours||0}h
-${mostPlayed.minutes||0}min
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`
-:
-""
-}
-
-`;
-
-}
+async function loadUpcoming(){ await fetchUpcomingPage(1,false); }
+async function loadMoreUpcoming(){ if(upcomingHasMore) await fetchUpcomingPage(upcomingPage+1,true); }
 
 
 /* =========================
@@ -2728,39 +2211,57 @@ loadUpcoming();
 }
 
 
-async function loadGenre(slug, label){
+let currentGenreSlug="";
+let currentGenreLabel="";
+let genrePage=1;
+let genreHasMore=false;
 
+async function fetchGenrePage(page=1, append=false){
 const container=document.getElementById("genreGames");
 const status=document.getElementById("genreStatus");
+const more=document.getElementById("genreMore");
 if(!container || !status) return;
 
-status.textContent=`Chargement des jeux ${label}...`;
-container.innerHTML='<div class="empty">🎭 Chargement...</div>';
+if(!append){ container.innerHTML='<div class="empty">🎭 Chargement...</div>'; genrePage=1; }
+status.textContent=`Chargement des jeux ${currentGenreLabel}...`;
 
 try{
-const response=await fetch(WORKER_URL+"/genre/"+encodeURIComponent(slug));
-const data=await response.json();
-if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger ce genre");
+  const response=await fetch(WORKER_URL+"/genre/"+encodeURIComponent(currentGenreSlug)+"?page="+page);
+  const data=await response.json();
+  if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger ce genre");
+  if(!append) container.innerHTML="";
 
-status.textContent=`${data.results.length} jeu(x) trouvé(s) dans ${label}.`;
-container.innerHTML="";
+  data.results.forEach(game=>{
+    const card=document.createElement("div");
+    card.className="card";
+    const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
+    card.innerHTML=`<img src="${image}" alt=""><div class="card-content"><div class="card-title">${escapeHtml(game.name || "Jeu")}</div><div class="card-date">${game.released || "Date inconnue"}</div></div>`;
+    card.onclick=()=>openGame(game);
+    container.appendChild(card);
+  });
 
-if(!data.results.length){container.innerHTML='<div class="empty">Aucun jeu trouvé.</div>';return;}
-
-data.results.forEach(game=>{
-const card=document.createElement("div");
-card.className="card";
-const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
-card.innerHTML=`<img src="${image}" alt=""><div class="card-content"><div class="card-title">${escapeHtml(game.name || "Jeu")}</div><div class="card-date">${game.released || "Date inconnue"}</div></div>`;
-card.onclick=()=>openGame(game);
-container.appendChild(card);
-});
+  genreHasMore=Boolean(data.next);
+  genrePage=page;
+  more.classList.toggle("hidden", !genreHasMore);
+  status.textContent=`${container.querySelectorAll('.card').length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+  if(!container.querySelector('.card')) container.innerHTML='<div class="empty">Aucun jeu trouvé.</div>';
 }catch(error){
-console.error(error);
-status.textContent="Erreur lors du chargement du genre.";
-container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
+  console.error(error);
+  status.textContent="Erreur lors du chargement du genre.";
+  if(!append) container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
 }
 }
+
+async function loadGenre(slug,label){
+  currentGenreSlug=slug;
+  currentGenreLabel=label;
+  await fetchGenrePage(1,false);
+}
+
+async function loadMoreGenre(){
+  if(genreHasMore) await fetchGenrePage(genrePage+1,true);
+}
+
 
 function showGenres(){
 hideSections();
