@@ -1471,9 +1471,10 @@ saved
 </button>
 
 <button
-class="delete"
-onclick="deleteCurrentGame()">
-🗑️ Supprimer
+  class="delete"
+  style="margin-left:auto"
+  onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
+  🗑️
 </button>
 `
 :
