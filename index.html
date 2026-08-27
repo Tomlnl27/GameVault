@@ -618,6 +618,16 @@ height:220px
 }
 }
 
+
+/* GENRES */
+.genre-list{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.genre-list button{border:1px solid #2b2b35;background:#191920;color:#ddd;padding:11px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+.genre-list button:hover{background:#24242d}
+.genre-list button.active{background:#fff;color:#000}
+.genre-tags{display:flex;flex-wrap:wrap;gap:6px}
+.genre-tag{border:1px solid #353540;background:#1b1b23;color:#fff;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:800;cursor:pointer}
+.genre-tag:hover{background:#2a2a34}
+
 /* SERIES / FRANCHISE */
 
 .series-panel{
@@ -764,6 +774,7 @@ grid-template-columns:repeat(2,1fr)
 <button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
 <button id="tabWishlist" onclick="showWishlist()">❤️ Souhaits</button>
 <button id="tabUpcoming" onclick="showUpcoming()">📅 Prochaines sorties</button>
+<button id="tabGenres" onclick="showGenres()">🎭 Genres</button>
 <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
 </nav>
 
@@ -867,6 +878,30 @@ Chargement des prochains jeux...
 
 </section>
 
+
+<section id="genresSection" class="hidden">
+
+<h2>🎭 Genres</h2>
+
+<div class="genre-list">
+<button onclick="loadGenre('action','Action')">🥷 Action</button>
+<button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
+<button onclick="loadGenre('rpg','RPG')">⚔️ RPG</button>
+<button onclick="loadGenre('shooter','FPS / Shooter')">🔫 FPS / Shooter</button>
+<button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
+<button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
+<button onclick="loadGenre('racing','Course')">🏎️ Course</button>
+<button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
+<button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button>
+<button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
+<button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
+<button onclick="loadGenre('indie','Indépendant')">✨ Indépendant</button>
+</div>
+
+<div id="genreStatus" class="status">Choisis un genre 🎮</div>
+<div id="genreGames" class="games"></div>
+
+</section>
 
 <section id="statsSection" class="hidden">
 
@@ -1273,8 +1308,8 @@ ${escapeHtml(publishers)}
 
 <div class="meta-box">
 <div class="meta-label">🎭 GENRES</div>
-<div class="meta-value">
-${escapeHtml(genres)}
+<div class="meta-value genre-tags">
+${game.genres && game.genres.length ? game.genres.map(g => `<button class="genre-tag" onclick="event.stopPropagation();showGenres();loadGenre('${escapeHtml(g.slug || '')}','${escapeHtml(g.name || '')}')">${escapeHtml(g.name || '')}</button>`).join('') : 'Inconnu'}
 </div>
 </div>
 
@@ -2600,6 +2635,7 @@ function hideSections(){
 "librarySection",
 "wishlistSection",
 "upcomingSection",
+"genresSection",
 "statsSection"
 ]
 .forEach(id=>{
@@ -2613,6 +2649,7 @@ document
 "tabLibrary",
 "tabWishlist",
 "tabUpcoming",
+"tabGenres",
 "tabStats"
 ]
 .forEach(id=>{
@@ -2690,6 +2727,46 @@ loadUpcoming();
 
 }
 
+
+async function loadGenre(slug, label){
+
+const container=document.getElementById("genreGames");
+const status=document.getElementById("genreStatus");
+if(!container || !status) return;
+
+status.textContent=`Chargement des jeux ${label}...`;
+container.innerHTML='<div class="empty">🎭 Chargement...</div>';
+
+try{
+const response=await fetch(WORKER_URL+"/genre/"+encodeURIComponent(slug));
+const data=await response.json();
+if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger ce genre");
+
+status.textContent=`${data.results.length} jeu(x) trouvé(s) dans ${label}.`;
+container.innerHTML="";
+
+if(!data.results.length){container.innerHTML='<div class="empty">Aucun jeu trouvé.</div>';return;}
+
+data.results.forEach(game=>{
+const card=document.createElement("div");
+card.className="card";
+const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
+card.innerHTML=`<img src="${image}" alt=""><div class="card-content"><div class="card-title">${escapeHtml(game.name || "Jeu")}</div><div class="card-date">${game.released || "Date inconnue"}</div></div>`;
+card.onclick=()=>openGame(game);
+container.appendChild(card);
+});
+}catch(error){
+console.error(error);
+status.textContent="Erreur lors du chargement du genre.";
+container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
+}
+}
+
+function showGenres(){
+hideSections();
+document.getElementById("genresSection").classList.remove("hidden");
+document.getElementById("tabGenres").classList.add("active");
+}
 
 function showStats(){
 
