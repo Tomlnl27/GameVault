@@ -477,6 +477,128 @@ object-fit:cover;
 border-radius:8px
 }
 
+
+/* WISHLIST / UPCOMING */
+.wishlist-tools{
+display:grid;
+grid-template-columns:1fr 180px;
+gap:10px;
+margin-bottom:15px
+}
+.wishlist-tools input,
+.wishlist-tools select{
+width:100%;
+background:#15151c;
+color:#fff;
+border:1px solid #292933;
+padding:11px;
+border-radius:10px
+}
+.wishlist-item{
+display:flex;
+gap:14px;
+align-items:center;
+background:#14141b;
+border:1px solid #292933;
+padding:12px;
+border-radius:13px;
+margin-bottom:10px;
+cursor:pointer
+}
+.wishlist-item img{
+width:65px;
+height:85px;
+object-fit:cover;
+border-radius:8px
+}
+.wishlist-info{
+flex:1;
+min-width:0
+}
+.wishlist-name{
+font-weight:850
+}
+.wishlist-date{
+color:#858590;
+font-size:12px;
+margin-top:5px
+}
+.wishlist-count{
+color:#858590;
+font-size:13px;
+margin-bottom:12px
+}
+.wishlist-badge{
+display:inline-block;
+margin-top:7px;
+padding:5px 8px;
+border-radius:7px;
+background:#20202a;
+font-size:11px;
+color:#bbb
+}
+.upcoming-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+gap:15px
+}
+.upcoming-card{
+background:#14141b;
+border:1px solid #292933;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+transition:.15s
+}
+.upcoming-card:hover{
+transform:translateY(-3px);
+border-color:#555563
+}
+.upcoming-card img{
+display:block;
+width:100%;
+height:235px;
+object-fit:cover
+}
+.upcoming-body{
+padding:11px
+}
+.upcoming-name{
+font-weight:850;
+line-height:1.3
+}
+.upcoming-date{
+color:#858590;
+font-size:12px;
+margin-top:6px
+}
+.countdown{
+margin-top:8px;
+display:inline-block;
+padding:5px 8px;
+border-radius:7px;
+background:#242630;
+font-size:11px;
+font-weight:800
+}
+.upcoming-loading{
+padding:40px;
+text-align:center;
+color:#858590
+}
+@media(max-width:600px){
+.wishlist-tools{
+grid-template-columns:1fr
+}
+.upcoming-grid{
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+.upcoming-card img{
+height:220px
+}
+}
+
 /* SERIES / FRANCHISE */
 
 .series-panel{
@@ -621,6 +743,8 @@ grid-template-columns:repeat(2,1fr)
 <nav>
 <button id="tabSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
 <button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
+<button id="tabWishlist" onclick="showWishlist()">❤️ Souhaits</button>
+<button id="tabUpcoming" onclick="showUpcoming()">📅 Prochaines sorties</button>
 <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
 </nav>
 
@@ -686,6 +810,45 @@ oninput="renderLibrary()"
 </section>
 
 
+
+<section id="wishlistSection" class="hidden">
+
+<h2>❤️ Ma liste de souhaits</h2>
+
+<div class="wishlist-tools">
+
+<input
+id="wishlistSearch"
+placeholder="🔎 Rechercher dans mes souhaits..."
+oninput="renderWishlist()"
+>
+
+<select id="wishlistSort" onchange="renderWishlist()">
+<option value="date">Date de sortie</option>
+<option value="name">Nom A → Z</option>
+</select>
+
+</div>
+
+<div id="wishlistCount" class="wishlist-count"></div>
+<div id="wishlist"></div>
+
+</section>
+
+
+<section id="upcomingSection" class="hidden">
+
+<h2>📅 Prochaines sorties</h2>
+
+<div id="upcomingStatus" class="status">
+Chargement des prochains jeux...
+</div>
+
+<div id="upcoming" class="upcoming-grid"></div>
+
+</section>
+
+
 <section id="statsSection" class="hidden">
 
 <h2>📊 Mes statistiques</h2>
@@ -707,6 +870,11 @@ let currentGame = null;
 let library =
 JSON.parse(
 localStorage.getItem("gamevault_library")
+) || [];
+
+let wishlist =
+JSON.parse(
+localStorage.getItem("gamevault_wishlist")
 ) || [];
 
 
@@ -940,6 +1108,11 @@ console.log("Série indisponible",error);
 
 const saved =
 library.find(
+item => item.id === game.id
+);
+
+const wished =
+wishlist.find(
 item => item.id === game.id
 );
 
@@ -1313,6 +1486,12 @@ onclick="addCurrentGame()">
 `
 }
 
+<button
+class="${wished ? "in-library" : "add"}"
+onclick="toggleWishlist()">
+${wished ? "❤️ Dans mes souhaits" : "❤️ Ajouter aux souhaits"}
+</button>
+
 </div>
 
 </div>
@@ -1582,6 +1761,345 @@ item => item.id !== currentGame.id
 saveLibrary();
 
 showLibrary();
+
+}
+
+
+
+function saveWishlist(){
+
+localStorage.setItem(
+"gamevault_wishlist",
+JSON.stringify(wishlist)
+);
+
+}
+
+
+function toggleWishlist(){
+
+if(!currentGame) return;
+
+const index =
+wishlist.findIndex(
+item => item.id === currentGame.id
+);
+
+if(index >= 0){
+
+wishlist.splice(index,1);
+
+}else{
+
+wishlist.push({
+id:currentGame.id,
+name:currentGame.name,
+background_image:currentGame.background_image,
+released:currentGame.released || null,
+tba:!!currentGame.tba,
+addedAt:Date.now()
+});
+
+}
+
+saveWishlist();
+renderDetail();
+
+}
+
+
+function removeFromWishlist(gameId){
+
+wishlist =
+wishlist.filter(
+item => item.id !== gameId
+);
+
+saveWishlist();
+renderWishlist();
+
+}
+
+
+function daysUntil(dateString){
+
+if(!dateString) return null;
+
+const today =
+new Date();
+
+today.setHours(0,0,0,0);
+
+const date =
+new Date(dateString + "T00:00:00");
+
+if(Number.isNaN(date.getTime()))
+return null;
+
+return Math.ceil(
+(date - today) / 86400000
+);
+
+}
+
+
+function releaseLabel(game){
+
+if(game.tba || !game.released)
+return "📅 Date à confirmer";
+
+const days =
+daysUntil(game.released);
+
+if(days === null)
+return "📅 Date inconnue";
+
+if(days < 0)
+return "🟢 Sorti";
+
+if(days === 0)
+return "🔥 Sortie aujourd'hui";
+
+if(days === 1)
+return "⏳ Sortie demain";
+
+return `⏳ Sortie dans ${days} jours`;
+
+}
+
+
+function renderWishlist(){
+
+const container =
+document.getElementById("wishlist");
+
+if(!container) return;
+
+const search =
+(
+document.getElementById("wishlistSearch").value || ""
+)
+.toLowerCase()
+.trim();
+
+const sort =
+document.getElementById("wishlistSort").value;
+
+let items =
+wishlist.filter(item =>
+(item.name || "").toLowerCase().includes(search)
+);
+
+items.sort((a,b)=>{
+
+if(sort === "name")
+return (a.name || "").localeCompare(b.name || "");
+
+const da =
+a.released || "9999-12-31";
+
+const db =
+b.released || "9999-12-31";
+
+return da.localeCompare(db);
+
+});
+
+document.getElementById("wishlistCount").textContent =
+`${items.length} jeu(x) dans tes souhaits`;
+
+if(!items.length){
+
+container.innerHTML =
+'<div class="empty">❤️ Aucun jeu dans ta liste de souhaits.</div>';
+
+return;
+
+}
+
+container.innerHTML = "";
+
+items.forEach(game=>{
+
+const item =
+document.createElement("div");
+
+item.className =
+"wishlist-item";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/100x150?text=Game";
+
+item.innerHTML = `
+
+<img src="${image}" alt="">
+
+<div class="wishlist-info">
+
+<div class="wishlist-name">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="wishlist-date">
+${game.released || "Date à confirmer"}
+</div>
+
+<div class="wishlist-badge">
+${releaseLabel(game)}
+</div>
+
+</div>
+
+<button
+class="delete"
+style="margin-left:auto"
+onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
+🗑️
+</button>
+
+`;
+
+item.onclick =
+()=>openGame(game);
+
+container.appendChild(item);
+
+});
+
+}
+
+
+async function loadUpcoming(){
+
+const container =
+document.getElementById("upcoming");
+
+const status =
+document.getElementById("upcomingStatus");
+
+if(!container || !status) return;
+
+container.innerHTML =
+'<div class="upcoming-loading">📅 Chargement...</div>';
+
+status.textContent =
+"Recherche des prochaines sorties...";
+
+const today =
+new Date();
+
+const from =
+today.toISOString().slice(0,10);
+
+const future =
+new Date(today);
+
+future.setDate(
+future.getDate() + 365
+);
+
+const to =
+future.toISOString().slice(0,10);
+
+try{
+
+const response =
+await fetch(
+WORKER_URL +
+"/upcoming?from=" +
+encodeURIComponent(from) +
+"&to=" +
+encodeURIComponent(to)
+);
+
+const data =
+await response.json();
+
+if(!response.ok || !Array.isArray(data.results)){
+
+throw new Error(
+data.error || "Impossible de charger les sorties"
+);
+
+}
+
+const games =
+data.results
+.filter(game => game.released)
+.sort((a,b)=>
+a.released.localeCompare(b.released)
+);
+
+status.textContent =
+`${games.length} prochaine(s) sortie(s) trouvée(s).`;
+
+if(!games.length){
+
+container.innerHTML =
+'<div class="empty">Aucune sortie trouvée.</div>';
+
+return;
+
+}
+
+container.innerHTML = "";
+
+games.forEach(game=>{
+
+const card =
+document.createElement("div");
+
+card.className =
+"upcoming-card";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/400x600?text=Game";
+
+card.innerHTML = `
+
+<img src="${image}" alt="">
+
+<div class="upcoming-body">
+
+<div class="upcoming-name">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="upcoming-date">
+📅 ${game.released}
+</div>
+
+<div class="countdown">
+${releaseLabel(game)}
+</div>
+
+</div>
+`;
+
+card.onclick =
+()=>openGame(game);
+
+container.appendChild(card);
+
+});
+
+}catch(error){
+
+console.error(error);
+
+status.textContent =
+"Erreur lors du chargement des sorties.";
+
+container.innerHTML =
+`
+<div class="empty">
+❌ ${escapeHtml(error.message)}
+</div>
+`;
+
+}
 
 }
 
@@ -2034,6 +2552,8 @@ function hideSections(){
 "searchSection",
 "detailSection",
 "librarySection",
+"wishlistSection",
+"upcomingSection",
 "statsSection"
 ]
 .forEach(id=>{
@@ -2045,6 +2565,8 @@ document
 [
 "tabSearch",
 "tabLibrary",
+"tabWishlist",
+"tabUpcoming",
 "tabStats"
 ]
 .forEach(id=>{
@@ -2084,6 +2606,41 @@ document
 .classList.add("active");
 
 renderLibrary();
+
+}
+
+
+
+function showWishlist(){
+
+hideSections();
+
+document
+.getElementById("wishlistSection")
+.classList.remove("hidden");
+
+document
+.getElementById("tabWishlist")
+.classList.add("active");
+
+renderWishlist();
+
+}
+
+
+function showUpcoming(){
+
+hideSections();
+
+document
+.getElementById("upcomingSection")
+.classList.remove("hidden");
+
+document
+.getElementById("tabUpcoming")
+.classList.add("active");
+
+loadUpcoming();
 
 }
 
