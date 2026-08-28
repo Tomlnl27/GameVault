@@ -116,7 +116,8 @@ transition:.15s
 }
 
 .card:hover{
-transform:translateY(-3px)
+transform:translateY(-3px);
+border-color:#444451
 }
 
 .card img{
@@ -323,29 +324,36 @@ background:#2a171a;
 color:#ff929b
 }
 
-/* CORBEILLES */
-.wishlist-delete,
-.library-delete{
-margin-left:auto;
-flex:none;
-padding:6px 8px;
-border:0;
-background:transparent;
-color:#fff;
-font-size:20px;
-line-height:1;
-cursor:pointer;
-border-radius:8px
-}
-.wishlist-delete:hover,
-.library-delete:hover{
-background:#20202a
-}
-
 .in-library{
 background:#20202a!important;
 color:#fff!important;
 cursor:default!important
+}
+
+/* CORBEILLES */
+
+.wishlist-delete,
+.library-delete{
+margin-left:auto;
+flex:none;
+width:34px;
+height:34px;
+padding:0;
+display:flex;
+align-items:center;
+justify-content:center;
+border:0;
+background:transparent;
+color:#fff;
+font-size:17px;
+line-height:1;
+cursor:pointer;
+border-radius:8px
+}
+
+.wishlist-delete:hover,
+.library-delete:hover{
+background:#20202a
 }
 
 /* LIBRARY */
@@ -496,14 +504,15 @@ object-fit:cover;
 border-radius:8px
 }
 
-
 /* WISHLIST / UPCOMING */
+
 .wishlist-tools{
 display:grid;
 grid-template-columns:1fr 180px;
 gap:10px;
 margin-bottom:15px
 }
+
 .wishlist-tools input,
 .wishlist-tools select{
 width:100%;
@@ -513,6 +522,7 @@ border:1px solid #292933;
 padding:11px;
 border-radius:10px
 }
+
 .wishlist-item{
 display:flex;
 gap:14px;
@@ -524,29 +534,35 @@ border-radius:13px;
 margin-bottom:10px;
 cursor:pointer
 }
+
 .wishlist-item img{
 width:65px;
 height:85px;
 object-fit:cover;
 border-radius:8px
 }
+
 .wishlist-info{
 flex:1;
 min-width:0
 }
+
 .wishlist-name{
 font-weight:850
 }
+
 .wishlist-date{
 color:#858590;
 font-size:12px;
 margin-top:5px
 }
+
 .wishlist-count{
 color:#858590;
 font-size:13px;
 margin-bottom:12px
 }
+
 .wishlist-badge{
 display:inline-block;
 margin-top:7px;
@@ -556,11 +572,13 @@ background:#20202a;
 font-size:11px;
 color:#bbb
 }
+
 .upcoming-grid{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
 gap:15px
 }
+
 .upcoming-card{
 background:#14141b;
 border:1px solid #292933;
@@ -569,28 +587,34 @@ overflow:hidden;
 cursor:pointer;
 transition:.15s
 }
+
 .upcoming-card:hover{
 transform:translateY(-3px);
 border-color:#555563
 }
+
 .upcoming-card img{
 display:block;
 width:100%;
 height:235px;
 object-fit:cover
 }
+
 .upcoming-body{
 padding:11px
 }
+
 .upcoming-name{
 font-weight:850;
 line-height:1.3
 }
+
 .upcoming-date{
 color:#858590;
 font-size:12px;
 margin-top:6px
 }
+
 .countdown{
 margin-top:8px;
 display:inline-block;
@@ -600,35 +624,64 @@ background:#242630;
 font-size:11px;
 font-weight:800
 }
-.upcoming-loading{
-padding:40px;
-text-align:center;
-color:#858590
-}
-@media(max-width:600px){
-.wishlist-tools{
-grid-template-columns:1fr
-}
-.upcoming-grid{
-grid-template-columns:repeat(2,1fr);
-gap:12px
-}
-.upcoming-card img{
-height:220px
-}
-}
-
 
 /* GENRES */
-.genre-list{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
-.genre-list button{border:1px solid #2b2b35;background:#191920;color:#ddd;padding:11px 14px;border-radius:10px;font-weight:800;cursor:pointer}
-.genre-list button:hover{background:#24242d}
-.genre-list button.active{background:#fff;color:#000}
-.genre-tags{display:flex;flex-wrap:wrap;gap:6px}
-.genre-tag{border:1px solid #353540;background:#1b1b23;color:#fff;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:800;cursor:pointer}
-.genre-tag:hover{background:#2a2a34}
 
-/* SERIES / FRANCHISE */
+.genre-list{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:18px
+}
+
+.genre-list button{
+border:1px solid #2b2b35;
+background:#191920;
+color:#ddd;
+padding:11px 14px;
+border-radius:10px;
+font-weight:800;
+cursor:pointer
+}
+
+.genre-list button:hover{
+background:#24242d
+}
+
+.genre-list button.active{
+background:#fff;
+color:#000
+}
+
+.genre-tags{
+display:flex;
+flex-wrap:wrap;
+gap:6px
+}
+
+.genre-tag{
+border:1px solid #353540;
+background:#1b1b23;
+color:#fff;
+border-radius:8px;
+padding:6px 8px;
+font-size:12px;
+font-weight:800;
+cursor:pointer
+}
+
+.genre-tag:hover{
+background:#2a2a34
+}
+
+.genre-loading{
+grid-column:1/-1;
+text-align:center;
+padding:40px;
+color:#858590
+}
+
+/* SERIES */
 
 .series-panel{
 margin:0 20px 15px;
@@ -690,11 +743,6 @@ color:#777783;
 margin-top:5px
 }
 
-.series-empty{
-color:#777783;
-font-size:13px
-}
-
 @media(max-width:800px){
 
 .detail-top{
@@ -712,14 +760,6 @@ grid-template-columns:repeat(2,1fr)
 }
 
 @media(max-width:600px){
-
-.series-card{
-flex-basis:125px
-}
-
-.series-card img{
-height:170px
-}
 
 main{
 padding:15px
@@ -754,6 +794,10 @@ grid-template-columns:1fr
 grid-template-columns:1fr
 }
 
+.wishlist-tools{
+grid-template-columns:1fr
+}
+
 .stats-grid{
 grid-template-columns:repeat(2,1fr)
 }
@@ -766,7 +810,7 @@ grid-template-columns:repeat(2,1fr)
 
 <header>
 <div class="logo">🎮 GameVault</div>
-<div class="subtitle">Ta bibliothèque gaming • V14 Référencement</div>
+<div class="subtitle">Ta bibliothèque gaming • V15 Référencement</div>
 </header>
 
 <nav>
@@ -840,7 +884,6 @@ oninput="renderLibrary()"
 </section>
 
 
-
 <section id="wishlistSection" class="hidden">
 
 <h2>❤️ Ma liste de souhaits</h2>
@@ -875,7 +918,14 @@ Chargement des prochains jeux...
 </div>
 
 <div id="upcoming" class="upcoming-grid"></div>
-<button id="upcomingMore" class="back hidden" style="margin-top:18px" onclick="loadMoreUpcoming()">Charger plus</button>
+
+<button
+id="upcomingMore"
+class="back hidden"
+style="margin-top:18px"
+onclick="loadMoreUpcoming()">
+Charger plus
+</button>
 
 </section>
 
@@ -885,35 +935,69 @@ Chargement des prochains jeux...
 <h2>🎭 Genres</h2>
 
 <div class="genre-list">
+
 <button onclick="loadGenre('action','Action')">🥷 Action</button>
+
 <button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
+
 <button onclick="loadGenre('rpg','RPG')">⚔️ RPG</button>
+
 <button onclick="loadGenre('fps','FPS')">🔫 FPS</button>
+
 <button onclick="loadGenre('tps','TPS')">🎯 TPS</button>
+
 <button onclick="loadGenre('open-world','Monde ouvert')">🌍 Monde ouvert</button>
+
 <button onclick="loadGenre('metroidvania','Metroidvania')">🗺️ Metroidvania</button>
+
 <button onclick="loadGenre('soulslike','Soulslike')">💀 Soulslike</button>
+
 <button onclick="loadGenre('horror','Horreur')">👻 Horreur</button>
+
 <button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
+
 <button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
+
 <button onclick="loadGenre('racing','Course')">🏎️ Course</button>
+
 <button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
+
 <button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button>
+
 <button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
+
 <button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
+
 <button onclick="loadGenre('indie','Indépendant')">✨ Indépendant</button>
+
 <button onclick="loadGenre('combat','Combat')">👊 Combat</button>
+
 <button onclick="loadGenre('multiplayer','Multijoueur')">🌐 Multijoueur</button>
+
 <button onclick="loadGenre('mmo','MMO')">🪐 MMO</button>
+
 <button onclick="loadGenre('anime','Anime')">🎌 Anime</button>
+
 <button onclick="loadGenre('vr','VR')">🥽 VR</button>
+
 </div>
 
-<div id="genreStatus" class="status">Choisis un genre 🎮</div>
+<div id="genreStatus" class="status">
+Choisis un genre 🎮
+</div>
+
 <div id="genreGames" class="games"></div>
-<button id="genreMore" class="back hidden" style="margin-top:18px" onclick="loadMoreGenre()">Charger plus</button>
+
+<button
+id="genreMore"
+class="back hidden"
+style="margin-top:18px"
+onclick="loadMoreGenre()">
+Charger plus
+</button>
 
 </section>
+
 
 <section id="statsSection" class="hidden">
 
@@ -933,15 +1017,39 @@ const WORKER_URL =
 
 let currentGame = null;
 
+
+/* =========================
+   DONNÉES LOCALES
+========================= */
+
 let library =
-JSON.parse(
-localStorage.getItem("gamevault_library")
-) || [];
+JSON.parse(localStorage.getItem("gamevault_library")) || [];
 
 let wishlist =
-JSON.parse(
-localStorage.getItem("gamevault_wishlist")
-) || [];
+JSON.parse(localStorage.getItem("gamevault_wishlist")) || [];
+
+
+/* =========================
+   SAUVEGARDE
+========================= */
+
+function saveLibrary(){
+
+localStorage.setItem(
+"gamevault_library",
+JSON.stringify(library)
+);
+
+}
+
+function saveWishlist(){
+
+localStorage.setItem(
+"gamevault_wishlist",
+JSON.stringify(wishlist)
+);
+
+}
 
 
 /* =========================
@@ -968,6 +1076,7 @@ status.textContent =
 "Écris au moins 2 caractères.";
 
 return;
+
 }
 
 status.textContent =
@@ -992,6 +1101,7 @@ if(!response.ok ||
 !data.results){
 
 throw new Error("Erreur RAWG");
+
 }
 
 if(data.results.length === 0){
@@ -1003,6 +1113,7 @@ status.textContent =
 "Aucun résultat.";
 
 return;
+
 }
 
 status.textContent =
@@ -1013,32 +1124,9 @@ games.innerHTML = "";
 
 data.results.forEach(game => {
 
-const card =
-document.createElement("div");
-
-card.className =
-"card";
-
-const image =
-game.background_image ||
-"https://via.placeholder.com/400x600?text=Game";
-
-card.innerHTML = `
-<img src="${image}" alt="">
-<div class="card-content">
-<div class="card-title">
-${escapeHtml(game.name || "Jeu")}
-</div>
-<div class="card-date">
-${game.released || "Date inconnue"}
-</div>
-</div>
-`;
-
-card.onclick =
-() => openGame(game);
-
-games.appendChild(card);
+games.appendChild(
+createGameCard(game)
+);
 
 });
 
@@ -1058,7 +1146,52 @@ games.innerHTML =
 
 
 /* =========================
-   FICHE DÉTAILLÉE
+   CARTE JEU
+========================= */
+
+function createGameCard(game){
+
+const card =
+document.createElement("div");
+
+card.className =
+"card";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/400x600?text=Game";
+
+card.innerHTML = `
+
+<img
+src="${escapeHtml(image)}"
+alt=""
+loading="lazy"
+>
+
+<div class="card-content">
+
+<div class="card-title">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="card-date">
+${escapeHtml(game.released || "Date inconnue")}
+</div>
+
+</div>
+`;
+
+card.onclick =
+()=>openGame(game);
+
+return card;
+
+}
+
+
+/* =========================
+   FICHE
 ========================= */
 
 async function openGame(game){
@@ -1092,10 +1225,7 @@ currentGame;
 let seriesGames = [];
 
 
-/*
-   TON WORKER UTILISE :
-   /game/ID
-*/
+/* INFOS DÉTAILLÉES */
 
 try{
 
@@ -1127,9 +1257,7 @@ console.log(error);
 }
 
 
-/* =========================
-   SÉRIE / FRANCHISE
-========================= */
+/* SÉRIE */
 
 try{
 
@@ -1149,11 +1277,16 @@ if(Array.isArray(seriesData.results)){
 
 seriesGames =
 seriesData.results
-.filter(item => item.id !== game.id)
+.filter(item =>
+Number(item.id) !== Number(game.id)
+)
 .sort((a,b)=>{
 
-const dateA = a.released || "9999-12-31";
-const dateB = b.released || "9999-12-31";
+const dateA =
+a.released || "9999-12-31";
+
+const dateB =
+b.released || "9999-12-31";
 
 return dateA.localeCompare(dateB);
 
@@ -1165,25 +1298,30 @@ return dateA.localeCompare(dateB);
 
 }catch(error){
 
-console.log("Série indisponible",error);
+console.log(
+"Série indisponible",
+error
+);
 
 }
 
 
-/* Jeu déjà sauvegardé ? */
+/* SAUVEGARDES */
 
 const saved =
 library.find(
-item => item.id === game.id
+item =>
+Number(item.id) === Number(game.id)
 );
 
 const wished =
 wishlist.find(
-item => item.id === game.id
+item =>
+Number(item.id) === Number(game.id)
 );
 
 
-/* Informations */
+/* INFOS */
 
 const image =
 game.background_image ||
@@ -1199,7 +1337,7 @@ game.developers &&
 game.developers.length
 ?
 game.developers
-.map(x => x.name)
+.map(x=>x.name)
 .join(", ")
 :
 "Inconnu";
@@ -1209,17 +1347,7 @@ game.publishers &&
 game.publishers.length
 ?
 game.publishers
-.map(x => x.name)
-.join(", ")
-:
-"Inconnu";
-
-const genres =
-game.genres &&
-game.genres.length
-?
-game.genres
-.map(x => x.name)
+.map(x=>x.name)
 .join(", ")
 :
 "Inconnu";
@@ -1276,6 +1404,35 @@ saved.status
 "À jouer";
 
 
+let genreHTML = "Inconnu";
+
+if(game.genres && game.genres.length){
+
+genreHTML =
+game.genres
+.map(g => `
+
+<button
+class="genre-tag"
+onclick="
+event.stopPropagation();
+showGenres();
+loadGenre(
+'${escapeHtml(g.slug || "")}',
+'${escapeHtml(g.name || "")}'
+);
+">
+
+${escapeHtml(g.name || "")}
+
+</button>
+
+`)
+.join("");
+
+}
+
+
 detail.innerHTML = `
 
 <div class="detail">
@@ -1284,7 +1441,7 @@ detail.innerHTML = `
 
 <img
 class="cover"
-src="${image}"
+src="${escapeHtml(image)}"
 alt=""
 >
 
@@ -1295,7 +1452,7 @@ ${escapeHtml(game.name || "Jeu")}
 </h1>
 
 <div class="release">
-📅 ${game.released || "Date inconnue"}
+📅 ${escapeHtml(game.released || "Date inconnue")}
 </div>
 
 <div class="description">
@@ -1305,45 +1462,80 @@ ${escapeHtml(description)}
 <div class="meta">
 
 <div class="meta-box">
-<div class="meta-label">🛠️ DÉVELOPPEUR</div>
+
+<div class="meta-label">
+🛠️ DÉVELOPPEUR
+</div>
+
 <div class="meta-value">
 ${escapeHtml(developers)}
 </div>
+
 </div>
 
+
 <div class="meta-box">
-<div class="meta-label">🏢 ÉDITEUR</div>
+
+<div class="meta-label">
+🏢 ÉDITEUR
+</div>
+
 <div class="meta-value">
 ${escapeHtml(publishers)}
 </div>
+
 </div>
 
+
 <div class="meta-box">
-<div class="meta-label">🎭 GENRES</div>
+
+<div class="meta-label">
+🎭 GENRES
+</div>
+
 <div class="meta-value genre-tags">
-${game.genres && game.genres.length ? game.genres.map(g => `<button class="genre-tag" onclick="event.stopPropagation();showGenres();loadGenre('${escapeHtml(g.slug || '')}','${escapeHtml(g.name || '')}')">${escapeHtml(g.name || '')}</button>`).join('') : 'Inconnu'}
-</div>
+${genreHTML}
 </div>
 
+</div>
+
+
 <div class="meta-box">
-<div class="meta-label">🎮 PLATEFORMES</div>
+
+<div class="meta-label">
+🎮 PLATEFORMES
+</div>
+
 <div class="meta-value">
 ${escapeHtml(platforms)}
 </div>
+
 </div>
 
+
 <div class="meta-box">
-<div class="meta-label">⭐ NOTE RAWG</div>
+
+<div class="meta-label">
+⭐ NOTE RAWG
+</div>
+
 <div class="meta-value">
 ${game.rating ? game.rating + " / 5" : "N/A"}
 </div>
+
 </div>
 
+
 <div class="meta-box">
-<div class="meta-label">👥 AVIS</div>
+
+<div class="meta-label">
+👥 AVIS
+</div>
+
 <div class="meta-value">
 ${game.ratings_count || "N/A"}
 </div>
+
 </div>
 
 </div>
@@ -1355,7 +1547,9 @@ ${game.ratings_count || "N/A"}
 
 ${
 seriesGames.length
-? `
+?
+`
+
 <div class="series-panel">
 
 <div class="series-title">
@@ -1368,11 +1562,15 @@ ${seriesGames.map(item => `
 
 <div
 class="series-card"
-onclick="openSeriesGame(${item.id})">
+onclick="openSeriesGame(${Number(item.id)})">
 
 <img
-src="${escapeHtml(item.background_image || "https://via.placeholder.com/300x450?text=Game")}"
+src="${escapeHtml(
+item.background_image ||
+"https://via.placeholder.com/300x450?text=Game"
+)}"
 alt=""
+loading="lazy"
 >
 
 <div class="series-card-body">
@@ -1382,7 +1580,7 @@ ${escapeHtml(item.name || "Jeu")}
 </div>
 
 <div class="series-card-date">
-${item.released || "Date inconnue"}
+${escapeHtml(item.released || "Date inconnue")}
 </div>
 
 </div>
@@ -1394,8 +1592,10 @@ ${item.released || "Date inconnue"}
 </div>
 
 </div>
+
 `
-: ""
+:
+""
 }
 
 
@@ -1406,10 +1606,13 @@ ${item.released || "Date inconnue"}
 </div>
 
 <div class="rating">
+
 <span id="ratingValue">
 ${rating}
 </span>
- / 10
+
+/ 10
+
 </div>
 
 <div class="rating-controls">
@@ -1440,9 +1643,11 @@ onclick="changeRating(0.5)">
 </div>
 
 <div class="progress-number">
+
 <span id="progressValue">
 ${progress}
 </span>%
+
 </div>
 
 <input
@@ -1532,6 +1737,7 @@ ${
 saved
 ?
 `
+
 <button class="in-library">
 ✅ Dans ma bibliothèque
 </button>
@@ -1543,21 +1749,31 @@ title="Supprimer de la bibliothèque"
 onclick="deleteCurrentGame()">
 🗑️ Supprimer
 </button>
+
 `
 :
 `
+
 <button
 class="add"
 onclick="addCurrentGame()">
 ➕ Ajouter à ma bibliothèque
 </button>
+
 `
 }
+
 
 <button
 class="${wished ? "in-library" : "add"}"
 onclick="toggleWishlist()">
-${wished ? "❤️ Dans mes souhaits" : "❤️ Ajouter aux souhaits"}
+
+${wished
+?
+"❤️ Dans mes souhaits"
+:
+"❤️ Ajouter aux souhaits"}
+
 </button>
 
 </div>
@@ -1565,14 +1781,13 @@ ${wished ? "❤️ Dans mes souhaits" : "❤️ Ajouter aux souhaits"}
 </div>
 `;
 
-
 updateRatingButtons();
 
 }
 
 
 /* =========================
-   OUVRIR UN JEU DE LA SÉRIE
+   SÉRIE
 ========================= */
 
 async function openSeriesGame(gameId){
@@ -1586,14 +1801,16 @@ WORKER_URL +
 encodeURIComponent(gameId)
 );
 
-if(!response.ok){
-throw new Error("Impossible de charger le jeu");
-}
+if(!response.ok)
+throw new Error(
+"Impossible de charger le jeu"
+);
 
 const game =
 await response.json();
 
-currentGame = game;
+currentGame =
+game;
 
 await renderDetail();
 
@@ -1612,10 +1829,13 @@ console.error(error);
 
 function getCurrentSaved(){
 
-if(!currentGame) return null;
+if(!currentGame)
+return null;
 
 return library.find(
-item => item.id === currentGame.id
+item =>
+Number(item.id) ===
+Number(currentGame.id)
 );
 
 }
@@ -1626,7 +1846,8 @@ function ensureSaved(){
 let game =
 getCurrentSaved();
 
-if(game) return game;
+if(game)
+return game;
 
 game = {
 
@@ -1698,9 +1919,11 @@ rating;
 
 saveLibrary();
 
-document.getElementById(
-"ratingValue"
-).textContent =
+const value =
+document.getElementById("ratingValue");
+
+if(value)
+value.textContent =
 rating;
 
 updateRatingButtons();
@@ -1713,7 +1936,8 @@ function updateRatingButtons(){
 const game =
 getCurrentSaved();
 
-if(!game) return;
+if(!game)
+return;
 
 const minus =
 document.getElementById(
@@ -1727,11 +1951,11 @@ document.getElementById(
 
 if(minus)
 minus.disabled =
-game.note <= 0;
+Number(game.note || 0) <= 0;
 
 if(plus)
 plus.disabled =
-game.note >= 10;
+Number(game.note || 0) >= 10;
 
 }
 
@@ -1813,14 +2037,21 @@ renderDetail();
 
 function deleteCurrentGame(){
 
-if(!currentGame) return;
+if(!currentGame)
+return;
 
-const gameId = Number(currentGame.id);
+const gameId =
+Number(currentGame.id);
 
-if(!confirm("Supprimer ce jeu de ta bibliothèque ?")) return;
+if(!confirm(
+"Supprimer ce jeu de ta bibliothèque ?"
+))
+return;
 
-library = library.filter(
-item => Number(item.id) !== gameId
+library =
+library.filter(
+item =>
+Number(item.id) !== gameId
 );
 
 saveLibrary();
@@ -1829,46 +2060,235 @@ showLibrary();
 
 }
 
+
 function deleteLibraryGame(gameId){
 
-const id = Number(gameId);
+const id =
+Number(gameId);
 
-const game = library.find(
-item => Number(item.id) === id
+const game =
+library.find(
+item =>
+Number(item.id) === id
 );
 
-if(!game) return;
+if(!game)
+return;
 
-if(!confirm(`Supprimer "${game.name}" de ta bibliothèque ?`)) return;
+if(!confirm(
+`Supprimer "${game.name}" de ta bibliothèque ?`
+))
+return;
 
-library = library.filter(
-item => Number(item.id) !== id
+library =
+library.filter(
+item =>
+Number(item.id) !== id
 );
 
 saveLibrary();
+
 renderLibrary();
 
 }
 
 
+function renderLibrary(){
 
-function saveWishlist(){
-
-localStorage.setItem(
-"gamevault_wishlist",
-JSON.stringify(wishlist)
+const container =
+document.getElementById(
+"library"
 );
+
+if(!container)
+return;
+
+const search =
+(
+document.getElementById(
+"librarySearch"
+).value || ""
+)
+.toLowerCase()
+.trim();
+
+const statusFilter =
+document.getElementById(
+"statusFilter"
+).value;
+
+const sort =
+document.getElementById(
+"sortFilter"
+).value;
+
+let items =
+library.filter(game => {
+
+const name =
+(game.name || "")
+.toLowerCase();
+
+const matchesSearch =
+name.includes(search);
+
+const matchesStatus =
+statusFilter === "Tous" ||
+game.status === statusFilter;
+
+return matchesSearch &&
+matchesStatus;
+
+});
+
+
+items.sort((a,b)=>{
+
+if(sort === "name")
+return (a.name || "")
+.localeCompare(
+b.name || "",
+"fr"
+);
+
+if(sort === "rating")
+return Number(b.note || 0) -
+Number(a.note || 0);
+
+if(sort === "progress")
+return Number(b.progress || 0) -
+Number(a.progress || 0);
+
+if(sort === "time"){
+
+const ta =
+Number(a.hours || 0) * 60 +
+Number(a.minutes || 0);
+
+const tb =
+Number(b.hours || 0) * 60 +
+Number(b.minutes || 0);
+
+return tb - ta;
+
+}
+
+return Number(b.addedAt || 0) -
+Number(a.addedAt || 0);
+
+});
+
+
+document.getElementById(
+"libraryCount"
+).textContent =
+`${items.length} jeu(x) dans ta bibliothèque`;
+
+
+if(!items.length){
+
+container.innerHTML =
+'<div class="empty">📚 Aucun jeu trouvé.</div>';
+
+return;
 
 }
 
 
+container.innerHTML = "";
+
+items.forEach(game=>{
+
+const item =
+document.createElement("div");
+
+item.className =
+"library-item";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/100x150?text=Game";
+
+const totalMinutes =
+Number(game.hours || 0) * 60 +
+Number(game.minutes || 0);
+
+const formattedTime =
+Math.floor(totalMinutes / 60) +
+"h " +
+(totalMinutes % 60) +
+"min";
+
+item.innerHTML = `
+
+<img
+src="${escapeHtml(image)}"
+alt=""
+loading="lazy"
+>
+
+<div class="library-info">
+
+<div class="library-name">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="library-small">
+${escapeHtml(game.released || "Date inconnue")}
+</div>
+
+<div class="library-line">
+⭐ ${Number(game.note || 0)}/10
+&nbsp; • &nbsp;
+📊 ${Number(game.progress || 0)}%
+</div>
+
+<div class="library-line">
+🕐 ${formattedTime}
+</div>
+
+<div class="badge">
+${escapeHtml(game.status || "À jouer")}
+</div>
+
+</div>
+
+<button
+class="library-delete"
+title="Supprimer de la bibliothèque"
+onclick="
+event.stopPropagation();
+deleteLibraryGame(${Number(game.id)});
+">
+🗑️
+</button>
+
+`;
+
+item.onclick =
+()=>openGame(game);
+
+container.appendChild(item);
+
+});
+
+}
+
+
+/* =========================
+   WISHLIST
+========================= */
+
 function toggleWishlist(){
 
-if(!currentGame) return;
+if(!currentGame)
+return;
 
 const index =
 wishlist.findIndex(
-item => item.id === currentGame.id
+item =>
+Number(item.id) ===
+Number(currentGame.id)
 );
 
 if(index >= 0){
@@ -1878,17 +2298,28 @@ wishlist.splice(index,1);
 }else{
 
 wishlist.push({
+
 id:currentGame.id,
+
 name:currentGame.name,
-background_image:currentGame.background_image,
-released:currentGame.released || null,
-tba:!!currentGame.tba,
+
+background_image:
+currentGame.background_image,
+
+released:
+currentGame.released || null,
+
+tba:
+!!currentGame.tba,
+
 addedAt:Date.now()
+
 });
 
 }
 
 saveWishlist();
+
 renderDetail();
 
 }
@@ -1896,12 +2327,17 @@ renderDetail();
 
 function removeFromWishlist(gameId){
 
+const id =
+Number(gameId);
+
 wishlist =
 wishlist.filter(
-item => item.id !== gameId
+item =>
+Number(item.id) !== id
 );
 
 saveWishlist();
+
 renderWishlist();
 
 }
@@ -1909,21 +2345,30 @@ renderWishlist();
 
 function daysUntil(dateString){
 
-if(!dateString) return null;
+if(!dateString)
+return null;
 
 const today =
 new Date();
 
-today.setHours(0,0,0,0);
+today.setHours(
+0,0,0,0
+);
 
 const date =
-new Date(dateString + "T00:00:00");
+new Date(
+dateString +
+"T00:00:00"
+);
 
-if(Number.isNaN(date.getTime()))
+if(Number.isNaN(
+date.getTime()
+))
 return null;
 
 return Math.ceil(
-(date - today) / 86400000
+(date - today) /
+86400000
 );
 
 }
@@ -1931,11 +2376,16 @@ return Math.ceil(
 
 function releaseLabel(game){
 
-if(game.tba || !game.released)
+if(
+game.tba ||
+!game.released
+)
 return "📅 Date à confirmer";
 
 const days =
-daysUntil(game.released);
+daysUntil(
+game.released
+);
 
 if(days === null)
 return "📅 Date inconnue";
@@ -1957,42 +2407,65 @@ return `⏳ Sortie dans ${days} jours`;
 function renderWishlist(){
 
 const container =
-document.getElementById("wishlist");
+document.getElementById(
+"wishlist"
+);
 
-if(!container) return;
+if(!container)
+return;
 
 const search =
 (
-document.getElementById("wishlistSearch").value || ""
+document.getElementById(
+"wishlistSearch"
+).value || ""
 )
 .toLowerCase()
 .trim();
 
 const sort =
-document.getElementById("wishlistSort").value;
+document.getElementById(
+"wishlistSort"
+).value;
 
 let items =
 wishlist.filter(item =>
-(item.name || "").toLowerCase().includes(search)
+(item.name || "")
+.toLowerCase()
+.includes(search)
 );
+
 
 items.sort((a,b)=>{
 
-if(sort === "name")
-return (a.name || "").localeCompare(b.name || "");
+if(sort === "name"){
+
+return (a.name || "")
+.localeCompare(
+b.name || "",
+"fr"
+);
+
+}
 
 const da =
-a.released || "9999-12-31";
+a.released ||
+"9999-12-31";
 
 const db =
-b.released || "9999-12-31";
+b.released ||
+"9999-12-31";
 
 return da.localeCompare(db);
 
 });
 
-document.getElementById("wishlistCount").textContent =
+
+document.getElementById(
+"wishlistCount"
+).textContent =
 `${items.length} jeu(x) dans tes souhaits`;
+
 
 if(!items.length){
 
@@ -2002,6 +2475,7 @@ container.innerHTML =
 return;
 
 }
+
 
 container.innerHTML = "";
 
@@ -2019,7 +2493,11 @@ game.background_image ||
 
 item.innerHTML = `
 
-<img src="${image}" alt="">
+<img
+src="${escapeHtml(image)}"
+alt=""
+loading="lazy"
+>
 
 <div class="wishlist-info">
 
@@ -2028,7 +2506,10 @@ ${escapeHtml(game.name || "Jeu")}
 </div>
 
 <div class="wishlist-date">
-${game.released || "Date à confirmer"}
+${escapeHtml(
+game.released ||
+"Date à confirmer"
+)}
 </div>
 
 <div class="wishlist-badge">
@@ -2040,7 +2521,10 @@ ${releaseLabel(game)}
 <button
 class="wishlist-delete"
 title="Retirer des souhaits"
-onclick="event.stopPropagation();removeFromWishlist(${Number(game.id)})">
+onclick="
+event.stopPropagation();
+removeFromWishlist(${Number(game.id)});
+">
 🗑️
 </button>
 
@@ -2056,60 +2540,1240 @@ container.appendChild(item);
 }
 
 
+/* =========================
+   PROCHAINES SORTIES
+========================= */
+
 let upcomingPage = 1;
 let upcomingHasMore = false;
 
-async function fetchUpcomingPage(page=1, append=false){
-const container=document.getElementById("upcoming");
-const status=document.getElementById("upcomingStatus");
-const more=document.getElementById("upcomingMore");
-if(!container || !status) return;
+async function fetchUpcomingPage(
+page=1,
+append=false
+){
+
+const container =
+document.getElementById(
+"upcoming"
+);
+
+const status =
+document.getElementById(
+"upcomingStatus"
+);
+
+const more =
+document.getElementById(
+"upcomingMore"
+);
+
+if(!container || !status)
+return;
 
 if(!append){
-  container.innerHTML='<div class="upcoming-loading">📅 Chargement...</div>';
-  upcomingPage=1;
+
+container.innerHTML =
+'<div class="empty">📅 Chargement...</div>';
+
+upcomingPage =
+1;
+
 }
 
-status.textContent = append ? "Chargement de jeux supplémentaires..." : "Recherche des prochaines sorties...";
+status.textContent =
+append
+?
+"Chargement de jeux supplémentaires..."
+:
+"Recherche des prochaines sorties...";
 
-const today=new Date();
-const from=today.toISOString().slice(0,10);
-const future=new Date(today);
-future.setDate(future.getDate()+365);
-const to=future.toISOString().slice(0,10);
+const today =
+new Date();
+
+const from =
+today.toISOString()
+.slice(0,10);
+
+const future =
+new Date(today);
+
+future.setDate(
+future.getDate() + 365
+);
+
+const to =
+future.toISOString()
+.slice(0,10);
 
 try{
-  const response=await fetch(WORKER_URL+"/upcoming?from="+encodeURIComponent(from)+"&to="+encodeURIComponent(to)+"&page="+page);
-  const data=await response.json();
-  if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger les sorties");
 
-  const games=data.results.filter(game=>game.released).sort((a,b)=>a.released.localeCompare(b.released));
-  if(!append) container.innerHTML="";
+const response =
+await fetch(
+WORKER_URL +
+"/upcoming?from=" +
+encodeURIComponent(from) +
+"&to=" +
+encodeURIComponent(to) +
+"&page=" +
+page
+);
 
-  games.forEach(game=>{
-    const card=document.createElement("div");
-    card.className="upcoming-card";
-    const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
-    card.innerHTML=`<img src="${image}" alt=""><div class="upcoming-body"><div class="upcoming-name">${escapeHtml(game.name || "Jeu")}</div><div class="upcoming-date">📅 ${game.released}</div><div class="countdown">${releaseLabel(game)}</div></div>`;
-    card.onclick=()=>openGame(game);
-    container.appendChild(card);
-  });
+const data =
+await response.json();
 
-  upcomingHasMore=Boolean(data.next);
-  upcomingPage=page;
-  more.classList.toggle("hidden", !upcomingHasMore);
-  status.textContent=`${container.querySelectorAll('.upcoming-card').length} prochaine(s) sortie(s) affichée(s).`;
+if(
+!response.ok ||
+!Array.isArray(data.results)
+)
+throw new Error(
+data.error ||
+"Impossible de charger les sorties"
+);
 
-  if(!container.querySelector('.upcoming-card')) container.innerHTML='<div class="empty">Aucune sortie trouvée.</div>';
+const games =
+data.results
+.filter(game =>
+game.released
+)
+.sort((a,b)=>
+a.released.localeCompare(
+b.released
+)
+);
+
+if(!append)
+container.innerHTML = "";
+
+games.forEach(game=>{
+
+const card =
+document.createElement("div");
+
+card.className =
+"upcoming-card";
+
+const image =
+game.background_image ||
+"https://via.placeholder.com/400x600?text=Game";
+
+card.innerHTML = `
+
+<img
+src="${escapeHtml(image)}"
+alt=""
+loading="lazy"
+>
+
+<div class="upcoming-body">
+
+<div class="upcoming-name">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="upcoming-date">
+📅 ${escapeHtml(game.released)}
+</div>
+
+<div class="countdown">
+${releaseLabel(game)}
+</div>
+
+</div>
+
+`;
+
+card.onclick =
+()=>openGame(game);
+
+container.appendChild(card);
+
+});
+
+
+upcomingHasMore =
+Boolean(data.next);
+
+upcomingPage =
+page;
+
+more.classList.toggle(
+"hidden",
+!upcomingHasMore
+);
+
+status.textContent =
+`${container.querySelectorAll(".upcoming-card").length} prochaine(s) sortie(s) affichée(s).`;
+
+if(
+!container.querySelector(
+".upcoming-card"
+)
+){
+
+container.innerHTML =
+'<div class="empty">Aucune sortie trouvée.</div>';
+
+}
+
 }catch(error){
-  console.error(error);
-  status.textContent="Erreur lors du chargement des sorties.";
-  if(!append) container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
-}
+
+console.error(error);
+
+status.textContent =
+"Erreur lors du chargement des sorties.";
+
+if(!append){
+
+container.innerHTML =
+`
+<div class="empty">
+❌ ${escapeHtml(error.message)}
+</div>
+`;
+
 }
 
-async function loadUpcoming(){ await fetchUpcomingPage(1,false); }
-async function loadMoreUpcoming(){ if(upcomingHasMore) await fetchUpcomingPage(upcomingPage+1,true); }
+}
+
+}
+
+
+async function loadUpcoming(){
+
+await fetchUpcomingPage(
+1,
+false
+);
+
+}
+
+
+async function loadMoreUpcoming(){
+
+if(upcomingHasMore)
+await fetchUpcomingPage(
+upcomingPage + 1,
+true
+);
+
+}
+
+
+/* =========================
+   RÉFÉRENCEMENT GAMEVAULT
+========================= */
+
+/*
+   IMPORTANT :
+
+   Ces listes servent uniquement à empêcher
+   les mauvais mélanges dans les catégories
+   spécialisées.
+
+   Un jeu peut appartenir à plusieurs catégories.
+*/
+
+const GV_RULES = {
+
+soulslike: [
+
+"dark souls",
+"demon's souls",
+"demon souls",
+"bloodborne",
+"elden ring",
+"sekiro",
+"black myth: wukong",
+"black myth wukong",
+"lies of p",
+"nioh",
+"nioh 2",
+"wo long",
+"lords of the fallen",
+"mortal shell",
+"another crab's treasure",
+"remnant: from the ashes",
+"remnant ii",
+"the first berserker: khazan",
+"the first berserker"
+
+],
+
+
+metroidvania: [
+
+"hollow knight",
+"silksong",
+"nine sols",
+"metroid",
+"castlevania",
+"ori and the blind forest",
+"ori and the will of the wisps",
+"blasphemous",
+"dead cells",
+"guacamelee",
+"axiom verge",
+"prince of persia: the lost crown",
+"bloodstained"
+
+],
+
+
+"open-world": [
+
+"grand theft auto",
+"gta ",
+"red dead redemption",
+"the elder scrolls",
+"skyrim",
+"oblivion",
+"morrowind",
+"cyberpunk 2077",
+"hogwarts legacy",
+"spider-man",
+"marvel's spider-man",
+"the witcher 3",
+"the witcher 4",
+"fallout 3",
+"fallout 4",
+"fallout: new vegas",
+"fallout 76",
+"assassin's creed",
+"assassin’s creed",
+"crimson desert",
+"far cry",
+"watch dogs",
+"ghost of tsushima",
+"days gone",
+"dying light",
+"elden ring"
+
+],
+
+
+tps: [
+
+"grand theft auto",
+"gta ",
+"red dead redemption",
+"the last of us",
+"uncharted",
+"max payne",
+"gears of war",
+"control",
+"alan wake",
+"resident evil 4",
+"resident evil 5",
+"resident evil 6",
+"resident evil 2",
+"resident evil 3",
+"resident evil village",
+"dead space",
+"remnant",
+"crimson desert",
+"the division",
+"ghost recon",
+"helldivers"
+
+],
+
+
+fps: [
+
+"borderlands",
+"far cry",
+"halo",
+"call of duty",
+"battlefield",
+"doom",
+"wolfenstein",
+"bioshock",
+"destiny",
+"titanfall",
+"metro 2033",
+"metro: last light",
+"metro exodus",
+"counter-strike",
+"valorant",
+"overwatch",
+"rainbow six",
+"quake",
+"prey",
+"battlebit"
+
+],
+
+
+horror: [
+
+"outlast",
+"resident evil",
+"alien: isolation",
+"alien isolation",
+"silent hill",
+"until dawn",
+"amnesia",
+"dead space",
+"the evil within",
+"visage",
+"layers of fear",
+"fatal frame",
+"little nightmares",
+"alone in the dark",
+"soma",
+"alan wake",
+"madison",
+"fear",
+"the medium",
+"signalis",
+"amnesia"
+
+],
+
+
+strategy: [
+
+"xcom",
+"star wars: zero company",
+"star wars zero company",
+"total war",
+"age of empires",
+"civilization",
+"company of heroes",
+"command & conquer",
+"warhammer 40,000: dawn of war",
+"anno",
+"stellaris",
+"europa universalis",
+"hearts of iron",
+"crusader kings",
+"into the breach"
+
+],
+
+
+sports: [
+
+"fifa",
+"ea sports fc",
+"nba 2k",
+"madden",
+"topspin",
+"nhl",
+"pga tour",
+"wwe 2k",
+"mlb the show",
+"efootball",
+"rocket league",
+"wii sports",
+"nfl"
+
+],
+
+
+racing: [
+
+"forza",
+"need for speed",
+"test drive unlimited",
+"gran turismo",
+"f1 ",
+"formula 1",
+"wrc",
+"dirt",
+"the crew",
+"mario kart",
+"assetto corsa",
+"project cars",
+"ride",
+"motogp",
+"wreckfest"
+
+],
+
+
+simulation: [
+
+"construction simulator",
+"gas station simulator",
+"bum simulator",
+"powerwash simulator",
+"tcg card shop simulator",
+"supermarket simulator",
+"ignite simulator",
+"farming simulator",
+"flight simulator",
+"euro truck simulator",
+"american truck simulator",
+"house flipper",
+"pc building simulator",
+"thief simulator",
+"goat simulator"
+
+],
+
+
+platformer: [
+
+"astro bot",
+"crash bandicoot",
+"rayman",
+"sackboy",
+"super mario",
+"donkey kong",
+"sonic",
+"celeste",
+"super meat boy",
+"littlebigplanet",
+"a hat in time",
+"psychonauts",
+"ratchet & clank",
+"ratchet and clank"
+
+],
+
+
+puzzle: [
+
+"portal",
+"the talos principle",
+"outer wilds",
+"sherlock holmes",
+"blue prince",
+"the witness",
+"baba is you",
+"the room",
+"cocoon",
+"viewfinder",
+"return of the obra dinn"
+
+],
+
+
+arcade: [
+
+"pac-man",
+"tetris",
+"tekken 3",
+"tekken 2",
+"tekken tag tournament",
+"mortal kombat",
+"street fighter ii",
+"street fighter 2",
+"space invaders",
+"galaga",
+"arkanoid"
+
+],
+
+
+indie: [
+
+"the binding of isaac",
+"super meat boy",
+"inside",
+"outer wilds",
+"undertale",
+"hades",
+"hollow knight",
+"celeste",
+"stardew valley",
+"dead cells",
+"cuphead",
+"disco elysium",
+"balatro",
+"limbo",
+"nine sols",
+"silksong",
+"undertale",
+"isaac"
+
+],
+
+
+combat: [
+
+"mortal kombat",
+"tekken",
+"ufc",
+"sifu",
+"street fighter",
+"dragon ball fighterz",
+"guilty gear",
+"soulcalibur",
+"virtua fighter",
+"king of fighters",
+"killer instinct",
+"injustice",
+"dead or alive"
+
+],
+
+
+multiplayer: [
+
+"call of duty",
+"battlefield",
+"fifa",
+"ea sports fc",
+"fortnite",
+"rocket league",
+"gta online",
+"grand theft auto v",
+"apex legends",
+"overwatch",
+"rainbow six siege",
+"helldivers",
+"destiny",
+"warframe",
+"valorant",
+"counter-strike",
+"sea of thieves",
+"fall guys",
+"among us",
+"minecraft",
+"roblox",
+"pubg",
+"dead by daylight"
+
+],
+
+
+mmo: [
+
+"world of warcraft",
+"dofus",
+"final fantasy xiv",
+"final fantasy 14",
+"the elder scrolls online",
+"black desert",
+"guild wars",
+"lost ark",
+"new world",
+"runescape",
+"elder scrolls online",
+"diablo iv",
+"diablo 4",
+"diablo iii",
+"diablo 3"
+
+],
+
+
+anime: [
+
+"one piece",
+"dragon ball",
+"naruto",
+"one punch man",
+"demon slayer",
+"bleach",
+"tokyo ghoul",
+"berserk",
+"attack on titan",
+"my hero academia",
+"jujutsu kaisen",
+"fairy tail",
+"sword art online",
+"dragon quest: dai",
+"dragon quest dai"
+
+],
+
+
+vr: [
+
+"half-life: alyx",
+"beat saber",
+"resident evil 4",
+"resident evil village",
+"resident evil 7",
+"the walking dead: saints & sinners",
+"batman: arkham shadow",
+"gran turismo 7",
+"astro bot rescue mission",
+"pistol whip",
+"blade & sorcery",
+"job simulator",
+"superhot vr",
+"horizon call of the mountain",
+"moss",
+"moss: book ii",
+"bonelab",
+"walking dead saints & sinners"
+
+]
+
+};
+
+
+/* =========================
+   TEST RÉFÉRENCEMENT
+========================= */
+
+function gvMatches(
+slug,
+game
+){
+
+const rules =
+GV_RULES[slug];
+
+if(!rules)
+return true;
+
+const name =
+(game.name || "")
+.toLowerCase()
+.trim();
+
+return rules.some(
+term =>
+name.includes(
+term.toLowerCase()
+)
+);
+
+}
+
+
+/* =========================
+   GENRES SPÉCIAUX
+========================= */
+
+const CUSTOM_GENRE_SEARCHES = {
+
+"open-world":[
+"grand theft auto",
+"red dead redemption",
+"cyberpunk",
+"the witcher",
+"assassin's creed",
+"hogwarts legacy",
+"spider-man",
+"fallout"
+],
+
+"metroidvania":[
+"hollow knight",
+"silksong",
+"metroid",
+"castlevania",
+"nine sols"
+],
+
+"soulslike":[
+"elden ring",
+"sekiro",
+"black myth wukong",
+"lies of p",
+"nioh"
+],
+
+"indie":[
+"indie games"
+],
+
+"combat":[
+"tekken",
+"mortal kombat",
+"street fighter",
+"ufc",
+"sifu"
+],
+
+"multiplayer":[
+"multiplayer games"
+],
+
+"mmo":[
+"mmorpg",
+"world of warcraft",
+"dofus",
+"final fantasy xiv",
+"black desert",
+"elder scrolls online",
+"diablo"
+],
+
+"anime":[
+"one piece",
+"dragon ball",
+"naruto",
+"demon slayer",
+"bleach",
+"one punch man"
+],
+
+"vr":[
+"vr games",
+"playstation vr",
+"psvr2"
+]
+
+};
+
+
+/*
+   Les genres RAWG classiques utilisent
+   directement /genre/.
+
+   Les catégories personnalisées peuvent
+   utiliser plusieurs recherches.
+*/
+
+function isCustomGenre(slug){
+
+return Object.prototype
+.hasOwnProperty.call(
+CUSTOM_GENRE_SEARCHES,
+slug
+);
+
+}
+
+
+/* =========================
+   GENRES
+========================= */
+
+let currentGenreSlug = "";
+
+let currentGenreLabel = "";
+
+let genrePage = 1;
+
+let genreHasMore = false;
+
+let genreLoading = false;
+
+let genreSeenIds =
+new Set();
+
+
+async function fetchGenrePage(
+page=1,
+append=false
+){
+
+if(genreLoading)
+return;
+
+genreLoading = true;
+
+const container =
+document.getElementById(
+"genreGames"
+);
+
+const status =
+document.getElementById(
+"genreStatus"
+);
+
+const more =
+document.getElementById(
+"genreMore"
+);
+
+if(!container || !status){
+
+genreLoading = false;
+
+return;
+
+}
+
+
+if(!append){
+
+container.innerHTML =
+'<div class="genre-loading">🎭 Chargement des jeux...</div>';
+
+genrePage = 1;
+
+genreSeenIds =
+new Set();
+
+}
+
+
+status.textContent =
+`Recherche des jeux ${currentGenreLabel}...`;
+
+
+try{
+
+/*
+   Pour les catégories personnalisées,
+   on interroge plusieurs recherches afin
+   d'obtenir beaucoup plus de résultats.
+*/
+
+if(
+isCustomGenre(
+currentGenreSlug
+)
+){
+
+await fetchCustomGenre(
+append
+);
+
+genreHasMore = true;
+
+genrePage++;
+
+more.classList.remove(
+"hidden"
+);
+
+status.textContent =
+`${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+
+genreLoading = false;
+
+return;
+
+}
+
+
+/*
+   Genre RAWG classique.
+*/
+
+const response =
+await fetch(
+WORKER_URL +
+"/genre/" +
+encodeURIComponent(
+currentGenreSlug
+) +
+"?page=" +
+page
+);
+
+const data =
+await response.json();
+
+if(
+!response.ok ||
+!Array.isArray(data.results)
+){
+
+throw new Error(
+data.error ||
+"Impossible de charger ce genre"
+);
+
+}
+
+
+if(!append)
+container.innerHTML = "";
+
+
+const classifiedResults =
+data.results.filter(
+game =>
+gvMatches(
+currentGenreSlug,
+game
+)
+);
+
+
+classifiedResults.forEach(
+game=>{
+
+const id =
+Number(game.id);
+
+if(
+genreSeenIds.has(id)
+)
+return;
+
+genreSeenIds.add(id);
+
+container.appendChild(
+createGameCard(game)
+);
+
+}
+);
+
+
+genreHasMore =
+Boolean(data.next);
+
+genrePage =
+page;
+
+
+more.classList.toggle(
+"hidden",
+!genreHasMore
+);
+
+
+status.textContent =
+`${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+
+
+if(
+!container.querySelector(".card")
+){
+
+container.innerHTML =
+`
+<div class="empty">
+Aucun jeu correctement référencé dans cette catégorie.
+</div>
+`;
+
+}
+
+}catch(error){
+
+console.error(error);
+
+status.textContent =
+"Erreur lors du chargement du genre.";
+
+if(!append){
+
+container.innerHTML =
+`
+<div class="empty">
+❌ ${escapeHtml(error.message)}
+</div>
+`;
+
+}
+
+}finally{
+
+genreLoading = false;
+
+}
+
+}
+
+
+/* =========================
+   GENRES PERSONNALISÉS
+========================= */
+
+async function fetchCustomGenre(
+append=false
+){
+
+const searches =
+CUSTOM_GENRE_SEARCHES[
+currentGenreSlug
+] || [];
+
+const container =
+document.getElementById(
+"genreGames"
+);
+
+if(!append)
+container.innerHTML = "";
+
+
+for(
+const query of searches
+){
+
+try{
+
+const response =
+await fetch(
+WORKER_URL +
+"/search?q=" +
+encodeURIComponent(query)
+);
+
+if(!response.ok)
+continue;
+
+const data =
+await response.json();
+
+if(
+!Array.isArray(
+data.results
+)
+)
+continue;
+
+
+data.results.forEach(
+game=>{
+
+const id =
+Number(game.id);
+
+if(
+genreSeenIds.has(id)
+)
+return;
+
+if(
+!gvMatches(
+currentGenreSlug,
+game
+)
+)
+return;
+
+genreSeenIds.add(id);
+
+container.appendChild(
+createGameCard(game)
+);
+
+}
+);
+
+}catch(error){
+
+console.log(
+"Recherche spéciale échouée",
+query,
+error
+);
+
+}
+
+}
+
+}
+
+
+/* =========================
+   CHARGER GENRE
+========================= */
+
+async function loadGenre(
+slug,
+label
+){
+
+currentGenreSlug =
+slug;
+
+currentGenreLabel =
+label;
+
+genrePage =
+1;
+
+genreHasMore =
+false;
+
+genreSeenIds =
+new Set();
+
+await fetchGenrePage(
+1,
+false
+);
+
+}
+
+
+/*
+   NOUVEAU SYSTÈME :
+
+   On ne se contente plus de faire
+   page + 1 une seule fois.
+
+   On charge plusieurs pages jusqu'à
+   avoir beaucoup de jeux réellement
+   classés dans la catégorie.
+*/
+
+async function loadMoreGenre(){
+
+if(
+genreLoading
+)
+return;
+
+
+/*
+   Catégories personnalisées :
+   on relance les recherches pour
+   récupérer davantage de résultats.
+*/
+
+if(
+isCustomGenre(
+currentGenreSlug
+)
+){
+
+await fetchCustomGenre(
+true
+);
+
+const container =
+document.getElementById(
+"genreGames"
+);
+
+const status =
+document.getElementById(
+"genreStatus"
+);
+
+if(container && status){
+
+status.textContent =
+`${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+
+}
+
+return;
+
+}
+
+
+/*
+   Pour les genres RAWG :
+
+   on avance de plusieurs pages
+   d'un coup.
+
+   Cela permet de dépasser
+   largement les 40 jeux visibles.
+*/
+
+const targetPages = 3;
+
+let loadedPages = 0;
+
+while(
+genreHasMore &&
+loadedPages < targetPages
+){
+
+const nextPage =
+genrePage + 1;
+
+await fetchGenrePage(
+nextPage,
+true
+);
+
+loadedPages++;
+
+}
+
+}
 
 
 /* =========================
@@ -2128,10 +3792,13 @@ function hideSections(){
 "statsSection"
 ]
 .forEach(id=>{
+
 document
 .getElementById(id)
 .classList.add("hidden");
+
 });
+
 
 [
 "tabSearch",
@@ -2142,9 +3809,13 @@ document
 "tabStats"
 ]
 .forEach(id=>{
+
 document
 .getElementById(id)
-.classList.remove("active");
+.classList.remove(
+"active"
+);
+
 });
 
 }
@@ -2155,12 +3826,20 @@ function showSearch(){
 hideSections();
 
 document
-.getElementById("searchSection")
-.classList.remove("hidden");
+.getElementById(
+"searchSection"
+)
+.classList.remove(
+"hidden"
+);
 
 document
-.getElementById("tabSearch")
-.classList.add("active");
+.getElementById(
+"tabSearch"
+)
+.classList.add(
+"active"
+);
 
 }
 
@@ -2170,17 +3849,24 @@ function showLibrary(){
 hideSections();
 
 document
-.getElementById("librarySection")
-.classList.remove("hidden");
+.getElementById(
+"librarySection"
+)
+.classList.remove(
+"hidden"
+);
 
 document
-.getElementById("tabLibrary")
-.classList.add("active");
+.getElementById(
+"tabLibrary"
+)
+.classList.add(
+"active"
+);
 
 renderLibrary();
 
 }
-
 
 
 function showWishlist(){
@@ -2188,12 +3874,20 @@ function showWishlist(){
 hideSections();
 
 document
-.getElementById("wishlistSection")
-.classList.remove("hidden");
+.getElementById(
+"wishlistSection"
+)
+.classList.remove(
+"hidden"
+);
 
 document
-.getElementById("tabWishlist")
-.classList.add("active");
+.getElementById(
+"tabWishlist"
+)
+.classList.add(
+"active"
+);
 
 renderWishlist();
 
@@ -2205,122 +3899,326 @@ function showUpcoming(){
 hideSections();
 
 document
-.getElementById("upcomingSection")
-.classList.remove("hidden");
+.getElementById(
+"upcomingSection"
+)
+.classList.remove(
+"hidden"
+);
 
 document
-.getElementById("tabUpcoming")
-.classList.add("active");
+.getElementById(
+"tabUpcoming"
+)
+.classList.add(
+"active"
+);
 
 loadUpcoming();
 
 }
 
 
-let currentGenreSlug="";
-let currentGenreLabel="";
-let genrePage=1;
-let genreHasMore=false;
-
-/* =========================
-   RÉFÉRENCEMENT GAMEVAULT V14
-   Les catégories spécialisées sont volontairement strictes.
-========================= */
-const GV_RULES = {
-  soulslike: ["dark souls","demon's souls","bloodborne","elden ring","sekiro","black myth: wukong","black myth wukong","lies of p","nioh","wo long","lords of the fallen","mortal shell","another crab's treasure","remnant"],
-  metroidvania: ["hollow knight","silksong","nine sols","metroid","castlevania","ori and the blind forest","ori and the will of the wisps","blasphemous","dead cells","guacamelee","axiom verge","prince of persia: the lost crown"],
-  "open-world": ["grand theft auto","gta ","red dead redemption","the elder scrolls","skyrim","oblivion","morrowind","cyberpunk 2077","hogwarts legacy","marvel's spider-man","spider-man","the witcher 3","the witcher 4","fallout 3","fallout 4","fallout: new vegas","fallout 76","assassin's creed"],
-  tps: ["grand theft auto","gta ","red dead redemption","the last of us","resident evil","max payne","gears of war","uncharted","control","alan wake 2","dead space","remnant"],
-  fps: ["borderlands","far cry","halo","call of duty","battlefield","doom","wolfenstein","bioshock","destiny","titanfall","metro 2033","metro: last light","metro exodus","counter-strike","valorant","overwatch","rainbow six","quake","prey"],
-  horror: ["outlast","resident evil","alien: isolation","alien isolation","silent hill","until dawn","amnesia","dead space","the evil within","visage","layers of fear","fatal frame","little nightmares","alone in the dark","soma","alan wake","madison"],
-  strategy: ["xcom","star wars: zero company","total war","age of empires","civilization","company of heroes","command & conquer","warhammer 40,000: dawn of war","anno","stellaris","europa universalis","hearts of iron","crusader kings","into the breach"],
-  sports: ["fifa","ea sports fc","nba 2k","madden","topspin","nhl","pga tour","wwe 2k","mlb the show","efootball","rocket league","wii sports"],
-  racing: ["forza","need for speed","test drive unlimited","gran turismo","f1 ","formula 1","wrc","dirt","the crew","mario kart","assetto corsa","project cars","ride","motogp","wreckfest"],
-  simulation: ["construction simulator","gas station simulator","bum simulator","powerwash simulator","tcg card shop simulator","supermarket simulator","ignite simulator","farming simulator","flight simulator","euro truck simulator","american truck simulator","house flipper","pc building simulator","thief simulator","goat simulator"],
-  platformer: ["astro bot","crash bandicoot","rayman","sackboy","super mario","donkey kong","sonic","celeste","super meat boy","littlebigplanet","a hat in time","psychonauts","ratchet & clank"],
-  puzzle: ["portal","the talos principle","outer wilds","sherlock holmes","blue prince","the witness","baba is you","the room","cocoon","viewfinder","return of the obra dinn"],
-  arcade: ["pac-man","tetris","tekken 3","tekken 2","tekken tag tournament","mortal kombat","street fighter ii","street fighter 2","space invaders","galaga","donkey kong","arkanoid"],
-  indie: ["the binding of isaac","super meat boy","inside","outer wilds","undertale","hades","hollow knight","celeste","stardew valley","dead cells","cuphead","disco elysium","balatro","limbo"],
-  combat: ["mortal kombat","tekken","ufc","sifu","street fighter","dragon ball fighterz","guilty gear","soulcalibur","virtua fighter","king of fighters","killer instinct","injustice","dead or alive"],
-  multiplayer: ["call of duty","battlefield","fifa","ea sports fc","fortnite","rocket league","gta online","grand theft auto v","apex legends","overwatch","rainbow six siege","helldivers","destiny","warframe","valorant","counter-strike","sea of thieves","fall guys","among us"],
-  mmo: ["world of warcraft","dofus","final fantasy xiv","final fantasy 14","the elder scrolls online","black desert","guild wars","lost ark","new world","runescape","elder scrolls online"],
-  anime: ["one piece","dragon ball","naruto","one punch man","demon slayer","bleach","tokyo ghoul","berserk","attack on titan","my hero academia","jujutsu kaisen","fairy tail","sword art online","dragon quest: dai"],
-  vr: ["half-life: alyx","beat saber","resident evil 4","resident evil village","the walking dead: saints & sinners","batman: arkham shadow","gran turismo 7","astro bot rescue mission","pistol whip","blade & sorcery","job simulator","superhot vr","horizon call of the mountain"]
-};
-function gvMatches(slug, game){
-  if(!GV_RULES[slug]) return true;
-  const name=(game.name||"").toLowerCase();
-  return GV_RULES[slug].some(term=>name.includes(term));
-}
-
-async function fetchGenrePage(page=1, append=false){
-const container=document.getElementById("genreGames");
-const status=document.getElementById("genreStatus");
-const more=document.getElementById("genreMore");
-if(!container || !status) return;
-
-if(!append){ container.innerHTML='<div class="empty">🎭 Chargement...</div>'; genrePage=1; }
-status.textContent=`Chargement des jeux ${currentGenreLabel}...`;
-
-try{
-  const response=await fetch(WORKER_URL+"/genre/"+encodeURIComponent(currentGenreSlug)+"?page="+page);
-  const data=await response.json();
-  if(!response.ok || !Array.isArray(data.results)) throw new Error(data.error || "Impossible de charger ce genre");
-  if(!append) container.innerHTML="";
-
-  const classifiedResults = data.results.filter(game => gvMatches(currentGenreSlug, game));
-
-  classifiedResults.forEach(game=>{
-    const card=document.createElement("div");
-    card.className="card";
-    const image=game.background_image || "https://via.placeholder.com/400x600?text=Game";
-    card.innerHTML=`<img src="${image}" alt=""><div class="card-content"><div class="card-title">${escapeHtml(game.name || "Jeu")}</div><div class="card-date">${game.released || "Date inconnue"}</div></div>`;
-    card.onclick=()=>openGame(game);
-    container.appendChild(card);
-  });
-
-  genreHasMore=Boolean(data.next);
-  genrePage=page;
-  more.classList.toggle("hidden", !genreHasMore);
-  status.textContent=`${container.querySelectorAll('.card').length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
-  if(!container.querySelector('.card')) container.innerHTML='<div class="empty">Aucun jeu correctement référencé dans cette catégorie sur cette page.</div>';
-}catch(error){
-  console.error(error);
-  status.textContent="Erreur lors du chargement du genre.";
-  if(!append) container.innerHTML=`<div class="empty">❌ ${escapeHtml(error.message)}</div>`;
-}
-}
-
-async function loadGenre(slug,label){
-  currentGenreSlug=slug;
-  currentGenreLabel=label;
-  await fetchGenrePage(1,false);
-}
-
-async function loadMoreGenre(){
-  if(genreHasMore) await fetchGenrePage(genrePage+1,true);
-}
-
-
 function showGenres(){
+
 hideSections();
-document.getElementById("genresSection").classList.remove("hidden");
-document.getElementById("tabGenres").classList.add("active");
+
+document
+.getElementById(
+"genresSection"
+)
+.classList.remove(
+"hidden"
+);
+
+document
+.getElementById(
+"tabGenres"
+)
+.classList.add(
+"active"
+);
+
 }
+
 
 function showStats(){
 
 hideSections();
 
 document
-.getElementById("statsSection")
-.classList.remove("hidden");
+.getElementById(
+"statsSection"
+)
+.classList.remove(
+"hidden"
+);
 
 document
-.getElementById("tabStats")
-.classList.add("active");
+.getElementById(
+"tabStats"
+)
+.classList.add(
+"active"
+);
 
 renderStats();
+
+}
+
+
+/* =========================
+   STATISTIQUES
+========================= */
+
+function renderStats(){
+
+const container =
+document.getElementById(
+"statsContent"
+);
+
+if(!container)
+return;
+
+
+const total =
+library.length;
+
+const finished =
+library.filter(
+g =>
+g.status === "Terminé"
+).length;
+
+const inProgress =
+library.filter(
+g =>
+g.status === "En cours"
+).length;
+
+const toPlay =
+library.filter(
+g =>
+g.status === "À jouer"
+).length;
+
+
+const totalMinutes =
+library.reduce(
+(sum,g)=>
+sum +
+Number(g.hours || 0) * 60 +
+Number(g.minutes || 0),
+0
+);
+
+
+const totalHours =
+Math.floor(
+totalMinutes / 60
+);
+
+
+const averageRating =
+total
+?
+(
+library.reduce(
+(sum,g)=>
+sum +
+Number(g.note || 0),
+0
+) / total
+).toFixed(1)
+:
+"0.0";
+
+
+const progress =
+total
+?
+Math.round(
+library.reduce(
+(sum,g)=>
+sum +
+Number(g.progress || 0),
+0
+) / total
+)
+:
+0;
+
+
+const best =
+[...library]
+.sort(
+(a,b)=>
+Number(b.note || 0) -
+Number(a.note || 0)
+)[0];
+
+
+container.innerHTML = `
+
+<div class="stats-grid">
+
+<div class="stat">
+
+<div class="stat-icon">
+🎮
+</div>
+
+<div class="stat-number">
+${total}
+</div>
+
+<div class="stat-label">
+Jeux dans la bibliothèque
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">
+🏆
+</div>
+
+<div class="stat-number">
+${finished}
+</div>
+
+<div class="stat-label">
+Jeux terminés
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">
+⏱️
+</div>
+
+<div class="stat-number">
+${totalHours}h
+</div>
+
+<div class="stat-label">
+Temps de jeu
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">
+⭐
+</div>
+
+<div class="stat-number">
+${averageRating}
+</div>
+
+<div class="stat-label">
+Note moyenne
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stats-box">
+
+<div class="panel-title">
+📊 Répartition
+</div>
+
+<div>
+🎯 À jouer : <strong>${toPlay}</strong>
+</div>
+
+<div style="margin-top:8px">
+🎮 En cours : <strong>${inProgress}</strong>
+</div>
+
+<div style="margin-top:8px">
+🏆 Terminés : <strong>${finished}</strong>
+</div>
+
+</div>
+
+
+<div class="stats-box">
+
+<div class="panel-title">
+📈 Progression moyenne
+</div>
+
+<div class="big">
+${progress}%
+</div>
+
+<div class="bar">
+
+<div
+class="fill"
+style="width:${progress}%">
+</div>
+
+</div>
+
+</div>
+
+
+${
+best
+?
+`
+
+<div class="stats-box">
+
+<div class="panel-title">
+⭐ Ton jeu le mieux noté
+</div>
+
+<div class="best">
+
+<img
+src="${escapeHtml(
+best.background_image ||
+"https://via.placeholder.com/100x150?text=Game"
+)}"
+alt=""
+>
+
+<div>
+
+<strong>
+${escapeHtml(best.name)}
+</strong>
+
+<div style="margin-top:6px">
+⭐ ${Number(best.note || 0)}/10
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`
+:
+""
+}
+
+`;
 
 }
 
@@ -2361,15 +4259,19 @@ return div.innerHTML;
 }
 
 
-/* ENTER */
+/* =========================
+   ENTER
+========================= */
 
 document
-.getElementById("searchInput")
+.getElementById(
+"searchInput"
+)
 .addEventListener(
 "keydown",
 event=>{
 
-if(event.key==="Enter")
+if(event.key === "Enter")
 searchGames();
 
 }
