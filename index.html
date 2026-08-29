@@ -810,7 +810,7 @@ grid-template-columns:repeat(2,1fr)
 
 <header>
 <div class="logo">🎮 GameVault</div>
-<div class="subtitle">Ta bibliothèque gaming • V15 Référencement</div>
+<div class="subtitle">Ta bibliothèque gaming • Genres RAWG</div>
 </header>
 
 <nav>
@@ -937,48 +937,24 @@ Charger plus
 <div class="genre-list">
 
 <button onclick="loadGenre('action','Action')">🥷 Action</button>
-
-<button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
-
-<button onclick="loadGenre('rpg','RPG')">⚔️ RPG</button>
-
-<button onclick="loadGenre('fps','FPS')">🔫 FPS</button>
-
-<button onclick="loadGenre('tps','TPS')">🎯 TPS</button>
-
-<button onclick="loadGenre('open-world','Monde ouvert')">🌍 Monde ouvert</button>
-
-<button onclick="loadGenre('metroidvania','Metroidvania')">🗺️ Metroidvania</button>
-
-<button onclick="loadGenre('soulslike','Soulslike')">💀 Soulslike</button>
-
-<button onclick="loadGenre('horror','Horreur')">👻 Horreur</button>
-
-<button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
-
-<button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
-
-<button onclick="loadGenre('racing','Course')">🏎️ Course</button>
-
-<button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
-
-<button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button>
-
-<button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
-
-<button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
-
 <button onclick="loadGenre('indie','Indépendant')">✨ Indépendant</button>
-
-<button onclick="loadGenre('combat','Combat')">👊 Combat</button>
-
-<button onclick="loadGenre('multiplayer','Multijoueur')">🌐 Multijoueur</button>
-
-<button onclick="loadGenre('mmo','MMO')">🪐 MMO</button>
-
-<button onclick="loadGenre('anime','Anime')">🎌 Anime</button>
-
-<button onclick="loadGenre('vr','VR')">🥽 VR</button>
+<button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
+<button onclick="loadGenre('role-playing-games-rpg','RPG')">⚔️ RPG</button>
+<button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
+<button onclick="loadGenre('shooter','Shooter')">🔫 Shooter</button>
+<button onclick="loadGenre('casual','Casual')">🙂 Casual</button>
+<button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
+<button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
+<button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
+<button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button>
+<button onclick="loadGenre('racing','Course')">🏎️ Course</button>
+<button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
+<button onclick="loadGenre('fighting','Combat')">🥊 Combat</button>
+<button onclick="loadGenre('massively-multiplayer','Massivement multijoueur')">🌐 Massivement multijoueur</button>
+<button onclick="loadGenre('family','Famille')">👨‍👩‍👧‍👦 Famille</button>
+<button onclick="loadGenre('board-games','Jeux de société')">🎲 Jeux de société</button>
+<button onclick="loadGenre('educational','Éducatif')">🎓 Éducatif</button>
+<button onclick="loadGenre('card','Cartes')">🃏 Cartes</button>
 
 </div>
 
@@ -2760,595 +2736,21 @@ true
 
 
 /* =========================
-   RÉFÉRENCEMENT GAMEVAULT
+   GENRES RAWG
 ========================= */
 
 /*
-   IMPORTANT :
-
-   Ces listes servent uniquement à empêcher
-   les mauvais mélanges dans les catégories
-   spécialisées.
-
-   Un jeu peut appartenir à plusieurs catégories.
+   GameVault utilise uniquement les genres natifs RAWG.
+   Aucun référencement manuel, aucun tag personnalisé
+   et aucune catégorie inventée par l'application.
 */
-
-const GV_RULES = {
-
-soulslike: [
-
-"dark souls",
-"demon's souls",
-"demon souls",
-"bloodborne",
-"elden ring",
-"sekiro",
-"black myth: wukong",
-"black myth wukong",
-"lies of p",
-"nioh",
-"nioh 2",
-"wo long",
-"lords of the fallen",
-"mortal shell",
-"another crab's treasure",
-"remnant: from the ashes",
-"remnant ii",
-"the first berserker: khazan",
-"the first berserker"
-
-],
-
-
-metroidvania: [
-
-"hollow knight",
-"silksong",
-"nine sols",
-"metroid",
-"castlevania",
-"ori and the blind forest",
-"ori and the will of the wisps",
-"blasphemous",
-"dead cells",
-"guacamelee",
-"axiom verge",
-"prince of persia: the lost crown",
-"bloodstained"
-
-],
-
-
-"open-world": [
-
-"grand theft auto",
-"gta ",
-"red dead redemption",
-"the elder scrolls",
-"skyrim",
-"oblivion",
-"morrowind",
-"cyberpunk 2077",
-"hogwarts legacy",
-"spider-man",
-"marvel's spider-man",
-"the witcher 3",
-"the witcher 4",
-"fallout 3",
-"fallout 4",
-"fallout: new vegas",
-"fallout 76",
-"assassin's creed",
-"assassin’s creed",
-"crimson desert",
-"far cry",
-"watch dogs",
-"ghost of tsushima",
-"days gone",
-"dying light",
-"elden ring"
-
-],
-
-
-tps: [
-
-"grand theft auto",
-"gta ",
-"red dead redemption",
-"the last of us",
-"uncharted",
-"max payne",
-"gears of war",
-"control",
-"alan wake",
-"resident evil 4",
-"resident evil 5",
-"resident evil 6",
-"resident evil 2",
-"resident evil 3",
-"resident evil village",
-"dead space",
-"remnant",
-"crimson desert",
-"the division",
-"ghost recon",
-"helldivers"
-
-],
-
-
-fps: [
-
-"borderlands",
-"far cry",
-"halo",
-"call of duty",
-"battlefield",
-"doom",
-"wolfenstein",
-"bioshock",
-"destiny",
-"titanfall",
-"metro 2033",
-"metro: last light",
-"metro exodus",
-"counter-strike",
-"valorant",
-"overwatch",
-"rainbow six",
-"quake",
-"prey",
-"battlebit"
-
-],
-
-
-horror: [
-
-"outlast",
-"resident evil",
-"alien: isolation",
-"alien isolation",
-"silent hill",
-"until dawn",
-"amnesia",
-"dead space",
-"the evil within",
-"visage",
-"layers of fear",
-"fatal frame",
-"little nightmares",
-"alone in the dark",
-"soma",
-"alan wake",
-"madison",
-"fear",
-"the medium",
-"signalis",
-"amnesia"
-
-],
-
-
-strategy: [
-
-"xcom",
-"star wars: zero company",
-"star wars zero company",
-"total war",
-"age of empires",
-"civilization",
-"company of heroes",
-"command & conquer",
-"warhammer 40,000: dawn of war",
-"anno",
-"stellaris",
-"europa universalis",
-"hearts of iron",
-"crusader kings",
-"into the breach"
-
-],
-
-
-sports: [
-
-"fifa",
-"ea sports fc",
-"nba 2k",
-"madden",
-"topspin",
-"nhl",
-"pga tour",
-"wwe 2k",
-"mlb the show",
-"efootball",
-"rocket league",
-"wii sports",
-"nfl"
-
-],
-
-
-racing: [
-
-"forza",
-"need for speed",
-"test drive unlimited",
-"gran turismo",
-"f1 ",
-"formula 1",
-"wrc",
-"dirt",
-"the crew",
-"mario kart",
-"assetto corsa",
-"project cars",
-"ride",
-"motogp",
-"wreckfest"
-
-],
-
-
-simulation: [
-
-"construction simulator",
-"gas station simulator",
-"bum simulator",
-"powerwash simulator",
-"tcg card shop simulator",
-"supermarket simulator",
-"ignite simulator",
-"farming simulator",
-"flight simulator",
-"euro truck simulator",
-"american truck simulator",
-"house flipper",
-"pc building simulator",
-"thief simulator",
-"goat simulator"
-
-],
-
-
-platformer: [
-
-"astro bot",
-"crash bandicoot",
-"rayman",
-"sackboy",
-"super mario",
-"donkey kong",
-"sonic",
-"celeste",
-"super meat boy",
-"littlebigplanet",
-"a hat in time",
-"psychonauts",
-"ratchet & clank",
-"ratchet and clank"
-
-],
-
-
-puzzle: [
-
-"portal",
-"the talos principle",
-"outer wilds",
-"sherlock holmes",
-"blue prince",
-"the witness",
-"baba is you",
-"the room",
-"cocoon",
-"viewfinder",
-"return of the obra dinn"
-
-],
-
-
-arcade: [
-
-"pac-man",
-"tetris",
-"tekken 3",
-"tekken 2",
-"tekken tag tournament",
-"mortal kombat",
-"street fighter ii",
-"street fighter 2",
-"space invaders",
-"galaga",
-"arkanoid"
-
-],
-
-
-indie: [
-
-"the binding of isaac",
-"super meat boy",
-"inside",
-"outer wilds",
-"undertale",
-"hades",
-"hollow knight",
-"celeste",
-"stardew valley",
-"dead cells",
-"cuphead",
-"disco elysium",
-"balatro",
-"limbo",
-"nine sols",
-"silksong",
-"undertale",
-"isaac"
-
-],
-
-
-combat: [
-
-"mortal kombat",
-"tekken",
-"ufc",
-"sifu",
-"street fighter",
-"dragon ball fighterz",
-"guilty gear",
-"soulcalibur",
-"virtua fighter",
-"king of fighters",
-"killer instinct",
-"injustice",
-"dead or alive"
-
-],
-
-
-multiplayer: [
-
-"call of duty",
-"battlefield",
-"fifa",
-"ea sports fc",
-"fortnite",
-"rocket league",
-"gta online",
-"grand theft auto v",
-"apex legends",
-"overwatch",
-"rainbow six siege",
-"helldivers",
-"destiny",
-"warframe",
-"valorant",
-"counter-strike",
-"sea of thieves",
-"fall guys",
-"among us",
-"minecraft",
-"roblox",
-"pubg",
-"dead by daylight"
-
-],
-
-
-mmo: [
-
-"world of warcraft",
-"dofus",
-"final fantasy xiv",
-"final fantasy 14",
-"the elder scrolls online",
-"black desert",
-"guild wars",
-"lost ark",
-"new world",
-"runescape",
-"elder scrolls online",
-"diablo iv",
-"diablo 4",
-"diablo iii",
-"diablo 3"
-
-],
-
-
-anime: [
-
-"one piece",
-"dragon ball",
-"naruto",
-"one punch man",
-"demon slayer",
-"bleach",
-"tokyo ghoul",
-"berserk",
-"attack on titan",
-"my hero academia",
-"jujutsu kaisen",
-"fairy tail",
-"sword art online",
-"dragon quest: dai",
-"dragon quest dai"
-
-],
-
-
-vr: [
-
-"half-life: alyx",
-"beat saber",
-"resident evil 4",
-"resident evil village",
-"resident evil 7",
-"the walking dead: saints & sinners",
-"batman: arkham shadow",
-"gran turismo 7",
-"astro bot rescue mission",
-"pistol whip",
-"blade & sorcery",
-"job simulator",
-"superhot vr",
-"horizon call of the mountain",
-"moss",
-"moss: book ii",
-"bonelab",
-"walking dead saints & sinners"
-
-]
-
-};
-
-
-/* =========================
-   TEST RÉFÉRENCEMENT
-========================= */
-
-function gvMatches(
-slug,
-game
-){
-
-const rules =
-GV_RULES[slug];
-
-if(!rules)
-return true;
-
-const name =
-(game.name || "")
-.toLowerCase()
-.trim();
-
-return rules.some(
-term =>
-name.includes(
-term.toLowerCase()
-)
-);
-
-}
-
-
-/* =========================
-   GENRES SPÉCIAUX
-========================= */
-
-const CUSTOM_GENRE_SEARCHES = {
-
-"open-world":[
-"grand theft auto",
-"red dead redemption",
-"cyberpunk",
-"the witcher",
-"assassin's creed",
-"hogwarts legacy",
-"spider-man",
-"fallout"
-],
-
-"metroidvania":[
-"hollow knight",
-"silksong",
-"metroid",
-"castlevania",
-"nine sols"
-],
-
-"soulslike":[
-"elden ring",
-"sekiro",
-"black myth wukong",
-"lies of p",
-"nioh"
-],
-
-"indie":[
-"indie games"
-],
-
-"combat":[
-"tekken",
-"mortal kombat",
-"street fighter",
-"ufc",
-"sifu"
-],
-
-"multiplayer":[
-"multiplayer games"
-],
-
-"mmo":[
-"mmorpg",
-"world of warcraft",
-"dofus",
-"final fantasy xiv",
-"black desert",
-"elder scrolls online",
-"diablo"
-],
-
-"anime":[
-"one piece",
-"dragon ball",
-"naruto",
-"demon slayer",
-"bleach",
-"one punch man"
-],
-
-"vr":[
-"vr games",
-"playstation vr",
-"psvr2"
-]
-
-};
-
-
-/*
-   Les genres RAWG classiques utilisent
-   directement /genre/.
-
-   Les catégories personnalisées peuvent
-   utiliser plusieurs recherches.
-*/
-
-function isCustomGenre(slug){
-
-return Object.prototype
-.hasOwnProperty.call(
-CUSTOM_GENRE_SEARCHES,
-slug
-);
-
-}
-
-
-/* =========================
-   GENRES
-========================= */
 
 let currentGenreSlug = "";
-
 let currentGenreLabel = "";
-
 let genrePage = 1;
-
 let genreHasMore = false;
-
 let genreLoading = false;
-
-let genreSeenIds =
-new Set();
+let genreSeenIds = new Set();
 
 
 async function fetchGenrePage(
@@ -3362,93 +2764,38 @@ return;
 genreLoading = true;
 
 const container =
-document.getElementById(
-"genreGames"
-);
+document.getElementById("genreGames");
 
 const status =
-document.getElementById(
-"genreStatus"
-);
+document.getElementById("genreStatus");
 
 const more =
-document.getElementById(
-"genreMore"
-);
+document.getElementById("genreMore");
 
 if(!container || !status){
-
 genreLoading = false;
-
 return;
-
 }
-
 
 if(!append){
 
 container.innerHTML =
 '<div class="genre-loading">🎭 Chargement des jeux...</div>';
 
-genrePage = 1;
-
-genreSeenIds =
-new Set();
+genreSeenIds = new Set();
 
 }
-
 
 status.textContent =
 `Recherche des jeux ${currentGenreLabel}...`;
 
-
 try{
-
-/*
-   Pour les catégories personnalisées,
-   on interroge plusieurs recherches afin
-   d'obtenir beaucoup plus de résultats.
-*/
-
-if(
-isCustomGenre(
-currentGenreSlug
-)
-){
-
-await fetchCustomGenre(
-append
-);
-
-genreHasMore = true;
-
-genrePage++;
-
-more.classList.remove(
-"hidden"
-);
-
-status.textContent =
-`${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
-
-genreLoading = false;
-
-return;
-
-}
-
-
-/*
-   Genre RAWG classique.
-*/
 
 const response =
 await fetch(
 WORKER_URL +
 "/genre/" +
-encodeURIComponent(
-currentGenreSlug
-) +
+encodeURIComponent(currentGenreSlug) +
 "?page=" +
 page
 );
@@ -3468,30 +2815,14 @@ data.error ||
 
 }
 
-
 if(!append)
 container.innerHTML = "";
 
+(data.results || []).forEach(game => {
 
-const classifiedResults =
-data.results.filter(
-game =>
-gvMatches(
-currentGenreSlug,
-game
-)
-);
+const id = Number(game.id);
 
-
-classifiedResults.forEach(
-game=>{
-
-const id =
-Number(game.id);
-
-if(
-genreSeenIds.has(id)
-)
+if(genreSeenIds.has(id))
 return;
 
 genreSeenIds.add(id);
@@ -3500,35 +2831,24 @@ container.appendChild(
 createGameCard(game)
 );
 
-}
-);
+});
 
-
-genreHasMore =
-Boolean(data.next);
-
-genrePage =
-page;
-
+genreHasMore = Boolean(data.next);
+genrePage = page;
 
 more.classList.toggle(
 "hidden",
 !genreHasMore
 );
 
-
 status.textContent =
 `${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
 
+if(!container.querySelector(".card")){
 
-if(
-!container.querySelector(".card")
-){
-
-container.innerHTML =
-`
+container.innerHTML = `
 <div class="empty">
-Aucun jeu correctement référencé dans cette catégorie.
+Aucun jeu trouvé dans ce genre RAWG.
 </div>
 `;
 
@@ -3543,8 +2863,7 @@ status.textContent =
 
 if(!append){
 
-container.innerHTML =
-`
+container.innerHTML = `
 <div class="empty">
 ❌ ${escapeHtml(error.message)}
 </div>
@@ -3562,98 +2881,6 @@ genreLoading = false;
 
 
 /* =========================
-   GENRES PERSONNALISÉS
-========================= */
-
-async function fetchCustomGenre(
-append=false
-){
-
-const searches =
-CUSTOM_GENRE_SEARCHES[
-currentGenreSlug
-] || [];
-
-const container =
-document.getElementById(
-"genreGames"
-);
-
-if(!append)
-container.innerHTML = "";
-
-
-for(
-const query of searches
-){
-
-try{
-
-const response =
-await fetch(
-WORKER_URL +
-"/search?q=" +
-encodeURIComponent(query)
-);
-
-if(!response.ok)
-continue;
-
-const data =
-await response.json();
-
-if(
-!Array.isArray(
-data.results
-)
-)
-continue;
-
-
-data.results.forEach(
-game=>{
-
-const id =
-Number(game.id);
-
-if(
-genreSeenIds.has(id)
-)
-return;
-
-if(
-!gvMatches(
-currentGenreSlug,
-game
-)
-)
-return;
-
-genreSeenIds.add(id);
-
-container.appendChild(
-createGameCard(game)
-);
-
-}
-);
-
-}catch(error){
-
-console.log(
-"Recherche spéciale échouée",
-query,
-error
-);
-
-}
-
-}
-
-}
-
-
-/* =========================
    CHARGER GENRE
 ========================= */
 
@@ -3662,20 +2889,11 @@ slug,
 label
 ){
 
-currentGenreSlug =
-slug;
-
-currentGenreLabel =
-label;
-
-genrePage =
-1;
-
-genreHasMore =
-false;
-
-genreSeenIds =
-new Set();
+currentGenreSlug = slug;
+currentGenreLabel = label;
+genrePage = 1;
+genreHasMore = false;
+genreSeenIds = new Set();
 
 await fetchGenrePage(
 1,
@@ -3685,75 +2903,21 @@ false
 }
 
 
-/*
-   NOUVEAU SYSTÈME :
-
-   On ne se contente plus de faire
-   page + 1 une seule fois.
-
-   On charge plusieurs pages jusqu'à
-   avoir beaucoup de jeux réellement
-   classés dans la catégorie.
-*/
+/* =========================
+   CHARGER PLUS
+========================= */
 
 async function loadMoreGenre(){
 
-if(
-genreLoading
-)
+if(genreLoading)
 return;
 
-
 /*
-   Catégories personnalisées :
-   on relance les recherches pour
-   récupérer davantage de résultats.
-*/
-
-if(
-isCustomGenre(
-currentGenreSlug
-)
-){
-
-await fetchCustomGenre(
-true
-);
-
-const container =
-document.getElementById(
-"genreGames"
-);
-
-const status =
-document.getElementById(
-"genreStatus"
-);
-
-if(container && status){
-
-status.textContent =
-`${container.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
-
-}
-
-return;
-
-}
-
-
-/*
-   Pour les genres RAWG :
-
-   on avance de plusieurs pages
-   d'un coup.
-
-   Cela permet de dépasser
-   largement les 40 jeux visibles.
+   Chaque clic charge 3 pages RAWG supplémentaires.
+   Aucun filtrage maison n'est appliqué.
 */
 
 const targetPages = 3;
-
 let loadedPages = 0;
 
 while(
