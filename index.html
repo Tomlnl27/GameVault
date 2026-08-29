@@ -4,218 +4,4401 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GameVault</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#09090d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-header{padding:22px 18px 18px;background:#101016;border-bottom:1px solid #24242d}
-.logo{font-size:29px;font-weight:900;letter-spacing:-1px}.subtitle{color:#858590;font-size:14px;margin-top:4px}
-nav{display:flex;gap:8px;padding:12px 16px;background:#101016;border-bottom:1px solid #20202a;overflow-x:auto}
-nav button{border:1px solid #2b2b35;background:#191920;color:#ddd;padding:10px 14px;border-radius:10px;white-space:nowrap;font-weight:700;cursor:pointer}
-nav button.active{background:#fff;color:#000}
-main{max-width:1100px;margin:auto;padding:20px}.hidden{display:none!important}
-.search{display:flex;gap:10px;margin-bottom:18px}.search input{flex:1;min-width:0;background:#15151c;color:#fff;border:1px solid #30303a;border-radius:12px;padding:14px;font-size:16px;outline:none}
-.search button,.add{border:0;background:#fff;color:#000;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer}
-.status,.count,.wishlist-count{color:#858590;font-size:14px;margin-bottom:18px}
-.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
-.card{background:#14141b;border:1px solid #25252f;border-radius:14px;overflow:hidden;cursor:pointer;transition:.15s}
-.card:hover,.series-card:hover,.upcoming-card:hover{transform:translateY(-3px);border-color:#555563}
-.card img{display:block;width:100%;height:225px;object-fit:cover}.card-content{padding:12px}.card-title{font-weight:800;line-height:1.25}.card-date{font-size:12px;color:#777783;margin-top:6px}
-.empty{text-align:center;color:#777783;padding:50px 15px}
-.back{border:0;background:#20202a;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
-.detail{margin-top:18px;background:#14141b;border:1px solid #292933;border-radius:18px;overflow:hidden}
-.detail-top{display:grid;grid-template-columns:300px 1fr;gap:25px;padding:20px}.cover{width:100%;max-height:460px;object-fit:cover;border-radius:13px}
-.detail-title{font-size:35px;line-height:1.05;margin:5px 0 8px}.release{color:#858590;font-size:14px;margin-bottom:18px}
-.description{color:#c9c9d0;line-height:1.65;font-size:15px}.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
-.meta-box,.studio-box,.stats-box,.panel,.series-panel{background:#0d0d12;border:1px solid #292933;border-radius:13px;padding:16px}
-.meta-label,.studio-fact-label{font-size:11px;color:#777783;margin-bottom:5px}.meta-value{font-size:14px;font-weight:700}
-.studio-link{display:inline-block;background:#20202a;color:#fff;border:1px solid #353540;padding:7px 10px;border-radius:8px;font-weight:800;cursor:pointer}
-.studio-links,.genre-tags{display:flex;flex-wrap:wrap;gap:6px}
-.panel{margin:0 20px 15px}.panel-title{font-weight:800;margin-bottom:12px}.rating{font-size:30px;font-weight:900;margin-bottom:12px}
-.rating-controls{display:flex;align-items:center;gap:12px}.rating-controls button{width:43px;height:43px;border-radius:10px;border:1px solid #34343f;background:#20202a;color:#fff;font-size:23px;cursor:pointer}
-.rating-controls button:disabled{opacity:.3}.slider{width:100%;margin-top:8px}
-.progress-number{font-size:24px;font-weight:900}.time-inputs{display:flex;gap:8px;flex-wrap:wrap}.time-inputs input,.library-tools input,.library-tools select,.wishlist-tools input,.wishlist-tools select{padding:10px;background:#1b1b23;color:#fff;border:1px solid #353540;border-radius:9px}
-.action{margin:0 20px 20px;display:flex;gap:10px;flex-wrap:wrap}.action button{padding:12px 15px;border-radius:10px;border:0;font-weight:800;cursor:pointer}.delete{background:#2a171a;color:#ff929b}.in-library{background:#20202a!important;color:#fff!important;cursor:default!important}
-.series-panel{margin:0 20px 15px}.series-title{font-size:18px;font-weight:900;margin-bottom:13px}.series-list{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
-.series-card{flex:0 0 135px;background:#15151c;border:1px solid #292933;border-radius:11px;overflow:hidden;cursor:pointer;transition:.15s}.series-card img{display:block;width:100%;height:185px;object-fit:cover}
-.series-card-body{padding:9px}.series-card-name{font-size:13px;font-weight:800;line-height:1.25}.series-card-date{font-size:11px;color:#777783;margin-top:5px}
-.library-tools{display:grid;grid-template-columns:1fr 180px 180px;gap:10px;margin-bottom:15px}.library-tools input,.library-tools select{width:100%}
-.library-item,.wishlist-item{display:flex;gap:14px;align-items:center;padding:12px;margin-bottom:10px;background:#14141b;border:1px solid #25252f;border-radius:13px;cursor:pointer}
-.library-item img,.wishlist-item img{width:65px;height:85px;object-fit:cover;border-radius:8px}.library-info,.wishlist-info{flex:1;min-width:0}
-.library-name,.wishlist-name{font-weight:850}.library-small,.wishlist-date{color:#777783;font-size:12px;margin-top:4px}.library-line{font-size:13px;margin-top:5px}
-.badge,.wishlist-badge,.countdown{display:inline-block;margin-top:7px;padding:5px 8px;background:#20202a;border-radius:7px;font-size:11px;color:#bbb}
-.library-delete,.wishlist-delete{margin-left:auto;flex:none;width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:#fff;font-size:17px;cursor:pointer;border-radius:8px}
-.library-delete:hover,.wishlist-delete:hover{background:#20202a}
-.wishlist-tools{display:grid;grid-template-columns:1fr 180px;gap:10px;margin-bottom:15px}.wishlist-tools input,.wishlist-tools select{width:100%}
-.upcoming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:15px}.upcoming-card{background:#14141b;border:1px solid #292933;border-radius:14px;overflow:hidden;cursor:pointer;transition:.15s}
-.upcoming-card img{display:block;width:100%;height:235px;object-fit:cover}.upcoming-body{padding:11px}.upcoming-name{font-weight:850;line-height:1.3}.upcoming-date{color:#858590;font-size:12px;margin-top:6px}
-.genre-list{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}.genre-list button{border:1px solid #2b2b35;background:#191920;color:#ddd;padding:11px 14px;border-radius:10px;font-weight:800;cursor:pointer}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#14141b;border:1px solid #292933;border-radius:14px;padding:17px}.stat-icon{font-size:24px}.stat-number{font-size:28px;font-weight:900;margin-top:7px}.stat-label{font-size:12px;color:#858590;margin-top:4px}
-.stats-box{margin-top:15px}.big{font-size:32px;font-weight:900}.bar{height:13px;background:#292933;border-radius:20px;overflow:hidden;margin-top:12px}.fill{height:100%;background:#fff}
-.best{display:flex;align-items:center;gap:14px}.best img{width:60px;height:80px;object-fit:cover;border-radius:8px}
-.studio-page{margin-top:18px}.studio-hero{background:#14141b;border:1px solid #292933;border-radius:18px;overflow:hidden;position:relative}
-.studio-hero-image{width:100%;height:280px;object-fit:cover;display:block}.studio-hero-overlay{position:absolute;left:0;right:0;bottom:0;padding:30px 22px 22px;background:linear-gradient(transparent,rgba(9,9,13,.95))}
-.studio-type{display:inline-block;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;padding:6px 9px;border-radius:7px;background:#fff;color:#000;margin-bottom:9px}
-.studio-name{font-size:36px;font-weight:950;line-height:1.05}.studio-content{padding:20px}.studio-wiki-grid{display:grid;grid-template-columns:1fr 300px;gap:15px}
-.studio-facts{display:flex;flex-direction:column;gap:11px}.studio-fact{border-bottom:1px solid #24242d;padding-bottom:10px}.studio-fact:last-child{border-bottom:0;padding-bottom:0}
-.studio-fact-value{font-weight:800;font-size:14px}.studio-count{font-size:30px;font-weight:950}.studio-games-section{margin-top:15px;background:#14141b;border:1px solid #292933;border-radius:14px;padding:17px}
-.studio-games-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.studio-games-title{font-size:20px;font-weight:900}.studio-games-count{font-size:13px;color:#858590}.studio-description{color:#c9c9d0;line-height:1.7;font-size:15px}
-.studio-loading{text-align:center;padding:45px;color:#858590}
-@media(max-width:800px){.detail-top{grid-template-columns:1fr}.cover{max-width:280px}.stats-grid{grid-template-columns:repeat(2,1fr)}.studio-wiki-grid{grid-template-columns:1fr}}
-@media(max-width:600px){main{padding:15px}.search{flex-direction:column}.search button{height:48px}.games{grid-template-columns:repeat(2,1fr);gap:12px}.card img{height:230px}.detail-title{font-size:28px}.meta{grid-template-columns:1fr}.library-tools,.wishlist-tools{grid-template-columns:1fr}.studio-name{font-size:28px}.studio-hero-image{height:230px}}
+
+body{
+  margin:0;
+  background:#09090d;
+  color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+}
+
+header{
+  padding:22px 18px 18px;
+  background:#101016;
+  border-bottom:1px solid #24242d
+}
+
+.logo{
+  font-size:29px;
+  font-weight:900;
+  letter-spacing:-1px
+}
+
+.subtitle{
+  color:#858590;
+  font-size:14px;
+  margin-top:4px
+}
+
+nav{
+  display:flex;
+  gap:8px;
+  padding:12px 16px;
+  background:#101016;
+  border-bottom:1px solid #20202a;
+  overflow-x:auto
+}
+
+nav button{
+  border:1px solid #2b2b35;
+  background:#191920;
+  color:#ddd;
+  padding:10px 14px;
+  border-radius:10px;
+  white-space:nowrap;
+  font-weight:700;
+  cursor:pointer
+}
+
+nav button.active{
+  background:#fff;
+  color:#000
+}
+
+main{
+  max-width:1100px;
+  margin:auto;
+  padding:20px
+}
+
+.hidden{
+  display:none!important
+}
+
+.search{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px
+}
+
+.search input{
+  flex:1;
+  min-width:0;
+  background:#15151c;
+  color:#fff;
+  border:1px solid #30303a;
+  border-radius:12px;
+  padding:14px;
+  font-size:16px;
+  outline:none
+}
+
+.search button,
+.add{
+  border:0;
+  background:#fff;
+  color:#000;
+  border-radius:12px;
+  padding:12px 18px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.status,
+.count,
+.wishlist-count{
+  color:#858590;
+  font-size:14px;
+  margin-bottom:18px
+}
+
+.games{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px
+}
+
+.card{
+  background:#14141b;
+  border:1px solid #25252f;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.15s
+}
+
+.card:hover,
+.series-card:hover,
+.upcoming-card:hover{
+  transform:translateY(-3px);
+  border-color:#555563
+}
+
+.card img{
+  display:block;
+  width:100%;
+  height:225px;
+  object-fit:cover
+}
+
+.card-content{
+  padding:12px
+}
+
+.card-title{
+  font-weight:800;
+  line-height:1.25
+}
+
+.card-date{
+  font-size:12px;
+  color:#777783;
+  margin-top:6px
+}
+
+.empty{
+  text-align:center;
+  color:#777783;
+  padding:50px 15px
+}
+
+.back{
+  border:0;
+  background:#20202a;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700
+}
+
+.detail{
+  margin-top:18px;
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:18px;
+  overflow:hidden
+}
+
+.detail-top{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:25px;
+  padding:20px
+}
+
+.cover{
+  width:100%;
+  max-height:460px;
+  object-fit:cover;
+  border-radius:13px
+}
+
+.detail-title{
+  font-size:35px;
+  line-height:1.05;
+  margin:5px 0 8px
+}
+
+.release{
+  color:#858590;
+  font-size:14px;
+  margin-bottom:18px
+}
+
+.description{
+  color:#c9c9d0;
+  line-height:1.65;
+  font-size:15px
+}
+
+.meta{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:20px
+}
+
+.meta-box,
+.studio-box,
+.stats-box,
+.panel,
+.series-panel{
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:13px;
+  padding:16px
+}
+
+.meta-label,
+.studio-fact-label{
+  font-size:11px;
+  color:#777783;
+  margin-bottom:5px
+}
+
+.meta-value{
+  font-size:14px;
+  font-weight:700
+}
+
+.studio-link{
+  display:inline-block;
+  background:#20202a;
+  color:#fff;
+  border:1px solid #353540;
+  padding:7px 10px;
+  border-radius:8px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.studio-links,
+.genre-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px
+}
+
+.panel{
+  margin:0 20px 15px
+}
+
+.panel-title{
+  font-weight:800;
+  margin-bottom:12px
+}
+
+.rating{
+  font-size:30px;
+  font-weight:900;
+  margin-bottom:12px
+}
+
+.rating-controls{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+
+.rating-controls button{
+  width:43px;
+  height:43px;
+  border-radius:10px;
+  border:1px solid #34343f;
+  background:#20202a;
+  color:#fff;
+  font-size:23px;
+  cursor:pointer
+}
+
+.rating-controls button:disabled{
+  opacity:.3
+}
+
+.slider{
+  width:100%;
+  margin-top:8px
+}
+
+.progress-number{
+  font-size:24px;
+  font-weight:900
+}
+
+.time-inputs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.time-inputs input,
+.library-tools input,
+.library-tools select,
+.wishlist-tools input,
+.wishlist-tools select{
+  padding:10px;
+  background:#1b1b23;
+  color:#fff;
+  border:1px solid #353540;
+  border-radius:9px
+}
+
+.action{
+  margin:0 20px 20px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap
+}
+
+.action button{
+  padding:12px 15px;
+  border-radius:10px;
+  border:0;
+  font-weight:800;
+  cursor:pointer
+}
+
+.delete{
+  background:#2a171a;
+  color:#ff929b
+}
+
+.in-library{
+  background:#20202a!important;
+  color:#fff!important;
+  cursor:default!important
+}
+
+.series-panel{
+  margin:0 20px 15px
+}
+
+.series-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:13px
+}
+
+.series-list{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:6px
+}
+
+.series-card{
+  flex:0 0 135px;
+  background:#15151c;
+  border:1px solid #292933;
+  border-radius:11px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.15s
+}
+
+.series-card img{
+  display:block;
+  width:100%;
+  height:185px;
+  object-fit:cover
+}
+
+.series-card-body{
+  padding:9px
+}
+
+.series-card-name{
+  font-size:13px;
+  font-weight:800;
+  line-height:1.25
+}
+
+.series-card-date{
+  font-size:11px;
+  color:#777783;
+  margin-top:5px
+}
+
+.library-tools{
+  display:grid;
+  grid-template-columns:1fr 180px 180px;
+  gap:10px;
+  margin-bottom:15px
+}
+
+.library-tools input,
+.library-tools select{
+  width:100%
+}
+
+.library-item,
+.wishlist-item{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  padding:12px;
+  margin-bottom:10px;
+  background:#14141b;
+  border:1px solid #25252f;
+  border-radius:13px;
+  cursor:pointer
+}
+
+.library-item img,
+.wishlist-item img{
+  width:65px;
+  height:85px;
+  object-fit:cover;
+  border-radius:8px
+}
+
+.library-info,
+.wishlist-info{
+  flex:1;
+  min-width:0
+}
+
+.library-name,
+.wishlist-name{
+  font-weight:850
+}
+
+.library-small,
+.wishlist-date{
+  color:#777783;
+  font-size:12px;
+  margin-top:4px
+}
+
+.library-line{
+  font-size:13px;
+  margin-top:5px
+}
+
+.badge,
+.wishlist-badge,
+.countdown{
+  display:inline-block;
+  margin-top:7px;
+  padding:5px 8px;
+  background:#20202a;
+  border-radius:7px;
+  font-size:11px;
+  color:#bbb
+}
+
+.library-delete,
+.wishlist-delete{
+  margin-left:auto;
+  flex:none;
+  width:34px;
+  height:34px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:17px;
+  cursor:pointer;
+  border-radius:8px
+}
+
+.library-delete:hover,
+.wishlist-delete:hover{
+  background:#20202a
+}
+
+.wishlist-tools{
+  display:grid;
+  grid-template-columns:1fr 180px;
+  gap:10px;
+  margin-bottom:15px
+}
+
+.wishlist-tools input,
+.wishlist-tools select{
+  width:100%
+}
+
+.upcoming-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:15px
+}
+
+.upcoming-card{
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.15s
+}
+
+.upcoming-card img{
+  display:block;
+  width:100%;
+  height:235px;
+  object-fit:cover
+}
+
+.upcoming-body{
+  padding:11px
+}
+
+.upcoming-name{
+  font-weight:850;
+  line-height:1.3
+}
+
+.upcoming-date{
+  color:#858590;
+  font-size:12px;
+  margin-top:6px
+}
+
+.genre-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px
+}
+
+.genre-list button{
+  border:1px solid #2b2b35;
+  background:#191920;
+  color:#ddd;
+  padding:11px 14px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
+}
+
+.stat{
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:14px;
+  padding:17px
+}
+
+.stat-icon{
+  font-size:24px
+}
+
+.stat-number{
+  font-size:28px;
+  font-weight:900;
+  margin-top:7px
+}
+
+.stat-label{
+  font-size:12px;
+  color:#858590;
+  margin-top:4px
+}
+
+.stats-box{
+  margin-top:15px
+}
+
+.big{
+  font-size:32px;
+  font-weight:900
+}
+
+.bar{
+  height:13px;
+  background:#292933;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:12px
+}
+
+.fill{
+  height:100%;
+  background:#fff
+}
+
+.best{
+  display:flex;
+  align-items:center;
+  gap:14px
+}
+
+.best img{
+  width:60px;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px
+}
+
+/* =========================
+   STUDIO
+========================= */
+
+.studio-page{
+  margin-top:18px
+}
+
+.studio-hero{
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative
+}
+
+.studio-hero-image{
+  width:100%;
+  height:280px;
+  object-fit:cover;
+  display:block
+}
+
+.studio-hero-overlay{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:30px 22px 22px;
+  background:linear-gradient(transparent,rgba(9,9,13,.95))
+}
+
+.studio-type{
+  display:inline-block;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  padding:6px 9px;
+  border-radius:7px;
+  background:#fff;
+  color:#000;
+  margin-bottom:9px
+}
+
+.studio-name{
+  font-size:36px;
+  font-weight:950;
+  line-height:1.05
+}
+
+.studio-content{
+  padding:20px
+}
+
+.studio-wiki-grid{
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:15px
+}
+
+.studio-facts{
+  display:flex;
+  flex-direction:column;
+  gap:11px
+}
+
+.studio-fact{
+  border-bottom:1px solid #24242d;
+  padding-bottom:10px
+}
+
+.studio-fact:last-child{
+  border-bottom:0;
+  padding-bottom:0
+}
+
+.studio-fact-value{
+  font-weight:800;
+  font-size:14px
+}
+
+.studio-count{
+  font-size:30px;
+  font-weight:950
+}
+
+.studio-games-section{
+  margin-top:15px;
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:14px;
+  padding:17px
+}
+
+.studio-games-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px
+}
+
+.studio-games-title{
+  font-size:20px;
+  font-weight:900
+}
+
+.studio-games-count{
+  font-size:13px;
+  color:#858590
+}
+
+.studio-description{
+  color:#c9c9d0;
+  line-height:1.7;
+  font-size:15px
+}
+
+.studio-loading{
+  text-align:center;
+  padding:45px;
+  color:#858590
+}
+
+.studio-source{
+  color:#777783;
+  font-size:11px;
+  margin-top:15px
+}
+
+.studio-box-title{
+  font-weight:900;
+  margin-bottom:12px
+}
+
+@media(max-width:800px){
+  .detail-top{
+    grid-template-columns:1fr
+  }
+
+  .cover{
+    max-width:280px
+  }
+
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .studio-wiki-grid{
+    grid-template-columns:1fr
+  }
+}
+
+@media(max-width:600px){
+  main{
+    padding:15px
+  }
+
+  .search{
+    flex-direction:column
+  }
+
+  .search button{
+    height:48px
+  }
+
+  .games{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px
+  }
+
+  .card img{
+    height:230px
+  }
+
+  .detail-title{
+    font-size:28px
+  }
+
+  .meta{
+    grid-template-columns:1fr
+  }
+
+  .library-tools,
+  .wishlist-tools{
+    grid-template-columns:1fr
+  }
+
+  .studio-name{
+    font-size:28px
+  }
+
+  .studio-hero-image{
+    height:230px
+  }
+}
 </style>
 </head>
-<body>
-<header><div class="logo">🎮 GameVault</div><div class="subtitle">Ta bibliothèque gaming • Genres RAWG</div></header>
-<nav>
-<button id="tabSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
-<button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
-<button id="tabWishlist" onclick="showWishlist()">❤️ Souhaits</button>
-<button id="tabUpcoming" onclick="showUpcoming()">📅 Prochaines sorties</button>
-<button id="tabGenres" onclick="showGenres()">🎭 Genres</button>
-<button id="tabStats" onclick="showStats()">📊 Statistiques</button>
-</nav>
-<main>
-<section id="searchSection"><div class="search"><input id="searchInput" placeholder="Rechercher un jeu..."><button onclick="searchGames()">Rechercher</button></div><div id="status" class="status">Recherche ton prochain jeu 🎮</div><div id="games" class="games"></div></section>
-<section id="detailSection" class="hidden"><button class="back" onclick="showSearch()">← Retour</button><div id="detail"></div></section>
-<section id="studioSection" class="hidden"><button class="back" onclick="goBackFromStudio()">← Retour</button><div id="studioDetail"></div></section>
-<section id="librarySection" class="hidden"><h2>📚 Ma bibliothèque</h2><div class="library-tools"><input id="librarySearch" placeholder="🔎 Rechercher..." oninput="renderLibrary()"><select id="statusFilter" onchange="renderLibrary()"><option>Tous</option><option>À jouer</option><option>En cours</option><option>Terminé</option></select><select id="sortFilter" onchange="renderLibrary()"><option value="recent">Plus récent</option><option value="name">Nom A → Z</option><option value="rating">Meilleure note</option><option value="progress">Progression</option><option value="time">Temps de jeu</option></select></div><div id="libraryCount" class="count"></div><div id="library"></div></section>
-<section id="wishlistSection" class="hidden"><h2>❤️ Ma liste de souhaits</h2><div class="wishlist-tools"><input id="wishlistSearch" placeholder="🔎 Rechercher dans mes souhaits..." oninput="renderWishlist()"><select id="wishlistSort" onchange="renderWishlist()"><option value="date">Date de sortie</option><option value="name">Nom A → Z</option></select></div><div id="wishlistCount" class="wishlist-count"></div><div id="wishlist"></div></section>
-<section id="upcomingSection" class="hidden"><h2>📅 Prochaines sorties</h2><div id="upcomingStatus" class="status">Chargement des prochains jeux...</div><div id="upcoming" class="upcoming-grid"></div><button id="upcomingMore" class="back hidden" style="margin-top:18px" onclick="loadMoreUpcoming()">Charger plus</button></section>
-<section id="genresSection" class="hidden"><h2>🎭 Genres</h2><div class="genre-list">
-<button onclick="loadGenre('action','Action')">🥷 Action</button><button onclick="loadGenre('indie','Indie')">✨ Indie</button><button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button><button onclick="loadGenre('role-playing-games-rpg','RPG')">⚔️ RPG</button><button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button><button onclick="loadGenre('shooter','Shooter')">🔫 Shooter</button><button onclick="loadGenre('casual','Casual')">🙂 Casual</button><button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button><button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button><button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button><button onclick="loadGenre('platformer','Platformer')">🕹️ Platformer</button><button onclick="loadGenre('racing','Racing')">🏎️ Racing</button><button onclick="loadGenre('sports','Sports')">🏀 Sports</button><button onclick="loadGenre('fighting','Fighting')">🥊 Fighting</button><button onclick="loadGenre('massively-multiplayer','Massively Multiplayer')">🌐 Massively Multiplayer</button><button onclick="loadGenre('family','Family')">👨‍👩‍👧‍👦 Family</button><button onclick="loadGenre('board-games','Board Games')">🎲 Board Games</button><button onclick="loadGenre('educational','Educational')">🎓 Educational</button><button onclick="loadGenre('card','Card')">🃏 Card</button>
-</div><div id="genreStatus" class="status">Choisis un genre 🎮</div><div id="genreGames" class="games"></div><button id="genreMore" class="back hidden" style="margin-top:18px" onclick="loadMoreGenre()">Charger plus</button></section>
-<section id="statsSection" class="hidden"><h2>📊 Mes statistiques</h2><div id="statsContent"></div></section>
-</main>
-<script>
-const WORKER_URL="https://gamevault-api.tom-lunel27200.workers.dev";
-let currentGame=null,previousStudioContext="detail";
-let library=JSON.parse(localStorage.getItem("gamevault_library"))||[];
-let wishlist=JSON.parse(localStorage.getItem("gamevault_wishlist"))||[];
 
-function saveLibrary(){localStorage.setItem("gamevault_library",JSON.stringify(library))}
-function saveWishlist(){localStorage.setItem("gamevault_wishlist",JSON.stringify(wishlist))}
+<body>
+
+<header>
+  <div class="logo">🎮 GameVault</div>
+  <div class="subtitle">Ta bibliothèque gaming • Genres RAWG</div>
+</header>
+
+<nav>
+  <button id="tabSearch" class="active" onclick="showSearch()">🔎 Recherche</button>
+  <button id="tabLibrary" onclick="showLibrary()">📚 Ma bibliothèque</button>
+  <button id="tabWishlist" onclick="showWishlist()">❤️ Souhaits</button>
+  <button id="tabUpcoming" onclick="showUpcoming()">📅 Prochaines sorties</button>
+  <button id="tabGenres" onclick="showGenres()">🎭 Genres</button>
+  <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
+</nav>
+
+<main>
+
+<section id="searchSection">
+
+  <div class="search">
+    <input id="searchInput" placeholder="Rechercher un jeu...">
+    <button onclick="searchGames()">Rechercher</button>
+  </div>
+
+  <div id="status" class="status">
+    Recherche ton prochain jeu 🎮
+  </div>
+
+  <div id="games" class="games"></div>
+
+</section>
+
+
+<section id="detailSection" class="hidden">
+
+  <button class="back" onclick="showSearch()">← Retour</button>
+
+  <div id="detail"></div>
+
+</section>
+
+
+<section id="studioSection" class="hidden">
+
+  <button class="back" onclick="goBackFromStudio()">← Retour</button>
+
+  <div id="studioDetail"></div>
+
+</section>
+
+
+<section id="librarySection" class="hidden">
+
+  <h2>📚 Ma bibliothèque</h2>
+
+  <div class="library-tools">
+
+    <input
+      id="librarySearch"
+      placeholder="🔎 Rechercher..."
+      oninput="renderLibrary()"
+    >
+
+    <select id="statusFilter" onchange="renderLibrary()">
+      <option>Tous</option>
+      <option>À jouer</option>
+      <option>En cours</option>
+      <option>Terminé</option>
+    </select>
+
+    <select id="sortFilter" onchange="renderLibrary()">
+      <option value="recent">Plus récent</option>
+      <option value="name">Nom A → Z</option>
+      <option value="rating">Meilleure note</option>
+      <option value="progress">Progression</option>
+      <option value="time">Temps de jeu</option>
+    </select>
+
+  </div>
+
+  <div id="libraryCount" class="count"></div>
+
+  <div id="library"></div>
+
+</section>
+
+
+<section id="wishlistSection" class="hidden">
+
+  <h2>❤️ Ma liste de souhaits</h2>
+
+  <div class="wishlist-tools">
+
+    <input
+      id="wishlistSearch"
+      placeholder="🔎 Rechercher dans mes souhaits..."
+      oninput="renderWishlist()"
+    >
+
+    <select id="wishlistSort" onchange="renderWishlist()">
+      <option value="date">Date de sortie</option>
+      <option value="name">Nom A → Z</option>
+    </select>
+
+  </div>
+
+  <div id="wishlistCount" class="wishlist-count"></div>
+
+  <div id="wishlist"></div>
+
+</section>
+
+
+<section id="upcomingSection" class="hidden">
+
+  <h2>📅 Prochaines sorties</h2>
+
+  <div id="upcomingStatus" class="status">
+    Chargement des prochains jeux...
+  </div>
+
+  <div id="upcoming" class="upcoming-grid"></div>
+
+  <button
+    id="upcomingMore"
+    class="back hidden"
+    style="margin-top:18px"
+    onclick="loadMoreUpcoming()"
+  >
+    Charger plus
+  </button>
+
+</section>
+
+
+<section id="genresSection" class="hidden">
+
+  <h2>🎭 Genres</h2>
+
+  <div class="genre-list">
+
+    <button onclick="loadGenre('action','Action')">🥷 Action</button>
+    <button onclick="loadGenre('indie','Indie')">✨ Indie</button>
+    <button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
+    <button onclick="loadGenre('role-playing-games-rpg','RPG')">⚔️ RPG</button>
+    <button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
+    <button onclick="loadGenre('shooter','Shooter')">🔫 Shooter</button>
+    <button onclick="loadGenre('casual','Casual')">🙂 Casual</button>
+    <button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
+    <button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
+    <button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
+    <button onclick="loadGenre('platformer','Platformer')">🕹️ Platformer</button>
+    <button onclick="loadGenre('racing','Racing')">🏎️ Racing</button>
+    <button onclick="loadGenre('sports','Sports')">🏀 Sports</button>
+    <button onclick="loadGenre('fighting','Fighting')">🥊 Fighting</button>
+    <button onclick="loadGenre('massively-multiplayer','Massively Multiplayer')">🌐 Massively Multiplayer</button>
+    <button onclick="loadGenre('family','Family')">👨‍👩‍👧‍👦 Family</button>
+    <button onclick="loadGenre('board-games','Board Games')">🎲 Board Games</button>
+    <button onclick="loadGenre('educational','Educational')">🎓 Educational</button>
+    <button onclick="loadGenre('card','Card')">🃏 Card</button>
+
+  </div>
+
+  <div id="genreStatus" class="status">
+    Choisis un genre 🎮
+  </div>
+
+  <div id="genreGames" class="games"></div>
+
+  <button
+    id="genreMore"
+    class="back hidden"
+    style="margin-top:18px"
+    onclick="loadMoreGenre()"
+  >
+    Charger plus
+  </button>
+
+</section>
+
+
+<section id="statsSection" class="hidden">
+
+  <h2>📊 Mes statistiques</h2>
+
+  <div id="statsContent"></div>
+
+</section>
+
+</main>
+
+
+<script>
+
+const WORKER_URL =
+  "https://gamevault-api.tom-lunel27200.workers.dev";
+
+let currentGame = null;
+let previousStudioContext = "detail";
+
+let library =
+  JSON.parse(localStorage.getItem("gamevault_library")) || [];
+
+let wishlist =
+  JSON.parse(localStorage.getItem("gamevault_wishlist")) || [];
+
+
+/* =========================
+   SAUVEGARDE
+========================= */
+
+function saveLibrary(){
+  localStorage.setItem(
+    "gamevault_library",
+    JSON.stringify(library)
+  );
+}
+
+function saveWishlist(){
+  localStorage.setItem(
+    "gamevault_wishlist",
+    JSON.stringify(wishlist)
+  );
+}
+
+
+/* =========================
+   RECHERCHE
+========================= */
 
 async function searchGames(){
- const input=document.getElementById("searchInput"),games=document.getElementById("games"),status=document.getElementById("status"),query=input.value.trim();
- if(query.length<2){status.textContent="Écris au moins 2 caractères.";return}
- status.textContent="Recherche en cours...";games.innerHTML='<div class="empty">🔎 Recherche...</div>';
- try{
-  const response=await fetch(WORKER_URL+"/search?q="+encodeURIComponent(query)),data=await response.json();
-  if(!response.ok||!data.results)throw new Error("Erreur RAWG");
-  if(!data.results.length){games.innerHTML='<div class="empty">Aucun jeu trouvé.</div>';status.textContent="Aucun résultat.";return}
-  status.textContent=data.results.length+" jeu(x) trouvé(s).";games.innerHTML="";
-  data.results.forEach(g=>games.appendChild(createGameCard(g)));
- }catch(e){console.error(e);status.textContent="Erreur lors de la recherche.";games.innerHTML='<div class="empty">Impossible de contacter GameVault.</div>'}
+
+  const input =
+    document.getElementById("searchInput");
+
+  const games =
+    document.getElementById("games");
+
+  const status =
+    document.getElementById("status");
+
+  const query =
+    input.value.trim();
+
+  if(query.length < 2){
+
+    status.textContent =
+      "Écris au moins 2 caractères.";
+
+    return;
+  }
+
+  status.textContent =
+    "Recherche en cours...";
+
+  games.innerHTML =
+    '<div class="empty">🔎 Recherche...</div>';
+
+  try{
+
+    const response =
+      await fetch(
+        WORKER_URL +
+        "/search?q=" +
+        encodeURIComponent(query)
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok || !data.results){
+
+      throw new Error("Erreur RAWG");
+    }
+
+    if(!data.results.length){
+
+      games.innerHTML =
+        '<div class="empty">Aucun jeu trouvé.</div>';
+
+      status.textContent =
+        "Aucun résultat.";
+
+      return;
+    }
+
+    status.textContent =
+      data.results.length +
+      " jeu(x) trouvé(s).";
+
+    games.innerHTML = "";
+
+    data.results.forEach(g => {
+
+      games.appendChild(
+        createGameCard(g)
+      );
+
+    });
+
+  }catch(e){
+
+    console.error(e);
+
+    status.textContent =
+      "Erreur lors de la recherche.";
+
+    games.innerHTML =
+      '<div class="empty">Impossible de contacter GameVault.</div>';
+  }
 }
+
+
+/* =========================
+   CARTE JEU
+========================= */
 
 function createGameCard(game){
- const card=document.createElement("div");card.className="card";
- card.innerHTML=`<img src="${escapeHtml(game.background_image||placeholder())}" alt="" loading="lazy"><div class="card-content"><div class="card-title">${escapeHtml(game.name||"Jeu")}</div><div class="card-date">${escapeHtml(game.released||"Date inconnue")}</div></div>`;
- card.onclick=()=>openGame(game);return card;
-}
-function placeholder(){return "https://via.placeholder.com/400x600?text=Game"}
 
-async function openGame(game){currentGame=game;hideSections();document.getElementById("detailSection").classList.remove("hidden");await renderDetail()}
+  const card =
+    document.createElement("div");
+
+  card.className = "card";
+
+  card.innerHTML = `
+    <img
+      src="${escapeHtml(game.background_image || placeholder())}"
+      alt=""
+      loading="lazy"
+    >
+
+    <div class="card-content">
+
+      <div class="card-title">
+        ${escapeHtml(game.name || "Jeu")}
+      </div>
+
+      <div class="card-date">
+        ${escapeHtml(game.released || "Date inconnue")}
+      </div>
+
+    </div>
+  `;
+
+  card.onclick =
+    () => openGame(game);
+
+  return card;
+}
+
+
+function placeholder(){
+
+  return "https://via.placeholder.com/400x600?text=Game";
+
+}
+
+
+/* =========================
+   FICHE JEU
+========================= */
+
+async function openGame(game){
+
+  currentGame = game;
+
+  hideSections();
+
+  document
+    .getElementById("detailSection")
+    .classList.remove("hidden");
+
+  await renderDetail();
+}
+
 
 async function renderDetail(){
- if(!currentGame)return;
- const detail=document.getElementById("detail");detail.innerHTML='<div class="empty">Chargement de la fiche...</div>';
- let game=currentGame,seriesGames=[];
- try{const r=await fetch(WORKER_URL+"/game/"+encodeURIComponent(game.id));if(r.ok){const d=await r.json();game={...game,...d};currentGame=game}}catch(e){console.log(e)}
- try{const r=await fetch(WORKER_URL+"/game-series/"+encodeURIComponent(game.id));if(r.ok){const d=await r.json();if(Array.isArray(d.results))seriesGames=d.results.filter(x=>Number(x.id)!==Number(game.id)).sort((a,b)=>(a.released||"9999-12-31").localeCompare(b.released||"9999-12-31"))}}catch(e){console.log("Série indisponible",e)}
- const saved=library.find(x=>Number(x.id)===Number(game.id)),wished=wishlist.find(x=>Number(x.id)===Number(game.id));
- const image=game.background_image||placeholder(),description=game.description_raw||stripHtml(game.description)||"Aucune description disponible.";
- const developers=Array.isArray(game.developers)?game.developers:[],publishers=Array.isArray(game.publishers)?game.publishers:[];
- const platforms=game.platforms?.length?game.platforms.map(x=>x.platform?x.platform.name:x.name).join(", "):"Inconnues";
- const rating=saved?Number(saved.note||0):0,progress=saved?Number(saved.progress||0):0,hours=saved?Number(saved.hours||0):0,minutes=saved?Number(saved.minutes||0):0,status=saved?saved.status:"À jouer";
- const genreHTML=game.genres?.length?game.genres.map(g=>`<button class="studio-link" onclick="event.stopPropagation();showGenres();loadGenre('${escapeAttr(g.slug||"")}','${escapeAttr(g.name||"")}')">${escapeHtml(g.name||"")}</button>`).join(""):"Inconnu";
- const developerHTML=developers.length?`<div class="studio-links">${developers.map(d=>`<button class="studio-link" onclick="event.stopPropagation();openStudio('developer',${Number(d.id)},'${escapeAttr(d.name||"")}')">${escapeHtml(d.name||"Développeur")}</button>`).join("")}</div>`:"Inconnu";
- const publisherHTML=publishers.length?`<div class="studio-links">${publishers.map(p=>`<button class="studio-link" onclick="event.stopPropagation();openStudio('publisher',${Number(p.id)},'${escapeAttr(p.name||"")}')">${escapeHtml(p.name||"Éditeur")}</button>`).join("")}</div>`:"Inconnu";
- const seriesHTML=seriesGames.length?`<div class="series-panel"><div class="series-title">🎮 Série / Franchise</div><div class="series-list">${seriesGames.map(x=>`<div class="series-card" onclick="openSeriesGame(${Number(x.id)})"><img src="${escapeHtml(x.background_image||placeholder())}" alt="" loading="lazy"><div class="series-card-body"><div class="series-card-name">${escapeHtml(x.name||"Jeu")}</div><div class="series-card-date">${escapeHtml(x.released||"Date inconnue")}</div></div></div>`).join("")}</div></div>`:"";
- detail.innerHTML=`<div class="detail"><div class="detail-top"><img class="cover" src="${escapeHtml(image)}" alt=""><div><h1 class="detail-title">${escapeHtml(game.name||"Jeu")}</h1><div class="release">📅 ${escapeHtml(game.released||"Date inconnue")}</div><div class="description">${escapeHtml(description)}</div><div class="meta">
- <div class="meta-box"><div class="meta-label">🛠️ DÉVELOPPEUR</div><div class="meta-value">${developerHTML}</div></div>
- <div class="meta-box"><div class="meta-label">🏢 ÉDITEUR</div><div class="meta-value">${publisherHTML}</div></div>
- <div class="meta-box"><div class="meta-label">🎭 GENRES</div><div class="meta-value genre-tags">${genreHTML}</div></div>
- <div class="meta-box"><div class="meta-label">🎮 PLATEFORMES</div><div class="meta-value">${escapeHtml(platforms)}</div></div>
- <div class="meta-box"><div class="meta-label">⭐ NOTE RAWG</div><div class="meta-value">${game.rating?game.rating+" / 5":"N/A"}</div></div>
- <div class="meta-box"><div class="meta-label">👥 AVIS</div><div class="meta-value">${game.ratings_count||"N/A"}</div></div>
- </div></div></div>${seriesHTML}
- <div class="panel"><div class="panel-title">⭐ Ma note</div><div class="rating"><span id="ratingValue">${rating}</span> / 10</div><div class="rating-controls"><button id="minusRating" onclick="changeRating(-.5)">−</button><span>par 0,5</span><button id="plusRating" onclick="changeRating(.5)">+</button></div></div>
- <div class="panel"><div class="panel-title">📊 Ma progression</div><div class="progress-number"><span id="progressValue">${progress}</span>%</div><input class="slider" type="range" min="0" max="100" value="${progress}" oninput="changeProgress(this.value)"></div>
- <div class="panel"><div class="panel-title">🕐 Temps de jeu</div><div class="time-inputs"><input id="hoursInput" type="number" min="0" value="${hours}" placeholder="Heures"><input id="minutesInput" type="number" min="0" max="59" value="${minutes}" placeholder="Minutes"><button class="add" onclick="saveTime()">Enregistrer</button></div></div>
- <div class="panel"><div class="panel-title">🎯 Statut</div><select onchange="changeStatus(this.value)"><option ${status==="À jouer"?"selected":""}>À jouer</option><option ${status==="En cours"?"selected":""}>En cours</option><option ${status==="Terminé"?"selected":""}>Terminé</option></select></div>
- <div class="action">${saved?'<button class="in-library">✅ Dans ma bibliothèque</button><button class="delete" onclick="deleteCurrentGame()">🗑️ Supprimer</button>':'<button class="add" onclick="addCurrentGame()">➕ Ajouter à ma bibliothèque</button>'}<button class="${wished?"in-library":"add"}" onclick="toggleWishlist()">${wished?"❤️ Dans mes souhaits":"❤️ Ajouter aux souhaits"}</button></div></div>`;
- updateRatingButtons();
+
+  if(!currentGame){
+    return;
+  }
+
+  const detail =
+    document.getElementById("detail");
+
+  detail.innerHTML =
+    '<div class="empty">Chargement de la fiche...</div>';
+
+  let game = currentGame;
+
+  let seriesGames = [];
+
+
+  /* Jeu complet */
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/game/" +
+        encodeURIComponent(game.id)
+      );
+
+    if(r.ok){
+
+      const d =
+        await r.json();
+
+      game = {
+        ...game,
+        ...d
+      };
+
+      currentGame = game;
+    }
+
+  }catch(e){
+
+    console.log(e);
+
+  }
+
+
+  /* Série */
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/game-series/" +
+        encodeURIComponent(game.id)
+      );
+
+    if(r.ok){
+
+      const d =
+        await r.json();
+
+      if(Array.isArray(d.results)){
+
+        seriesGames =
+          d.results
+            .filter(
+              x =>
+                Number(x.id) !==
+                Number(game.id)
+            )
+            .sort(
+              (a,b) =>
+                (a.released || "9999-12-31")
+                .localeCompare(
+                  b.released || "9999-12-31"
+                )
+            );
+      }
+    }
+
+  }catch(e){
+
+    console.log(
+      "Série indisponible",
+      e
+    );
+
+  }
+
+
+  const saved =
+    library.find(
+      x =>
+        Number(x.id) ===
+        Number(game.id)
+    );
+
+  const wished =
+    wishlist.find(
+      x =>
+        Number(x.id) ===
+        Number(game.id)
+    );
+
+
+  const image =
+    game.background_image ||
+    placeholder();
+
+  const description =
+    game.description_raw ||
+    stripHtml(game.description) ||
+    "Aucune description disponible.";
+
+  const developers =
+    Array.isArray(game.developers)
+      ? game.developers
+      : [];
+
+  const publishers =
+    Array.isArray(game.publishers)
+      ? game.publishers
+      : [];
+
+
+  const platforms =
+    game.platforms?.length
+      ? game.platforms
+          .map(
+            x =>
+              x.platform
+                ? x.platform.name
+                : x.name
+          )
+          .join(", ")
+      : "Inconnues";
+
+
+  const rating =
+    saved
+      ? Number(saved.note || 0)
+      : 0;
+
+  const progress =
+    saved
+      ? Number(saved.progress || 0)
+      : 0;
+
+  const hours =
+    saved
+      ? Number(saved.hours || 0)
+      : 0;
+
+  const minutes =
+    saved
+      ? Number(saved.minutes || 0)
+      : 0;
+
+  const status =
+    saved
+      ? saved.status
+      : "À jouer";
+
+
+  /* Genres */
+
+  const genreHTML =
+    game.genres?.length
+      ? game.genres
+          .map(
+            g => `
+              <button
+                class="studio-link"
+                onclick="
+                  event.stopPropagation();
+                  showGenres();
+                  loadGenre(
+                    '${escapeAttr(g.slug || "")}',
+                    '${escapeAttr(g.name || "")}'
+                  )
+                "
+              >
+                ${escapeHtml(g.name || "")}
+              </button>
+            `
+          )
+          .join("")
+      : "Inconnu";
+
+
+  /* Développeurs */
+
+  const developerHTML =
+    developers.length
+      ? `
+        <div class="studio-links">
+
+          ${
+            developers
+              .map(
+                d => `
+                  <button
+                    class="studio-link"
+                    onclick="
+                      event.stopPropagation();
+                      openStudio(
+                        'developer',
+                        ${Number(d.id)},
+                        '${escapeAttr(d.name || "")}'
+                      )
+                    "
+                  >
+                    ${escapeHtml(
+                      d.name ||
+                      "Développeur"
+                    )}
+                  </button>
+                `
+              )
+              .join("")
+          }
+
+        </div>
+      `
+      : "Inconnu";
+
+
+  /* Éditeurs */
+
+  const publisherHTML =
+    publishers.length
+      ? `
+        <div class="studio-links">
+
+          ${
+            publishers
+              .map(
+                p => `
+                  <button
+                    class="studio-link"
+                    onclick="
+                      event.stopPropagation();
+                      openStudio(
+                        'publisher',
+                        ${Number(p.id)},
+                        '${escapeAttr(p.name || "")}'
+                      )
+                    "
+                  >
+                    ${escapeHtml(
+                      p.name ||
+                      "Éditeur"
+                    )}
+                  </button>
+                `
+              )
+              .join("")
+          }
+
+        </div>
+      `
+      : "Inconnu";
+
+
+  /* Série */
+
+  const seriesHTML =
+    seriesGames.length
+      ? `
+        <div class="series-panel">
+
+          <div class="series-title">
+            🎮 Série / Franchise
+          </div>
+
+          <div class="series-list">
+
+            ${
+              seriesGames
+                .map(
+                  x => `
+                    <div
+                      class="series-card"
+                      onclick="
+                        openSeriesGame(
+                          ${Number(x.id)}
+                        )
+                      "
+                    >
+
+                      <img
+                        src="${escapeHtml(
+                          x.background_image ||
+                          placeholder()
+                        )}"
+                        alt=""
+                        loading="lazy"
+                      >
+
+                      <div class="series-card-body">
+
+                        <div class="series-card-name">
+                          ${escapeHtml(
+                            x.name || "Jeu"
+                          )}
+                        </div>
+
+                        <div class="series-card-date">
+                          ${escapeHtml(
+                            x.released ||
+                            "Date inconnue"
+                          )}
+                        </div>
+
+                      </div>
+
+                    </div>
+                  `
+                )
+                .join("")
+            }
+
+          </div>
+
+        </div>
+      `
+      : "";
+
+
+  /* HTML fiche */
+
+  detail.innerHTML = `
+
+    <div class="detail">
+
+      <div class="detail-top">
+
+        <img
+          class="cover"
+          src="${escapeHtml(image)}"
+          alt=""
+        >
+
+        <div>
+
+          <h1 class="detail-title">
+            ${escapeHtml(
+              game.name || "Jeu"
+            )}
+          </h1>
+
+          <div class="release">
+            📅 ${escapeHtml(
+              game.released ||
+              "Date inconnue"
+            )}
+          </div>
+
+          <div class="description">
+            ${escapeHtml(description)}
+          </div>
+
+
+          <div class="meta">
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                🛠️ DÉVELOPPEUR
+              </div>
+
+              <div class="meta-value">
+                ${developerHTML}
+              </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                🏢 ÉDITEUR
+              </div>
+
+              <div class="meta-value">
+                ${publisherHTML}
+              </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                🎭 GENRES
+              </div>
+
+              <div class="meta-value genre-tags">
+                ${genreHTML}
+              </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                🎮 PLATEFORMES
+              </div>
+
+              <div class="meta-value">
+                ${escapeHtml(platforms)}
+              </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                ⭐ NOTE RAWG
+              </div>
+
+              <div class="meta-value">
+                ${
+                  game.rating
+                    ? game.rating + " / 5"
+                    : "N/A"
+                }
+              </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+              <div class="meta-label">
+                👥 AVIS
+              </div>
+
+              <div class="meta-value">
+                ${game.ratings_count || "N/A"}
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      ${seriesHTML}
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          ⭐ Ma note
+        </div>
+
+        <div class="rating">
+          <span id="ratingValue">
+            ${rating}
+          </span>
+          / 10
+        </div>
+
+        <div class="rating-controls">
+
+          <button
+            id="minusRating"
+            onclick="changeRating(-.5)"
+          >
+            −
+          </button>
+
+          <span>par 0,5</span>
+
+          <button
+            id="plusRating"
+            onclick="changeRating(.5)"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          📊 Ma progression
+        </div>
+
+        <div class="progress-number">
+
+          <span id="progressValue">
+            ${progress}
+          </span>%
+
+        </div>
+
+        <input
+          class="slider"
+          type="range"
+          min="0"
+          max="100"
+          value="${progress}"
+          oninput="changeProgress(this.value)"
+        >
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🕐 Temps de jeu
+        </div>
+
+        <div class="time-inputs">
+
+          <input
+            id="hoursInput"
+            type="number"
+            min="0"
+            value="${hours}"
+            placeholder="Heures"
+          >
+
+          <input
+            id="minutesInput"
+            type="number"
+            min="0"
+            max="59"
+            value="${minutes}"
+            placeholder="Minutes"
+          >
+
+          <button
+            class="add"
+            onclick="saveTime()"
+          >
+            Enregistrer
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🎯 Statut
+        </div>
+
+        <select onchange="changeStatus(this.value)">
+
+          <option
+            ${status === "À jouer" ? "selected" : ""}
+          >
+            À jouer
+          </option>
+
+          <option
+            ${status === "En cours" ? "selected" : ""}
+          >
+            En cours
+          </option>
+
+          <option
+            ${status === "Terminé" ? "selected" : ""}
+          >
+            Terminé
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="action">
+
+        ${
+          saved
+            ? `
+              <button class="in-library">
+                ✅ Dans ma bibliothèque
+              </button>
+
+              <button
+                class="delete"
+                onclick="deleteCurrentGame()"
+              >
+                🗑️ Supprimer
+              </button>
+            `
+            : `
+              <button
+                class="add"
+                onclick="addCurrentGame()"
+              >
+                ➕ Ajouter à ma bibliothèque
+              </button>
+            `
+        }
+
+
+        <button
+          class="${wished ? "in-library" : "add"}"
+          onclick="toggleWishlist()"
+        >
+          ${
+            wished
+              ? "❤️ Dans mes souhaits"
+              : "❤️ Ajouter aux souhaits"
+          }
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  updateRatingButtons();
+
 }
 
-let currentStudio=null,studioPage=1,studioHasMore=false,studioLoading=false,studioGames=[],studioGameIds=new Set();
-async function openStudio(type,id,name){if(!id)return;previousStudioContext="detail";currentStudio={type,id:Number(id),name:name||"Studio"};hideSections();document.getElementById("studioSection").classList.remove("hidden");await renderStudio()}
+
+/* =========================================================
+   STUDIO / DÉVELOPPEUR / ÉDITEUR
+========================================================= */
+
+let currentStudio = null;
+
+let studioPage = 1;
+let studioHasMore = false;
+let studioLoading = false;
+
+let studioGames = [];
+let studioGameIds = new Set();
+
+
+/* =========================
+   OUVRIR STUDIO
+========================= */
+
+async function openStudio(
+  type,
+  id,
+  name
+){
+
+  if(!id){
+    return;
+  }
+
+  previousStudioContext =
+    "detail";
+
+  currentStudio = {
+    type,
+    id:Number(id),
+    name:name || "Studio"
+  };
+
+  hideSections();
+
+  document
+    .getElementById("studioSection")
+    .classList.remove("hidden");
+
+  await renderStudio();
+
+}
+
+
+/* =========================
+   FICHE STUDIO
+========================= */
+
 async function renderStudio(){
- const c=document.getElementById("studioDetail"),s=currentStudio;c.innerHTML='<div class="studio-loading">🏢 Chargement de la fiche du studio...</div>';
- try{
-  const r=await fetch(WORKER_URL+"/studio/"+encodeURIComponent(s.type)+"/"+encodeURIComponent(s.id));if(!r.ok)throw new Error("Impossible de charger le studio.");
-  const d=await r.json(),studio=d.studio||d,wiki=d.wiki||{},image=studio.image_background||studio.image||wiki.image||placeholder(),description=wiki.description||studio.description||"Aucune description disponible.";
-  const location=wiki.location||wiki.headquarters||wiki.siege||"Non renseigné",founded=wiki.founded||wiki.foundation||wiki.dateFounded||"Non renseigné",founder=wiki.founder||wiki.founders||"Non renseigné",ceo=wiki.ceo||wiki.president||wiki.director||"Non renseigné",gamesCount=Number(studio.games_count||d.games_count||d.count||0);
-  c.innerHTML=`<div class="studio-page"><div class="studio-hero"><img class="studio-hero-image" src="${escapeHtml(image)}" alt="" loading="lazy"><div class="studio-hero-overlay"><div class="studio-type">${s.type==="publisher"?"ÉDITEUR":"DÉVELOPPEUR"}</div><div class="studio-name">${escapeHtml(studio.name||s.name||"Studio")}</div></div></div><div class="studio-content"><div class="studio-wiki-grid"><div class="studio-box"><div class="studio-box-title">📖 À propos</div><div class="studio-description">${escapeHtml(stripHtml(description))}</div><div class="studio-source">Informations encyclopédiques : Wikipédia / Wikidata</div></div><div class="studio-box"><div class="studio-box-title">🏢 Informations</div><div class="studio-facts"><div class="studio-fact"><div class="studio-fact-label">📍 Localisation</div><div class="studio-fact-value">${escapeHtml(location)}</div></div><div class="studio-fact"><div class="studio-fact-label">📅 Fondation</div><div class="studio-fact-value">${escapeHtml(founded)}</div></div><div class="studio-fact"><div class="studio-fact-label">👤 Fondateur</div><div class="studio-fact-value">${escapeHtml(founder)}</div></div><div class="studio-fact"><div class="studio-fact-label">👔 Direction</div><div class="studio-fact-value">${escapeHtml(ceo)}</div></div><div class="studio-fact"><div class="studio-fact-label">🎮 Jeux</div><div class="studio-count">${gamesCount||"N/A"}</div></div></div></div></div><div class="studio-games-section"><div class="studio-games-header"><div><div class="studio-games-title">🎮 Jeux du studio</div><div id="studioGamesCount" class="studio-games-count">Chargement...</div></div></div><div id="studioGames" class="games"></div><button id="studioMore" class="back hidden" style="margin-top:18px" onclick="loadMoreStudioGames()">Charger plus</button></div></div></div>`;
-  studioPage=1;studioHasMore=false;studioLoading=false;studioGames=[];studioGameIds=new Set();await loadStudioGames(1,false);
- }catch(e){console.error(e);c.innerHTML=`<div class="empty">❌ Impossible de charger la fiche de <strong>${escapeHtml(s.name)}</strong>.<br><br>${escapeHtml(e.message)}</div>`}
-}
-async function loadStudioGames(page=1,append=false){
- if(studioLoading)return;studioLoading=true;const c=document.getElementById("studioGames"),more=document.getElementById("studioMore"),count=document.getElementById("studioGamesCount");if(!c){studioLoading=false;return}
- if(!append){c.innerHTML='<div class="studio-loading">🎮 Chargement des jeux...</div>';studioGames=[];studioGameIds=new Set()}
- try{const r=await fetch(WORKER_URL+"/studio/"+encodeURIComponent(currentStudio.type)+"/"+encodeURIComponent(currentStudio.id)+"/games?page="+page);if(!r.ok)throw new Error("Impossible de charger les jeux du studio.");const d=await r.json();if(!append)c.innerHTML="";(d.results||[]).forEach(g=>{const id=Number(g.id);if(studioGameIds.has(id))return;studioGameIds.add(id);studioGames.push(g);c.appendChild(createGameCard(g))});studioHasMore=Boolean(d.next);studioPage=page;more.classList.toggle("hidden",!studioHasMore);if(count)count.textContent=`${studioGames.length} jeu(x) chargé(s)${d.count?` sur ${d.count}`:""}`;if(!studioGames.length)c.innerHTML='<div class="empty">🎮 Aucun jeu trouvé pour ce studio.</div>'}catch(e){console.error(e);if(!append)c.innerHTML=`<div class="empty">❌ ${escapeHtml(e.message)}</div>`}finally{studioLoading=false}
-}
-async function loadMoreStudioGames(){if(studioHasMore)await loadStudioGames(studioPage+1,true)}
-function goBackFromStudio(){if(currentGame){hideSections();document.getElementById("detailSection").classList.remove("hidden");renderDetail()}else showSearch()}
-async function openSeriesGame(id){try{const r=await fetch(WORKER_URL+"/game/"+encodeURIComponent(id));if(!r.ok)throw new Error("Impossible de charger le jeu");currentGame=await r.json();await renderDetail()}catch(e){console.error(e)}}
 
-function getCurrentSaved(){return currentGame?library.find(x=>Number(x.id)===Number(currentGame.id)):null}
-function ensureSaved(){let g=getCurrentSaved();if(g)return g;g={id:currentGame.id,name:currentGame.name,background_image:currentGame.background_image,released:currentGame.released,note:0,progress:0,hours:0,minutes:0,status:"À jouer",addedAt:Date.now()};library.push(g);saveLibrary();return g}
-function addCurrentGame(){ensureSaved();renderDetail()}
-function changeRating(a){const g=ensureSaved();g.note=Math.max(0,Math.min(10,Math.round((Number(g.note||0)+a)*2)/2));saveLibrary();document.getElementById("ratingValue").textContent=g.note;updateRatingButtons()}
-function updateRatingButtons(){const g=getCurrentSaved();if(!g)return;document.getElementById("minusRating").disabled=Number(g.note||0)<=0;document.getElementById("plusRating").disabled=Number(g.note||0)>=10}
-function changeProgress(v){const g=ensureSaved();g.progress=Number(v);document.getElementById("progressValue").textContent=v;saveLibrary()}
-function saveTime(){const g=ensureSaved();let h=parseInt(document.getElementById("hoursInput").value)||0,m=parseInt(document.getElementById("minutesInput").value)||0;h+=Math.floor(m/60);m%=60;g.hours=Math.max(0,h);g.minutes=Math.max(0,m);saveLibrary();renderDetail()}
-function changeStatus(v){const g=ensureSaved();g.status=v;saveLibrary();renderDetail()}
-function deleteCurrentGame(){if(!currentGame||!confirm("Supprimer ce jeu de ta bibliothèque ?"))return;library=library.filter(x=>Number(x.id)!==Number(currentGame.id));saveLibrary();showLibrary()}
-function deleteLibraryGame(id){const g=library.find(x=>Number(x.id)===Number(id));if(!g||!confirm(`Supprimer "${g.name}" de ta bibliothèque ?`))return;library=library.filter(x=>Number(x.id)!==Number(id));saveLibrary();renderLibrary()}
+  const c =
+    document.getElementById(
+      "studioDetail"
+    );
+
+  const s =
+    currentStudio;
+
+
+  c.innerHTML =
+    '<div class="studio-loading">🏢 Chargement de la fiche du studio...</div>';
+
+
+  try{
+
+    /*
+      CORRECTION IMPORTANTE :
+
+      Le Worker utilise :
+
+      /developers/ID
+      /publishers/ID
+
+      et PAS :
+
+      /studio/developer/ID
+    */
+
+    const endpoint =
+      s.type === "developer"
+        ? "developers"
+        : "publishers";
+
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/" +
+        endpoint +
+        "/" +
+        encodeURIComponent(s.id)
+      );
+
+
+    if(!r.ok){
+
+      let errorMessage =
+        "Impossible de charger le studio.";
+
+      try{
+
+        const errorData =
+          await r.json();
+
+        if(errorData.error){
+          errorMessage =
+            errorData.error;
+        }
+
+      }catch(_){}
+
+      throw new Error(
+        errorMessage +
+        " (HTTP " +
+        r.status +
+        ")"
+      );
+    }
+
+
+    const d =
+      await r.json();
+
+
+    /*
+      RAWG renvoie directement
+      les informations du studio.
+
+      On utilise donc d directement.
+    */
+
+    const studio =
+      d.studio || d;
+
+
+    const image =
+      studio.image_background ||
+      studio.image ||
+      placeholder();
+
+
+    const description =
+      studio.description ||
+      "Aucune description disponible.";
+
+
+    const gamesCount =
+      Number(
+        studio.games_count ||
+        studio.count ||
+        0
+      );
+
+
+    /*
+      Informations disponibles
+      directement chez RAWG.
+    */
+
+    const location =
+      studio.location ||
+      studio.headquarters ||
+      "Non renseigné";
+
+
+    const founded =
+      studio.founded ||
+      studio.foundation ||
+      studio.dateFounded ||
+      "Non renseigné";
+
+
+    const founder =
+      studio.founder ||
+      studio.founders ||
+      "Non renseigné";
+
+
+    const ceo =
+      studio.ceo ||
+      studio.president ||
+      studio.director ||
+      "Non renseigné";
+
+
+    c.innerHTML = `
+
+      <div class="studio-page">
+
+
+        <div class="studio-hero">
+
+          <img
+            class="studio-hero-image"
+            src="${escapeHtml(image)}"
+            alt=""
+            loading="lazy"
+          >
+
+          <div class="studio-hero-overlay">
+
+            <div class="studio-type">
+
+              ${
+                s.type === "publisher"
+                  ? "ÉDITEUR"
+                  : "DÉVELOPPEUR"
+              }
+
+            </div>
+
+            <div class="studio-name">
+
+              ${escapeHtml(
+                studio.name ||
+                s.name ||
+                "Studio"
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="studio-content">
+
+
+          <div class="studio-wiki-grid">
+
+
+            <div class="studio-box">
+
+              <div class="studio-box-title">
+                📖 À propos
+              </div>
+
+              <div class="studio-description">
+
+                ${escapeHtml(
+                  stripHtml(description)
+                )}
+
+              </div>
+
+              <div class="studio-source">
+                Informations fournies par RAWG.
+              </div>
+
+            </div>
+
+
+            <div class="studio-box">
+
+              <div class="studio-box-title">
+                🏢 Informations
+              </div>
+
+
+              <div class="studio-facts">
+
+
+                <div class="studio-fact">
+
+                  <div class="studio-fact-label">
+                    📍 Localisation
+                  </div>
+
+                  <div class="studio-fact-value">
+                    ${escapeHtml(location)}
+                  </div>
+
+                </div>
+
+
+                <div class="studio-fact">
+
+                  <div class="studio-fact-label">
+                    📅 Fondation
+                  </div>
+
+                  <div class="studio-fact-value">
+                    ${escapeHtml(founded)}
+                  </div>
+
+                </div>
+
+
+                <div class="studio-fact">
+
+                  <div class="studio-fact-label">
+                    👤 Fondateur
+                  </div>
+
+                  <div class="studio-fact-value">
+                    ${escapeHtml(founder)}
+                  </div>
+
+                </div>
+
+
+                <div class="studio-fact">
+
+                  <div class="studio-fact-label">
+                    👔 Direction
+                  </div>
+
+                  <div class="studio-fact-value">
+                    ${escapeHtml(ceo)}
+                  </div>
+
+                </div>
+
+
+                <div class="studio-fact">
+
+                  <div class="studio-fact-label">
+                    🎮 Jeux
+                  </div>
+
+                  <div class="studio-count">
+                    ${
+                      gamesCount ||
+                      "N/A"
+                    }
+                  </div>
+
+                </div>
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+          <div class="studio-games-section">
+
+
+            <div class="studio-games-header">
+
+              <div>
+
+                <div class="studio-games-title">
+                  🎮 Jeux du studio
+                </div>
+
+                <div
+                  id="studioGamesCount"
+                  class="studio-games-count"
+                >
+                  Chargement...
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div
+              id="studioGames"
+              class="games"
+            ></div>
+
+
+            <button
+              id="studioMore"
+              class="back hidden"
+              style="margin-top:18px"
+              onclick="loadMoreStudioGames()"
+            >
+              Charger plus
+            </button>
+
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    studioPage = 1;
+    studioHasMore = false;
+    studioLoading = false;
+    studioGames = [];
+    studioGameIds = new Set();
+
+
+    await loadStudioGames(
+      1,
+      false
+    );
+
+
+  }catch(e){
+
+    console.error(
+      "Erreur fiche studio :",
+      e
+    );
+
+
+    c.innerHTML = `
+
+      <div class="empty">
+
+        ❌ Impossible de charger la fiche de
+
+        <strong>
+          ${escapeHtml(
+            s.name
+          )}
+        </strong>
+
+        <br><br>
+
+        ${escapeHtml(
+          e.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   JEUX DU STUDIO
+========================= */
+
+async function loadStudioGames(
+  page = 1,
+  append = false
+){
+
+  if(studioLoading){
+    return;
+  }
+
+  studioLoading = true;
+
+
+  const c =
+    document.getElementById(
+      "studioGames"
+    );
+
+  const more =
+    document.getElementById(
+      "studioMore"
+    );
+
+  const count =
+    document.getElementById(
+      "studioGamesCount"
+    );
+
+
+  if(!c){
+
+    studioLoading = false;
+
+    return;
+  }
+
+
+  if(!append){
+
+    c.innerHTML =
+      '<div class="studio-loading">🎮 Chargement des jeux...</div>';
+
+    studioGames = [];
+    studioGameIds = new Set();
+
+  }
+
+
+  /*
+    CORRECTION IMPORTANTE :
+
+    Développeur :
+
+    /developers/ID/games
+
+    Éditeur :
+
+    /publishers/ID/games
+  */
+
+  const endpoint =
+    currentStudio.type === "developer"
+      ? "developers"
+      : "publishers";
+
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/" +
+        endpoint +
+        "/" +
+        encodeURIComponent(
+          currentStudio.id
+        ) +
+        "/games?page=" +
+        page
+      );
+
+
+    if(!r.ok){
+
+      throw new Error(
+        "Impossible de charger les jeux du studio."
+      );
+
+    }
+
+
+    const d =
+      await r.json();
+
+
+    if(!append){
+
+      c.innerHTML = "";
+
+    }
+
+
+    (d.results || [])
+      .forEach(g => {
+
+        const id =
+          Number(g.id);
+
+
+        if(
+          studioGameIds.has(id)
+        ){
+          return;
+        }
+
+
+        studioGameIds.add(id);
+
+        studioGames.push(g);
+
+
+        c.appendChild(
+          createGameCard(g)
+        );
+
+      });
+
+
+    studioHasMore =
+      Boolean(d.next);
+
+
+    studioPage =
+      page;
+
+
+    if(more){
+
+      more.classList.toggle(
+        "hidden",
+        !studioHasMore
+      );
+
+    }
+
+
+    if(count){
+
+      count.textContent =
+        `${studioGames.length} jeu(x) chargé(s)` +
+        (
+          d.count
+            ? ` sur ${d.count}`
+            : ""
+        );
+
+    }
+
+
+    if(!studioGames.length){
+
+      c.innerHTML =
+        '<div class="empty">🎮 Aucun jeu trouvé pour ce studio.</div>';
+
+    }
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    if(!append){
+
+      c.innerHTML =
+        `
+        <div class="empty">
+          ❌ ${escapeHtml(
+            e.message
+          )}
+        </div>
+        `;
+
+    }
+
+  }finally{
+
+    studioLoading = false;
+
+  }
+
+}
+
+
+async function loadMoreStudioGames(){
+
+  if(studioHasMore){
+
+    await loadStudioGames(
+      studioPage + 1,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   RETOUR STUDIO
+========================= */
+
+function goBackFromStudio(){
+
+  if(currentGame){
+
+    hideSections();
+
+    document
+      .getElementById("detailSection")
+      .classList.remove("hidden");
+
+    renderDetail();
+
+  }else{
+
+    showSearch();
+
+  }
+
+}
+
+
+/* =========================
+   OUVRIR JEU DE LA SÉRIE
+========================= */
+
+async function openSeriesGame(id){
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/game/" +
+        encodeURIComponent(id)
+      );
+
+
+    if(!r.ok){
+
+      throw new Error(
+        "Impossible de charger le jeu"
+      );
+
+    }
+
+
+    currentGame =
+      await r.json();
+
+
+    await renderDetail();
+
+
+  }catch(e){
+
+    console.error(e);
+
+  }
+
+}
+
+
+/* =========================
+   BIBLIOTHÈQUE
+========================= */
+
+function getCurrentSaved(){
+
+  return currentGame
+    ? library.find(
+        x =>
+          Number(x.id) ===
+          Number(currentGame.id)
+      )
+    : null;
+
+}
+
+
+function ensureSaved(){
+
+  let g =
+    getCurrentSaved();
+
+
+  if(g){
+    return g;
+  }
+
+
+  g = {
+
+    id:
+      currentGame.id,
+
+    name:
+      currentGame.name,
+
+    background_image:
+      currentGame.background_image,
+
+    released:
+      currentGame.released,
+
+    note:
+      0,
+
+    progress:
+      0,
+
+    hours:
+      0,
+
+    minutes:
+      0,
+
+    status:
+      "À jouer",
+
+    addedAt:
+      Date.now()
+
+  };
+
+
+  library.push(g);
+
+  saveLibrary();
+
+
+  return g;
+
+}
+
+
+function addCurrentGame(){
+
+  ensureSaved();
+
+  renderDetail();
+
+}
+
+
+function changeRating(a){
+
+  const g =
+    ensureSaved();
+
+
+  g.note =
+    Math.max(
+      0,
+      Math.min(
+        10,
+        Math.round(
+          (
+            Number(g.note || 0) +
+            a
+          ) * 2
+        ) / 2
+      )
+    );
+
+
+  saveLibrary();
+
+
+  document
+    .getElementById(
+      "ratingValue"
+    )
+    .textContent =
+      g.note;
+
+
+  updateRatingButtons();
+
+}
+
+
+function updateRatingButtons(){
+
+  const g =
+    getCurrentSaved();
+
+
+  if(!g){
+    return;
+  }
+
+
+  document
+    .getElementById(
+      "minusRating"
+    )
+    .disabled =
+      Number(g.note || 0) <= 0;
+
+
+  document
+    .getElementById(
+      "plusRating"
+    )
+    .disabled =
+      Number(g.note || 0) >= 10;
+
+}
+
+
+function changeProgress(v){
+
+  const g =
+    ensureSaved();
+
+
+  g.progress =
+    Number(v);
+
+
+  document
+    .getElementById(
+      "progressValue"
+    )
+    .textContent =
+      v;
+
+
+  saveLibrary();
+
+}
+
+
+function saveTime(){
+
+  const g =
+    ensureSaved();
+
+
+  let h =
+    parseInt(
+      document
+        .getElementById(
+          "hoursInput"
+        )
+        .value
+    ) || 0;
+
+
+  let m =
+    parseInt(
+      document
+        .getElementById(
+          "minutesInput"
+        )
+        .value
+    ) || 0;
+
+
+  h +=
+    Math.floor(
+      m / 60
+    );
+
+
+  m %= 60;
+
+
+  g.hours =
+    Math.max(
+      0,
+      h
+    );
+
+
+  g.minutes =
+    Math.max(
+      0,
+      m
+    );
+
+
+  saveLibrary();
+
+  renderDetail();
+
+}
+
+
+function changeStatus(v){
+
+  const g =
+    ensureSaved();
+
+
+  g.status =
+    v;
+
+
+  saveLibrary();
+
+  renderDetail();
+
+}
+
+
+function deleteCurrentGame(){
+
+  if(
+    !currentGame ||
+    !confirm(
+      "Supprimer ce jeu de ta bibliothèque ?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  library =
+    library.filter(
+      x =>
+        Number(x.id) !==
+        Number(currentGame.id)
+    );
+
+
+  saveLibrary();
+
+  showLibrary();
+
+}
+
+
+function deleteLibraryGame(id){
+
+  const g =
+    library.find(
+      x =>
+        Number(x.id) ===
+        Number(id)
+    );
+
+
+  if(
+    !g ||
+    !confirm(
+      `Supprimer "${g.name}" de ta bibliothèque ?`
+    )
+  ){
+
+    return;
+
+  }
+
+
+  library =
+    library.filter(
+      x =>
+        Number(x.id) !==
+        Number(id)
+    );
+
+
+  saveLibrary();
+
+  renderLibrary();
+
+}
+
+
 function renderLibrary(){
- const c=document.getElementById("library"),search=(document.getElementById("librarySearch").value||"").toLowerCase().trim(),sf=document.getElementById("statusFilter").value,sort=document.getElementById("sortFilter").value;
- let items=library.filter(g=>(g.name||"").toLowerCase().includes(search)&&(sf==="Tous"||g.status===sf));
- items.sort((a,b)=>sort==="name"?(a.name||"").localeCompare(b.name||"","fr"):sort==="rating"?Number(b.note||0)-Number(a.note||0):sort==="progress"?Number(b.progress||0)-Number(a.progress||0):sort==="time"?(Number(b.hours||0)*60+Number(b.minutes||0))-(Number(a.hours||0)*60+Number(a.minutes||0)):Number(b.addedAt||0)-Number(a.addedAt||0));
- document.getElementById("libraryCount").textContent=`${items.length} jeu(x) dans ta bibliothèque`;if(!items.length){c.innerHTML='<div class="empty">📚 Aucun jeu trouvé.</div>';return}c.innerHTML="";
- items.forEach(g=>{const i=document.createElement("div");i.className="library-item";const mins=Number(g.hours||0)*60+Number(g.minutes||0);i.innerHTML=`<img src="${escapeHtml(g.background_image||placeholder())}" alt="" loading="lazy"><div class="library-info"><div class="library-name">${escapeHtml(g.name||"Jeu")}</div><div class="library-small">${escapeHtml(g.released||"Date inconnue")}</div><div class="library-line">⭐ ${Number(g.note||0)}/10 • 📊 ${Number(g.progress||0)}%</div><div class="library-line">🕐 ${Math.floor(mins/60)}h ${mins%60}min</div><div class="badge">${escapeHtml(g.status||"À jouer")}</div></div><button class="library-delete" onclick="event.stopPropagation();deleteLibraryGame(${Number(g.id)})">🗑️</button>`;i.onclick=()=>openGame(g);c.appendChild(i)})
+
+  const c =
+    document.getElementById(
+      "library"
+    );
+
+
+  const search =
+    (
+      document.getElementById(
+        "librarySearch"
+      ).value || ""
+    )
+      .toLowerCase()
+      .trim();
+
+
+  const sf =
+    document.getElementById(
+      "statusFilter"
+    ).value;
+
+
+  const sort =
+    document.getElementById(
+      "sortFilter"
+    ).value;
+
+
+  let items =
+    library.filter(
+      g =>
+        (
+          g.name || ""
+        )
+          .toLowerCase()
+          .includes(search)
+        &&
+        (
+          sf === "Tous" ||
+          g.status === sf
+        )
+    );
+
+
+  items.sort(
+    (a,b) =>
+      sort === "name"
+        ? (
+            a.name || ""
+          ).localeCompare(
+            b.name || "",
+            "fr"
+          )
+
+        : sort === "rating"
+          ? Number(b.note || 0) -
+            Number(a.note || 0)
+
+        : sort === "progress"
+          ? Number(b.progress || 0) -
+            Number(a.progress || 0)
+
+        : sort === "time"
+          ? (
+              Number(b.hours || 0) * 60 +
+              Number(b.minutes || 0)
+            )
+            -
+            (
+              Number(a.hours || 0) * 60 +
+              Number(a.minutes || 0)
+            )
+
+        : Number(b.addedAt || 0) -
+          Number(a.addedAt || 0)
+  );
+
+
+  document
+    .getElementById(
+      "libraryCount"
+    )
+    .textContent =
+      `${items.length} jeu(x) dans ta bibliothèque`;
+
+
+  if(!items.length){
+
+    c.innerHTML =
+      '<div class="empty">📚 Aucun jeu trouvé.</div>';
+
+    return;
+
+  }
+
+
+  c.innerHTML = "";
+
+
+  items.forEach(g => {
+
+    const i =
+      document.createElement(
+        "div"
+      );
+
+
+    i.className =
+      "library-item";
+
+
+    const mins =
+      Number(g.hours || 0) * 60 +
+      Number(g.minutes || 0);
+
+
+    i.innerHTML = `
+
+      <img
+        src="${escapeHtml(
+          g.background_image ||
+          placeholder()
+        )}"
+        alt=""
+        loading="lazy"
+      >
+
+      <div class="library-info">
+
+        <div class="library-name">
+          ${escapeHtml(
+            g.name || "Jeu"
+          )}
+        </div>
+
+        <div class="library-small">
+          ${escapeHtml(
+            g.released ||
+            "Date inconnue"
+          )}
+        </div>
+
+        <div class="library-line">
+          ⭐ ${Number(g.note || 0)}/10
+          •
+          📊 ${Number(g.progress || 0)}%
+        </div>
+
+        <div class="library-line">
+          🕐 ${Math.floor(mins / 60)}h
+          ${mins % 60}min
+        </div>
+
+        <div class="badge">
+          ${escapeHtml(
+            g.status ||
+            "À jouer"
+          )}
+        </div>
+
+      </div>
+
+      <button
+        class="library-delete"
+        onclick="
+          event.stopPropagation();
+          deleteLibraryGame(
+            ${Number(g.id)}
+          )
+        "
+      >
+        🗑️
+      </button>
+
+    `;
+
+
+    i.onclick =
+      () => openGame(g);
+
+
+    c.appendChild(i);
+
+  });
+
 }
 
-function toggleWishlist(){if(!currentGame)return;const idx=wishlist.findIndex(x=>Number(x.id)===Number(currentGame.id));if(idx>=0)wishlist.splice(idx,1);else wishlist.push({id:currentGame.id,name:currentGame.name,background_image:currentGame.background_image,released:currentGame.released||null,tba:!!currentGame.tba,addedAt:Date.now()});saveWishlist();renderDetail()}
-function removeFromWishlist(id){wishlist=wishlist.filter(x=>Number(x.id)!==Number(id));saveWishlist();renderWishlist()}
-function daysUntil(s){if(!s)return null;const t=new Date();t.setHours(0,0,0,0);const d=new Date(s+"T00:00:00");return isNaN(d)?null:Math.ceil((d-t)/86400000)}
-function releaseLabel(g){if(g.tba||!g.released)return"📅 Date à confirmer";const d=daysUntil(g.released);if(d===null)return"📅 Date inconnue";if(d<0)return"🟢 Sorti";if(d===0)return"🔥 Sortie aujourd'hui";if(d===1)return"⏳ Sortie demain";return`⏳ Sortie dans ${d} jours`}
-function renderWishlist(){const c=document.getElementById("wishlist"),s=(document.getElementById("wishlistSearch").value||"").toLowerCase().trim(),sort=document.getElementById("wishlistSort").value;let items=wishlist.filter(x=>(x.name||"").toLowerCase().includes(s));items.sort((a,b)=>sort==="name"?(a.name||"").localeCompare(b.name||"","fr"):(a.released||"9999-12-31").localeCompare(b.released||"9999-12-31"));document.getElementById("wishlistCount").textContent=`${items.length} jeu(x) dans tes souhaits`;if(!items.length){c.innerHTML='<div class="empty">❤️ Aucun jeu dans ta liste de souhaits.</div>';return}c.innerHTML="";items.forEach(g=>{const i=document.createElement("div");i.className="wishlist-item";i.innerHTML=`<img src="${escapeHtml(g.background_image||placeholder())}" alt="" loading="lazy"><div class="wishlist-info"><div class="wishlist-name">${escapeHtml(g.name||"Jeu")}</div><div class="wishlist-date">${escapeHtml(g.released||"Date à confirmer")}</div><div class="wishlist-badge">${releaseLabel(g)}</div></div><button class="wishlist-delete" onclick="event.stopPropagation();removeFromWishlist(${Number(g.id)})">🗑️</button>`;i.onclick=()=>openGame(g);c.appendChild(i)})}
 
-let upcomingPage=1,upcomingHasMore=false;
-async function fetchUpcomingPage(page=1,append=false){const c=document.getElementById("upcoming"),s=document.getElementById("upcomingStatus"),more=document.getElementById("upcomingMore");if(!append){c.innerHTML='<div class="empty">📅 Chargement...</div>';upcomingPage=1}s.textContent=append?"Chargement de jeux supplémentaires...":"Recherche des prochaines sorties...";const today=new Date(),from=today.toISOString().slice(0,10),future=new Date(today);future.setDate(future.getDate()+365);const to=future.toISOString().slice(0,10);try{const r=await fetch(WORKER_URL+`/upcoming?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&page=${page}`),d=await r.json();if(!r.ok||!Array.isArray(d.results))throw new Error(d.error||"Impossible de charger les sorties");if(!append)c.innerHTML="";d.results.filter(x=>x.released).sort((a,b)=>a.released.localeCompare(b.released)).forEach(g=>{const card=document.createElement("div");card.className="upcoming-card";card.innerHTML=`<img src="${escapeHtml(g.background_image||placeholder())}" alt="" loading="lazy"><div class="upcoming-body"><div class="upcoming-name">${escapeHtml(g.name||"Jeu")}</div><div class="upcoming-date">📅 ${escapeHtml(g.released)}</div><div class="countdown">${releaseLabel(g)}</div></div>`;card.onclick=()=>openGame(g);c.appendChild(card)});upcomingHasMore=Boolean(d.next);upcomingPage=page;more.classList.toggle("hidden",!upcomingHasMore);s.textContent=`${c.querySelectorAll(".upcoming-card").length} prochaine(s) sortie(s) affichée(s).`;if(!c.querySelector(".upcoming-card"))c.innerHTML='<div class="empty">Aucune sortie trouvée.</div>'}catch(e){console.error(e);s.textContent="Erreur lors du chargement des sorties.";if(!append)c.innerHTML=`<div class="empty">❌ ${escapeHtml(e.message)}</div>`}}
-async function loadUpcoming(){await fetchUpcomingPage(1,false)}async function loadMoreUpcoming(){if(upcomingHasMore)await fetchUpcomingPage(upcomingPage+1,true)}
+/* =========================
+   SOUHAITS
+========================= */
 
-let currentGenreSlug="",currentGenreLabel="",genrePage=1,genreHasMore=false,genreLoading=false,genreSeenIds=new Set();
-async function fetchGenrePage(page=1,append=false){if(genreLoading)return;genreLoading=true;const c=document.getElementById("genreGames"),s=document.getElementById("genreStatus"),more=document.getElementById("genreMore");if(!append){c.innerHTML='<div class="empty">🎭 Chargement des jeux...</div>';genreSeenIds=new Set()}s.textContent=`Recherche des jeux ${currentGenreLabel}...`;try{const r=await fetch(WORKER_URL+"/genre/"+encodeURIComponent(currentGenreSlug)+"?page="+page),d=await r.json();if(!r.ok||!Array.isArray(d.results))throw new Error(d.error||"Impossible de charger ce genre");if(!append)c.innerHTML="";d.results.forEach(g=>{const id=Number(g.id);if(genreSeenIds.has(id))return;genreSeenIds.add(id);c.appendChild(createGameCard(g))});genreHasMore=Boolean(d.next);genrePage=page;more.classList.toggle("hidden",!genreHasMore);s.textContent=`${c.querySelectorAll(".card").length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;if(!c.querySelector(".card"))c.innerHTML='<div class="empty">Aucun jeu trouvé dans ce genre RAWG.</div>'}catch(e){console.error(e);s.textContent="Erreur lors du chargement du genre.";if(!append)c.innerHTML=`<div class="empty">❌ ${escapeHtml(e.message)}</div>`}finally{genreLoading=false}}
-async function loadGenre(slug,label){currentGenreSlug=slug;currentGenreLabel=label;genrePage=1;genreHasMore=false;genreSeenIds=new Set();await fetchGenrePage(1,false)}
-async function loadMoreGenre(){let n=0;while(genreHasMore&&n<3){await fetchGenrePage(genrePage+1,true);n++}}
+function toggleWishlist(){
 
-function hideSections(){["searchSection","detailSection","studioSection","librarySection","wishlistSection","upcomingSection","genresSection","statsSection"].forEach(id=>document.getElementById(id)?.classList.add("hidden"));["tabSearch","tabLibrary","tabWishlist","tabUpcoming","tabGenres","tabStats"].forEach(id=>document.getElementById(id)?.classList.remove("active"))}
-function showSearch(){hideSections();document.getElementById("searchSection").classList.remove("hidden");document.getElementById("tabSearch").classList.add("active")}
-function showLibrary(){hideSections();document.getElementById("librarySection").classList.remove("hidden");document.getElementById("tabLibrary").classList.add("active");renderLibrary()}
-function showWishlist(){hideSections();document.getElementById("wishlistSection").classList.remove("hidden");document.getElementById("tabWishlist").classList.add("active");renderWishlist()}
-function showUpcoming(){hideSections();document.getElementById("upcomingSection").classList.remove("hidden");document.getElementById("tabUpcoming").classList.add("active");loadUpcoming()}
-function showGenres(){hideSections();document.getElementById("genresSection").classList.remove("hidden");document.getElementById("tabGenres").classList.add("active")}
-function showStats(){hideSections();document.getElementById("statsSection").classList.remove("hidden");document.getElementById("tabStats").classList.add("active");renderStats()}
+  if(!currentGame){
+    return;
+  }
 
-function renderStats(){const c=document.getElementById("statsContent"),total=library.length,finished=library.filter(g=>g.status==="Terminé").length,inProgress=library.filter(g=>g.status==="En cours").length,toPlay=library.filter(g=>g.status==="À jouer").length,totalMinutes=library.reduce((s,g)=>s+Number(g.hours||0)*60+Number(g.minutes||0),0),avg=total?(library.reduce((s,g)=>s+Number(g.note||0),0)/total).toFixed(1):"0.0",prog=total?Math.round(library.reduce((s,g)=>s+Number(g.progress||0),0)/total):0,best=[...library].sort((a,b)=>Number(b.note||0)-Number(a.note||0))[0];c.innerHTML=`<div class="stats-grid"><div class="stat"><div class="stat-icon">🎮</div><div class="stat-number">${total}</div><div class="stat-label">Jeux dans la bibliothèque</div></div><div class="stat"><div class="stat-icon">🏆</div><div class="stat-number">${finished}</div><div class="stat-label">Jeux terminés</div></div><div class="stat"><div class="stat-icon">⏱️</div><div class="stat-number">${Math.floor(totalMinutes/60)}h</div><div class="stat-label">Temps de jeu</div></div><div class="stat"><div class="stat-icon">⭐</div><div class="stat-number">${avg}</div><div class="stat-label">Note moyenne</div></div></div><div class="stats-box"><div class="panel-title">📊 Répartition</div>🎯 À jouer : <strong>${toPlay}</strong><br><br>🎮 En cours : <strong>${inProgress}</strong><br><br>🏆 Terminés : <strong>${finished}</strong></div><div class="stats-box"><div class="panel-title">📈 Progression moyenne</div><div class="big">${prog}%</div><div class="bar"><div class="fill" style="width:${prog}%"></div></div></div>${best?`<div class="stats-box"><div class="panel-title">⭐ Ton jeu le mieux noté</div><div class="best"><img src="${escapeHtml(best.background_image||placeholder())}" alt=""><div><strong>${escapeHtml(best.name)}</strong><div style="margin-top:6px">⭐ ${Number(best.note||0)}/10</div></div></div></div>`:""}`}
 
-function stripHtml(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
-function escapeHtml(text){const d=document.createElement("div");d.textContent=text==null?"":String(text);return d.innerHTML}
-function escapeAttr(text){return String(text==null?"":text).replace(/\\/g,"\\\\").replace(/'/g,"&#39;").replace(/"/g,"&quot;")}
-document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchGames()});
+  const idx =
+    wishlist.findIndex(
+      x =>
+        Number(x.id) ===
+        Number(currentGame.id)
+    );
+
+
+  if(idx >= 0){
+
+    wishlist.splice(
+      idx,
+      1
+    );
+
+  }else{
+
+    wishlist.push({
+
+      id:
+        currentGame.id,
+
+      name:
+        currentGame.name,
+
+      background_image:
+        currentGame.background_image,
+
+      released:
+        currentGame.released ||
+        null,
+
+      tba:
+        !!currentGame.tba,
+
+      addedAt:
+        Date.now()
+
+    });
+
+  }
+
+
+  saveWishlist();
+
+  renderDetail();
+
+}
+
+
+function removeFromWishlist(id){
+
+  wishlist =
+    wishlist.filter(
+      x =>
+        Number(x.id) !==
+        Number(id)
+    );
+
+
+  saveWishlist();
+
+  renderWishlist();
+
+}
+
+
+function daysUntil(s){
+
+  if(!s){
+    return null;
+  }
+
+
+  const t =
+    new Date();
+
+
+  t.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  const d =
+    new Date(
+      s +
+      "T00:00:00"
+    );
+
+
+  return isNaN(d)
+    ? null
+    : Math.ceil(
+        (
+          d - t
+        ) /
+        86400000
+      );
+
+}
+
+
+function releaseLabel(g){
+
+  if(
+    g.tba ||
+    !g.released
+  ){
+
+    return "📅 Date à confirmer";
+
+  }
+
+
+  const d =
+    daysUntil(
+      g.released
+    );
+
+
+  if(d === null){
+
+    return "📅 Date inconnue";
+
+  }
+
+
+  if(d < 0){
+
+    return "🟢 Sorti";
+
+  }
+
+
+  if(d === 0){
+
+    return "🔥 Sortie aujourd'hui";
+
+  }
+
+
+  if(d === 1){
+
+    return "⏳ Sortie demain";
+
+  }
+
+
+  return `
+    ⏳ Sortie dans
+    ${d}
+    jours
+  `;
+
+}
+
+
+function renderWishlist(){
+
+  const c =
+    document.getElementById(
+      "wishlist"
+    );
+
+
+  const s =
+    (
+      document.getElementById(
+        "wishlistSearch"
+      ).value || ""
+    )
+      .toLowerCase()
+      .trim();
+
+
+  const sort =
+    document.getElementById(
+      "wishlistSort"
+    ).value;
+
+
+  let items =
+    wishlist.filter(
+      x =>
+        (
+          x.name || ""
+        )
+          .toLowerCase()
+          .includes(s)
+    );
+
+
+  items.sort(
+    (a,b) =>
+      sort === "name"
+        ? (
+            a.name || ""
+          ).localeCompare(
+            b.name || "",
+            "fr"
+          )
+        : (
+            a.released ||
+            "9999-12-31"
+          ).localeCompare(
+            b.released ||
+            "9999-12-31"
+          )
+  );
+
+
+  document
+    .getElementById(
+      "wishlistCount"
+    )
+    .textContent =
+      `${items.length} jeu(x) dans tes souhaits`;
+
+
+  if(!items.length){
+
+    c.innerHTML =
+      '<div class="empty">❤️ Aucun jeu dans ta liste de souhaits.</div>';
+
+    return;
+
+  }
+
+
+  c.innerHTML = "";
+
+
+  items.forEach(g => {
+
+    const i =
+      document.createElement(
+        "div"
+      );
+
+
+    i.className =
+      "wishlist-item";
+
+
+    i.innerHTML = `
+
+      <img
+        src="${escapeHtml(
+          g.background_image ||
+          placeholder()
+        )}"
+        alt=""
+        loading="lazy"
+      >
+
+      <div class="wishlist-info">
+
+        <div class="wishlist-name">
+          ${escapeHtml(
+            g.name || "Jeu"
+          )}
+        </div>
+
+        <div class="wishlist-date">
+          ${escapeHtml(
+            g.released ||
+            "Date à confirmer"
+          )}
+        </div>
+
+        <div class="wishlist-badge">
+          ${releaseLabel(g)}
+        </div>
+
+      </div>
+
+      <button
+        class="wishlist-delete"
+        onclick="
+          event.stopPropagation();
+          removeFromWishlist(
+            ${Number(g.id)}
+          )
+        "
+      >
+        🗑️
+      </button>
+
+    `;
+
+
+    i.onclick =
+      () => openGame(g);
+
+
+    c.appendChild(i);
+
+  });
+
+}
+
+
+/* =========================
+   PROCHAINES SORTIES
+========================= */
+
+let upcomingPage = 1;
+let upcomingHasMore = false;
+
+
+async function fetchUpcomingPage(
+  page = 1,
+  append = false
+){
+
+  const c =
+    document.getElementById(
+      "upcoming"
+    );
+
+
+  const s =
+    document.getElementById(
+      "upcomingStatus"
+    );
+
+
+  const more =
+    document.getElementById(
+      "upcomingMore"
+    );
+
+
+  if(!append){
+
+    c.innerHTML =
+      '<div class="empty">📅 Chargement...</div>';
+
+    upcomingPage = 1;
+
+  }
+
+
+  s.textContent =
+    append
+      ? "Chargement de jeux supplémentaires..."
+      : "Recherche des prochaines sorties...";
+
+
+  const today =
+    new Date();
+
+
+  const from =
+    today
+      .toISOString()
+      .slice(0,10);
+
+
+  const future =
+    new Date(today);
+
+
+  future.setDate(
+    future.getDate() + 365
+  );
+
+
+  const to =
+    future
+      .toISOString()
+      .slice(0,10);
+
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        `/upcoming?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&page=${page}`
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !Array.isArray(d.results)
+    ){
+
+      throw new Error(
+        d.error ||
+        "Impossible de charger les sorties"
+      );
+
+    }
+
+
+    if(!append){
+
+      c.innerHTML = "";
+
+    }
+
+
+    d.results
+      .filter(
+        x =>
+          x.released
+      )
+      .sort(
+        (a,b) =>
+          a.released.localeCompare(
+            b.released
+          )
+      )
+      .forEach(g => {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "upcoming-card";
+
+
+        card.innerHTML = `
+
+          <img
+            src="${escapeHtml(
+              g.background_image ||
+              placeholder()
+            )}"
+            alt=""
+            loading="lazy"
+          >
+
+          <div class="upcoming-body">
+
+            <div class="upcoming-name">
+              ${escapeHtml(
+                g.name || "Jeu"
+              )}
+            </div>
+
+            <div class="upcoming-date">
+              📅 ${escapeHtml(
+                g.released
+              )}
+            </div>
+
+            <div class="countdown">
+              ${releaseLabel(g)}
+            </div>
+
+          </div>
+
+        `;
+
+
+        card.onclick =
+          () => openGame(g);
+
+
+        c.appendChild(card);
+
+      });
+
+
+    upcomingHasMore =
+      Boolean(d.next);
+
+
+    upcomingPage =
+      page;
+
+
+    more.classList.toggle(
+      "hidden",
+      !upcomingHasMore
+    );
+
+
+    s.textContent =
+      `${c.querySelectorAll(
+        ".upcoming-card"
+      ).length} prochaine(s) sortie(s) affichée(s).`;
+
+
+    if(
+      !c.querySelector(
+        ".upcoming-card"
+      )
+    ){
+
+      c.innerHTML =
+        '<div class="empty">Aucune sortie trouvée.</div>';
+
+    }
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    s.textContent =
+      "Erreur lors du chargement des sorties.";
+
+
+    if(!append){
+
+      c.innerHTML =
+        `
+        <div class="empty">
+          ❌ ${escapeHtml(
+            e.message
+          )}
+        </div>
+        `;
+
+    }
+
+  }
+
+}
+
+
+async function loadUpcoming(){
+
+  await fetchUpcomingPage(
+    1,
+    false
+  );
+
+}
+
+
+async function loadMoreUpcoming(){
+
+  if(upcomingHasMore){
+
+    await fetchUpcomingPage(
+      upcomingPage + 1,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   GENRES
+========================= */
+
+let currentGenreSlug = "";
+let currentGenreLabel = "";
+
+let genrePage = 1;
+let genreHasMore = false;
+let genreLoading = false;
+
+let genreSeenIds =
+  new Set();
+
+
+async function fetchGenrePage(
+  page = 1,
+  append = false
+){
+
+  if(genreLoading){
+    return;
+  }
+
+
+  genreLoading = true;
+
+
+  const c =
+    document.getElementById(
+      "genreGames"
+    );
+
+
+  const s =
+    document.getElementById(
+      "genreStatus"
+    );
+
+
+  const more =
+    document.getElementById(
+      "genreMore"
+    );
+
+
+  if(!append){
+
+    c.innerHTML =
+      '<div class="empty">🎭 Chargement des jeux...</div>';
+
+    genreSeenIds =
+      new Set();
+
+  }
+
+
+  s.textContent =
+    `Recherche des jeux ${currentGenreLabel}...`;
+
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/genre/" +
+        encodeURIComponent(
+          currentGenreSlug
+        ) +
+        "?page=" +
+        page
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !Array.isArray(d.results)
+    ){
+
+      throw new Error(
+        d.error ||
+        "Impossible de charger ce genre"
+      );
+
+    }
+
+
+    if(!append){
+
+      c.innerHTML = "";
+
+    }
+
+
+    d.results.forEach(
+      g => {
+
+        const id =
+          Number(g.id);
+
+
+        if(
+          genreSeenIds.has(id)
+        ){
+
+          return;
+
+        }
+
+
+        genreSeenIds.add(id);
+
+
+        c.appendChild(
+          createGameCard(g)
+        );
+
+      }
+    );
+
+
+    genreHasMore =
+      Boolean(d.next);
+
+
+    genrePage =
+      page;
+
+
+    more.classList.toggle(
+      "hidden",
+      !genreHasMore
+    );
+
+
+    s.textContent =
+      `${c.querySelectorAll(
+        ".card"
+      ).length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+
+
+    if(
+      !c.querySelector(
+        ".card"
+      )
+    ){
+
+      c.innerHTML =
+        '<div class="empty">Aucun jeu trouvé dans ce genre RAWG.</div>';
+
+    }
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    s.textContent =
+      "Erreur lors du chargement du genre.";
+
+
+    if(!append){
+
+      c.innerHTML =
+        `
+        <div class="empty">
+          ❌ ${escapeHtml(
+            e.message
+          )}
+        </div>
+        `;
+
+    }
+
+  }finally{
+
+    genreLoading = false;
+
+  }
+
+}
+
+
+async function loadGenre(
+  slug,
+  label
+){
+
+  currentGenreSlug =
+    slug;
+
+  currentGenreLabel =
+    label;
+
+  genrePage =
+    1;
+
+  genreHasMore =
+    false;
+
+  genreSeenIds =
+    new Set();
+
+
+  await fetchGenrePage(
+    1,
+    false
+  );
+
+}
+
+
+async function loadMoreGenre(){
+
+  let n = 0;
+
+
+  while(
+    genreHasMore &&
+    n < 3
+  ){
+
+    await fetchGenrePage(
+      genrePage + 1,
+      true
+    );
+
+    n++;
+
+  }
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function hideSections(){
+
+  [
+    "searchSection",
+    "detailSection",
+    "studioSection",
+    "librarySection",
+    "wishlistSection",
+    "upcomingSection",
+    "genresSection",
+    "statsSection"
+  ]
+  .forEach(
+    id =>
+      document
+        .getElementById(id)
+        ?.classList
+        .add("hidden")
+  );
+
+
+  [
+    "tabSearch",
+    "tabLibrary",
+    "tabWishlist",
+    "tabUpcoming",
+    "tabGenres",
+    "tabStats"
+  ]
+  .forEach(
+    id =>
+      document
+        .getElementById(id)
+        ?.classList
+        .remove("active")
+  );
+
+}
+
+
+function showSearch(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "searchSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabSearch"
+    )
+    .classList
+    .add("active");
+
+}
+
+
+function showLibrary(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "librarySection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabLibrary"
+    )
+    .classList
+    .add("active");
+
+
+  renderLibrary();
+
+}
+
+
+function showWishlist(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "wishlistSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabWishlist"
+    )
+    .classList
+    .add("active");
+
+
+  renderWishlist();
+
+}
+
+
+function showUpcoming(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "upcomingSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabUpcoming"
+    )
+    .classList
+    .add("active");
+
+
+  loadUpcoming();
+
+}
+
+
+function showGenres(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "genresSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabGenres"
+    )
+    .classList
+    .add("active");
+
+}
+
+
+function showStats(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "statsSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "tabStats"
+    )
+    .classList
+    .add("active");
+
+
+  renderStats();
+
+}
+
+
+/* =========================
+   STATISTIQUES
+========================= */
+
+function renderStats(){
+
+  const c =
+    document.getElementById(
+      "statsContent"
+    );
+
+
+  const total =
+    library.length;
+
+
+  const finished =
+    library.filter(
+      g =>
+        g.status ===
+        "Terminé"
+    ).length;
+
+
+  const inProgress =
+    library.filter(
+      g =>
+        g.status ===
+        "En cours"
+    ).length;
+
+
+  const toPlay =
+    library.filter(
+      g =>
+        g.status ===
+        "À jouer"
+    ).length;
+
+
+  const totalMinutes =
+    library.reduce(
+      (s,g) =>
+        s +
+        Number(g.hours || 0) * 60 +
+        Number(g.minutes || 0),
+      0
+    );
+
+
+  const avg =
+    total
+      ? (
+          library.reduce(
+            (s,g) =>
+              s +
+              Number(g.note || 0),
+            0
+          ) /
+          total
+        ).toFixed(1)
+      : "0.0";
+
+
+  const prog =
+    total
+      ? Math.round(
+          library.reduce(
+            (s,g) =>
+              s +
+              Number(
+                g.progress || 0
+              ),
+            0
+          ) /
+          total
+        )
+      : 0;
+
+
+  const best =
+    [...library]
+      .sort(
+        (a,b) =>
+          Number(b.note || 0) -
+          Number(a.note || 0)
+      )[0];
+
+
+  c.innerHTML = `
+
+    <div class="stats-grid">
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          🎮
+        </div>
+
+        <div class="stat-number">
+          ${total}
+        </div>
+
+        <div class="stat-label">
+          Jeux dans la bibliothèque
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          🏆
+        </div>
+
+        <div class="stat-number">
+          ${finished}
+        </div>
+
+        <div class="stat-label">
+          Jeux terminés
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          ⏱️
+        </div>
+
+        <div class="stat-number">
+          ${Math.floor(
+            totalMinutes / 60
+          )}h
+        </div>
+
+        <div class="stat-label">
+          Temps de jeu
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          ⭐
+        </div>
+
+        <div class="stat-number">
+          ${avg}
+        </div>
+
+        <div class="stat-label">
+          Note moyenne
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="stats-box">
+
+      <div class="panel-title">
+        📊 Répartition
+      </div>
+
+      🎯 À jouer :
+      <strong>${toPlay}</strong>
+
+      <br><br>
+
+      🎮 En cours :
+      <strong>${inProgress}</strong>
+
+      <br><br>
+
+      🏆 Terminés :
+      <strong>${finished}</strong>
+
+    </div>
+
+
+    <div class="stats-box">
+
+      <div class="panel-title">
+        📈 Progression moyenne
+      </div>
+
+      <div class="big">
+        ${prog}%
+      </div>
+
+      <div class="bar">
+
+        <div
+          class="fill"
+          style="width:${prog}%"
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    ${
+      best
+        ? `
+
+          <div class="stats-box">
+
+            <div class="panel-title">
+              ⭐ Ton jeu le mieux noté
+            </div>
+
+            <div class="best">
+
+              <img
+                src="${escapeHtml(
+                  best.background_image ||
+                  placeholder()
+                )}"
+                alt=""
+              >
+
+              <div>
+
+                <strong>
+                  ${escapeHtml(
+                    best.name
+                  )}
+                </strong>
+
+                <div style="margin-top:6px">
+
+                  ⭐ ${Number(
+                    best.note || 0
+                  )}/10
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        `
+        : ""
+    }
+
+  `;
+
+}
+
+
+/* =========================
+   OUTILS
+========================= */
+
+function stripHtml(html){
+
+  const d =
+    document.createElement(
+      "div"
+    );
+
+
+  d.innerHTML =
+    html || "";
+
+
+  return (
+    d.textContent ||
+    d.innerText ||
+    ""
+  );
+
+}
+
+
+function escapeHtml(text){
+
+  const d =
+    document.createElement(
+      "div"
+    );
+
+
+  d.textContent =
+    text == null
+      ? ""
+      : String(text);
+
+
+  return d.innerHTML;
+
+}
+
+
+function escapeAttr(text){
+
+  return String(
+    text == null
+      ? ""
+      : text
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "&#39;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    );
+
+}
+
+
+/* =========================
+   ENTRÉE
+========================= */
+
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "keydown",
+    e => {
+
+      if(
+        e.key ===
+        "Enter"
+      ){
+
+        searchGames();
+
+      }
+
+    }
+  );
+
 </script>
+
 </body>
 </html>
