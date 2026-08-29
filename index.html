@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -223,6 +224,193 @@ margin-bottom:5px
 .meta-value{
 font-size:14px;
 font-weight:700
+}
+
+/* STUDIOS */
+
+.studio-link{
+display:inline-block;
+color:#fff;
+text-decoration:none;
+cursor:pointer;
+font-weight:800;
+border-bottom:1px solid #555563;
+padding-bottom:2px;
+transition:.15s
+}
+
+.studio-link:hover{
+color:#ccc;
+border-color:#fff
+}
+
+.studio-list{
+display:flex;
+flex-direction:column;
+gap:7px
+}
+
+.studio-item{
+display:inline-block;
+width:max-content;
+max-width:100%;
+color:#fff;
+text-decoration:none;
+cursor:pointer;
+font-weight:800;
+border-bottom:1px solid #555563;
+padding-bottom:2px
+}
+
+.studio-item:hover{
+color:#ccc;
+border-color:#fff
+}
+
+/* STUDIO DETAIL */
+
+.studio-detail{
+margin-top:18px;
+background:#14141b;
+border:1px solid #292933;
+border-radius:18px;
+overflow:hidden
+}
+
+.studio-hero{
+padding:25px;
+min-height:210px;
+display:flex;
+align-items:flex-end;
+background-size:cover;
+background-position:center;
+position:relative
+}
+
+.studio-hero:before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+to top,
+rgba(9,9,13,.98),
+rgba(9,9,13,.25)
+)
+}
+
+.studio-hero-content{
+position:relative;
+z-index:1;
+width:100%
+}
+
+.studio-title{
+font-size:38px;
+font-weight:900;
+line-height:1.05;
+margin:0
+}
+
+.studio-type{
+color:#aaaab5;
+font-size:13px;
+font-weight:800;
+text-transform:uppercase;
+margin-bottom:8px
+}
+
+.studio-body{
+padding:20px
+}
+
+.studio-description{
+color:#c9c9d0;
+font-size:15px;
+line-height:1.7;
+white-space:pre-line
+}
+
+.studio-info-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:18px
+}
+
+.studio-info{
+background:#0d0d12;
+border:1px solid #292933;
+border-radius:11px;
+padding:13px
+}
+
+.studio-info-label{
+font-size:11px;
+color:#777783;
+margin-bottom:5px
+}
+
+.studio-info-value{
+font-size:14px;
+font-weight:800
+}
+
+.studio-games-title{
+font-size:20px;
+font-weight:900;
+margin:25px 0 13px
+}
+
+.studio-games{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:14px
+}
+
+.studio-game{
+background:#0d0d12;
+border:1px solid #292933;
+border-radius:12px;
+overflow:hidden;
+cursor:pointer;
+transition:.15s
+}
+
+.studio-game:hover{
+transform:translateY(-3px);
+border-color:#555563
+}
+
+.studio-game img{
+width:100%;
+height:205px;
+display:block;
+object-fit:cover
+}
+
+.studio-game-body{
+padding:10px
+}
+
+.studio-game-name{
+font-weight:800;
+line-height:1.25
+}
+
+.studio-game-date{
+font-size:11px;
+color:#777783;
+margin-top:5px
+}
+
+.studio-loading{
+text-align:center;
+padding:45px;
+color:#858590
+}
+
+.meta-value .studio-list + .studio-list{
+margin-top:5px
 }
 
 .panel{
@@ -757,6 +945,10 @@ max-width:280px
 grid-template-columns:repeat(2,1fr)
 }
 
+.studio-info-grid{
+grid-template-columns:1fr
+}
+
 }
 
 @media(max-width:600px){
@@ -802,8 +994,17 @@ grid-template-columns:1fr
 grid-template-columns:repeat(2,1fr)
 }
 
+.studio-title{
+font-size:29px
+}
+
+.studio-games{
+grid-template-columns:repeat(2,1fr)
+}
+
 }
 </style>
+
 </head>
 
 <body>
@@ -839,7 +1040,6 @@ Recherche ton prochain jeu 🎮
 
 </section>
 
-
 <section id="detailSection" class="hidden">
 
 <button class="back" onclick="showSearch()">← Retour</button>
@@ -848,6 +1048,13 @@ Recherche ton prochain jeu 🎮
 
 </section>
 
+<section id="studioSection" class="hidden">
+
+<button class="back" onclick="returnFromStudio()">← Retour</button>
+
+<div id="studioDetail"></div>
+
+</section>
 
 <section id="librarySection" class="hidden">
 
@@ -858,7 +1065,8 @@ Recherche ton prochain jeu 🎮
 <input
 id="librarySearch"
 placeholder="🔎 Rechercher..."
-oninput="renderLibrary()"
+oninput="renderLibrary"
+
 >
 
 <select id="statusFilter" onchange="renderLibrary()">
@@ -883,7 +1091,6 @@ oninput="renderLibrary()"
 
 </section>
 
-
 <section id="wishlistSection" class="hidden">
 
 <h2>❤️ Ma liste de souhaits</h2>
@@ -894,6 +1101,7 @@ oninput="renderLibrary()"
 id="wishlistSearch"
 placeholder="🔎 Rechercher dans mes souhaits..."
 oninput="renderWishlist()"
+
 >
 
 <select id="wishlistSort" onchange="renderWishlist()">
@@ -907,7 +1115,6 @@ oninput="renderWishlist()"
 <div id="wishlist"></div>
 
 </section>
-
 
 <section id="upcomingSection" class="hidden">
 
@@ -924,11 +1131,9 @@ id="upcomingMore"
 class="back hidden"
 style="margin-top:18px"
 onclick="loadMoreUpcoming()">
-Charger plus
-</button>
+Charger plus </button>
 
 </section>
-
 
 <section id="genresSection" class="hidden">
 
@@ -936,25 +1141,7 @@ Charger plus
 
 <div class="genre-list">
 
-<button onclick="loadGenre('action','Action')">🥷 Action</button>
-<button onclick="loadGenre('indie','Indépendant')">✨ Indépendant</button>
-<button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button>
-<button onclick="loadGenre('role-playing-games-rpg','RPG')">⚔️ RPG</button>
-<button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button>
-<button onclick="loadGenre('shooter','Shooter')">🔫 Shooter</button>
-<button onclick="loadGenre('casual','Casual')">🙂 Casual</button>
-<button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button>
-<button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button>
-<button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button>
-<button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button>
-<button onclick="loadGenre('racing','Course')">🏎️ Course</button>
-<button onclick="loadGenre('sports','Sport')">🏀 Sport</button>
-<button onclick="loadGenre('fighting','Combat')">🥊 Combat</button>
-<button onclick="loadGenre('massively-multiplayer','Massivement multijoueur')">🌐 Massivement multijoueur</button>
-<button onclick="loadGenre('family','Famille')">👨‍👩‍👧‍👦 Famille</button>
-<button onclick="loadGenre('board-games','Jeux de société')">🎲 Jeux de société</button>
-<button onclick="loadGenre('educational','Éducatif')">🎓 Éducatif</button>
-<button onclick="loadGenre('card','Cartes')">🃏 Cartes</button>
+<button onclick="loadGenre('action','Action')">🥷 Action</button> <button onclick="loadGenre('indie','Indépendant')">✨ Indépendant</button> <button onclick="loadGenre('adventure','Aventure')">🗺️ Aventure</button> <button onclick="loadGenre('role-playing-games-rpg','RPG')">⚔️ RPG</button> <button onclick="loadGenre('strategy','Stratégie')">🧠 Stratégie</button> <button onclick="loadGenre('shooter','Shooter')">🔫 Shooter</button> <button onclick="loadGenre('casual','Casual')">🙂 Casual</button> <button onclick="loadGenre('simulation','Simulation')">🛠️ Simulation</button> <button onclick="loadGenre('puzzle','Puzzle')">🧩 Puzzle</button> <button onclick="loadGenre('arcade','Arcade')">👾 Arcade</button> <button onclick="loadGenre('platformer','Plateforme')">🕹️ Plateforme</button> <button onclick="loadGenre('racing','Course')">🏎️ Course</button> <button onclick="loadGenre('sports','Sport')">🏀 Sport</button> <button onclick="loadGenre('fighting','Combat')">🥊 Combat</button> <button onclick="loadGenre('massively-multiplayer','Massivement multijoueur')">🌐 Massivement multijoueur</button> <button onclick="loadGenre('family','Famille')">👨‍👩‍👧‍👦 Famille</button> <button onclick="loadGenre('board-games','Jeux de société')">🎲 Jeux de société</button> <button onclick="loadGenre('educational','Éducatif')">🎓 Éducatif</button> <button onclick="loadGenre('card','Cartes')">🃏 Cartes</button>
 
 </div>
 
@@ -969,11 +1156,9 @@ id="genreMore"
 class="back hidden"
 style="margin-top:18px"
 onclick="loadMoreGenre()">
-Charger plus
-</button>
+Charger plus </button>
 
 </section>
-
 
 <section id="statsSection" class="hidden">
 
@@ -985,13 +1170,16 @@ Charger plus
 
 </main>
 
-
 <script>
 
 const WORKER_URL =
 "https://gamevault-api.tom-lunel27200.workers.dev";
 
 let currentGame = null;
+
+let previousSection = "searchSection";
+
+let currentStudio = null;
 
 
 /* =========================
@@ -1174,6 +1362,8 @@ async function openGame(game){
 
 currentGame = game;
 
+previousSection = "searchSection";
+
 hideSections();
 
 document
@@ -1308,25 +1498,82 @@ game.description_raw ||
 stripHtml(game.description) ||
 "Aucune description disponible.";
 
-const developers =
-game.developers &&
-game.developers.length
-?
-game.developers
-.map(x=>x.name)
-.join(", ")
-:
+
+/* =========================
+   DEVELOPPEURS
+========================= */
+
+let developersHTML =
 "Inconnu";
 
-const publishers =
-game.publishers &&
-game.publishers.length
-?
-game.publishers
-.map(x=>x.name)
-.join(", ")
-:
+if(
+Array.isArray(game.developers) &&
+game.developers.length
+){
+
+developersHTML = `
+<div class="studio-list">
+
+${
+game.developers.map(dev => `
+
+<button
+class="studio-item"
+onclick="
+event.stopPropagation();
+openStudio('developer',${Number(dev.id)},'${escapeJs(dev.name || "Développeur")}');
+">
+
+${escapeHtml(dev.name || "Développeur")}
+
+</button>
+
+`).join("")
+}
+
+</div>
+`;
+
+}
+
+
+/* =========================
+   EDITEURS
+========================= */
+
+let publishersHTML =
 "Inconnu";
+
+if(
+Array.isArray(game.publishers) &&
+game.publishers.length
+){
+
+publishersHTML = `
+<div class="studio-list">
+
+${
+game.publishers.map(pub => `
+
+<button
+class="studio-item"
+onclick="
+event.stopPropagation();
+openStudio('publisher',${Number(pub.id)},'${escapeJs(pub.name || "Éditeur")}');
+">
+
+${escapeHtml(pub.name || "Éditeur")}
+
+</button>
+
+`).join("")
+}
+
+</div>
+`;
+
+}
+
 
 const platforms =
 game.platforms &&
@@ -1394,8 +1641,8 @@ onclick="
 event.stopPropagation();
 showGenres();
 loadGenre(
-'${escapeHtml(g.slug || "")}',
-'${escapeHtml(g.name || "")}'
+'${escapeJs(g.slug || "")}',
+'${escapeJs(g.name || "")}'
 );
 ">
 
@@ -1444,7 +1691,7 @@ ${escapeHtml(description)}
 </div>
 
 <div class="meta-value">
-${escapeHtml(developers)}
+${developersHTML}
 </div>
 
 </div>
@@ -1457,7 +1704,7 @@ ${escapeHtml(developers)}
 </div>
 
 <div class="meta-value">
-${escapeHtml(publishers)}
+${publishersHTML}
 </div>
 
 </div>
@@ -1763,6 +2010,395 @@ updateRatingButtons();
 
 
 /* =========================
+   WIKI DEVELOPPEUR / EDITEUR
+========================= */
+
+async function openStudio(type,id,name){
+
+if(!id)
+return;
+
+currentStudio = {
+type:type,
+id:Number(id),
+name:name || "Studio"
+};
+
+previousSection = "detailSection";
+
+hideSections();
+
+document
+.getElementById("studioSection")
+.classList.remove("hidden");
+
+const container =
+document.getElementById("studioDetail");
+
+container.innerHTML = `
+<div class="studio-loading">
+🏢 Chargement de la fiche du studio...
+</div>
+`;
+
+try{
+
+const endpoint =
+type === "developer"
+?
+"/developer/"
+:
+"/publisher/";
+
+const response =
+await fetch(
+WORKER_URL +
+endpoint +
+encodeURIComponent(id)
+);
+
+const data =
+await response.json();
+
+if(!response.ok){
+
+throw new Error(
+data.error ||
+"Impossible de charger le studio"
+);
+
+}
+
+renderStudio(data,type,name);
+
+}catch(error){
+
+console.error(error);
+
+container.innerHTML = `
+
+<div class="empty">
+
+❌ Impossible de charger les informations de ce studio.
+
+<br><br>
+
+<span style="color:#777783;font-size:13px">
+${escapeHtml(error.message || "")}
+</span>
+
+</div>
+
+`;
+
+}
+
+}
+
+
+function renderStudio(data,type,fallbackName){
+
+const container =
+document.getElementById("studioDetail");
+
+const name =
+data.name ||
+fallbackName ||
+"Studio inconnu";
+
+const image =
+data.image_background ||
+data.background_image ||
+"";
+
+const description =
+data.description_raw ||
+stripHtml(data.description) ||
+"Aucune description disponible.";
+
+const gamesCount =
+data.games_count != null
+?
+data.games_count
+:
+Array.isArray(data.games)
+?
+data.games.length
+:
+"N/A";
+
+const country =
+data.country ||
+data.location ||
+data.city ||
+"N/A";
+
+const founded =
+data.founded ||
+data.established ||
+"Non renseigné";
+
+const website =
+data.website ||
+"";
+
+const games =
+Array.isArray(data.games)
+?
+data.games
+:
+Array.isArray(data.results)
+?
+data.results
+:
+[];
+
+
+const typeLabel =
+type === "developer"
+?
+"Développeur"
+:
+"Éditeur";
+
+
+container.innerHTML = `
+
+<div class="studio-detail">
+
+<div
+class="studio-hero"
+style="
+${
+image
+?
+`background-image:url('${escapeHtml(image)}');`
+:
+""
+}
+">
+
+<div class="studio-hero-content">
+
+<div class="studio-type">
+${typeLabel}
+</div>
+
+<h1 class="studio-title">
+${escapeHtml(name)}
+</h1>
+
+</div>
+
+</div>
+
+
+<div class="studio-body">
+
+<div class="studio-description">
+${escapeHtml(description)}
+</div>
+
+
+<div class="studio-info-grid">
+
+<div class="studio-info">
+
+<div class="studio-info-label">
+🎮 JEUX
+</div>
+
+<div class="studio-info-value">
+${escapeHtml(gamesCount)}
+</div>
+
+</div>
+
+
+<div class="studio-info">
+
+<div class="studio-info-label">
+📍 LOCALISATION
+</div>
+
+<div class="studio-info-value">
+${escapeHtml(country)}
+</div>
+
+</div>
+
+
+<div class="studio-info">
+
+<div class="studio-info-label">
+📅 FONDATION
+</div>
+
+<div class="studio-info-value">
+${escapeHtml(founded)}
+</div>
+
+</div>
+
+</div>
+
+
+${
+website
+?
+`
+
+<div style="margin-top:16px">
+
+<a
+href="${escapeHtml(website)}"
+target="_blank"
+rel="noopener noreferrer"
+class="studio-link">
+
+🌐 Site officiel
+
+</a>
+
+</div>
+
+`
+:
+""
+}
+
+
+<div class="studio-games-title">
+
+${
+type === "developer"
+?
+"🎮 Jeux développés"
+:
+"🎮 Jeux édités"
+}
+
+</div>
+
+
+<div class="studio-games">
+
+${
+games.length
+?
+games.map(game => `
+
+<div
+class="studio-game"
+onclick="openStudioGame(${Number(game.id)})">
+
+<img
+src="${escapeHtml(
+game.background_image ||
+"https://via.placeholder.com/300x450?text=Game"
+)}"
+alt=""
+loading="lazy"
+>
+
+<div class="studio-game-body">
+
+<div class="studio-game-name">
+${escapeHtml(game.name || "Jeu")}
+</div>
+
+<div class="studio-game-date">
+${escapeHtml(game.released || "Date inconnue")}
+</div>
+
+</div>
+
+</div>
+
+`).join("")
+:
+`
+
+<div class="empty">
+Aucun jeu disponible.
+</div>
+
+`
+}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+async function openStudioGame(gameId){
+
+try{
+
+const response =
+await fetch(
+WORKER_URL +
+"/game/" +
+encodeURIComponent(gameId)
+);
+
+if(!response.ok)
+throw new Error(
+"Impossible de charger le jeu"
+);
+
+const game =
+await response.json();
+
+currentGame =
+game;
+
+previousSection =
+"studioSection";
+
+hideSections();
+
+document
+.getElementById("detailSection")
+.classList.remove("hidden");
+
+await renderDetail();
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+
+function returnFromStudio(){
+
+if(previousSection === "detailSection"){
+
+hideSections();
+
+document
+.getElementById("detailSection")
+.classList.remove("hidden");
+
+return;
+
+}
+
+showSearch();
+
+}
+
+
+/* =========================
    SÉRIE
 ========================= */
 
@@ -1787,6 +2423,9 @@ await response.json();
 
 currentGame =
 game;
+
+previousSection =
+"detailSection";
 
 await renderDetail();
 
@@ -2739,12 +3378,6 @@ true
    GENRES RAWG
 ========================= */
 
-/*
-   GameVault utilise uniquement les genres natifs RAWG.
-   Aucun référencement manuel, aucun tag personnalisé
-   et aucune catégorie inventée par l'application.
-*/
-
 let currentGenreSlug = "";
 let currentGenreLabel = "";
 let genrePage = 1;
@@ -2880,10 +3513,6 @@ genreLoading = false;
 }
 
 
-/* =========================
-   CHARGER GENRE
-========================= */
-
 async function loadGenre(
 slug,
 label
@@ -2903,19 +3532,10 @@ false
 }
 
 
-/* =========================
-   CHARGER PLUS
-========================= */
-
 async function loadMoreGenre(){
 
 if(genreLoading)
 return;
-
-/*
-   Chaque clic charge 3 pages RAWG supplémentaires.
-   Aucun filtrage maison n'est appliqué.
-*/
 
 const targetPages = 3;
 let loadedPages = 0;
@@ -2949,6 +3569,7 @@ function hideSections(){
 [
 "searchSection",
 "detailSection",
+"studioSection",
 "librarySection",
 "wishlistSection",
 "upcomingSection",
@@ -3419,6 +4040,21 @@ text == null
 String(text);
 
 return div.innerHTML;
+
+}
+
+
+/* Protection pour les valeurs
+   insérées dans onclick */
+
+function escapeJs(text){
+
+return String(text || "")
+.replace(/\\/g,"\\\\")
+.replace(/'/g,"\\'")
+.replace(/"/g,'\\"')
+.replace(/\n/g,"\\n")
+.replace(/\r/g,"\\r");
 
 }
 
