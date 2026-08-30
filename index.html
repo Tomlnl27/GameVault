@@ -68,6 +68,10 @@ main{
   display:none!important
 }
 
+/* =========================
+   RECHERCHE
+========================= */
+
 .search{
   display:flex;
   gap:10px;
@@ -105,6 +109,10 @@ main{
   margin-bottom:18px
 }
 
+/* =========================
+   CARTES JEUX
+========================= */
+
 .games{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
@@ -120,9 +128,7 @@ main{
   transition:.15s
 }
 
-.card:hover,
-.series-card:hover,
-.upcoming-card:hover{
+.card:hover{
   transform:translateY(-3px);
   border-color:#555563
 }
@@ -155,6 +161,10 @@ main{
   padding:50px 15px
 }
 
+/* =========================
+   BOUTONS
+========================= */
+
 .back{
   border:0;
   background:#20202a;
@@ -164,6 +174,19 @@ main{
   cursor:pointer;
   font-weight:700
 }
+
+select{
+  background:#1b1b23;
+  color:#fff;
+  border:1px solid #353540;
+  border-radius:9px;
+  padding:10px;
+  outline:none
+}
+
+/* =========================
+   FICHE JEU
+========================= */
 
 .detail{
   margin-top:18px;
@@ -212,19 +235,14 @@ main{
   margin-top:20px
 }
 
-.meta-box,
-.studio-box,
-.stats-box,
-.panel,
-.series-panel{
+.meta-box{
   background:#0d0d12;
   border:1px solid #292933;
   border-radius:13px;
   padding:16px
 }
 
-.meta-label,
-.studio-fact-label{
+.meta-label{
   font-size:11px;
   color:#777783;
   margin-bottom:5px
@@ -235,7 +253,15 @@ main{
   font-weight:700
 }
 
-.studio-link{
+.studio-links,
+.genre-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px
+}
+
+.studio-link,
+.genre-tag{
   display:inline-block;
   background:#20202a;
   color:#fff;
@@ -246,15 +272,16 @@ main{
   cursor:pointer
 }
 
-.studio-links,
-.genre-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px
-}
+/* =========================
+   PANELS
+========================= */
 
 .panel{
-  margin:0 20px 15px
+  margin:0 20px 15px;
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:13px;
+  padding:16px
 }
 
 .panel-title{
@@ -305,11 +332,8 @@ main{
   flex-wrap:wrap
 }
 
-.time-inputs input,
-.library-tools input,
-.library-tools select,
-.wishlist-tools input,
-.wishlist-tools select{
+.time-inputs input{
+  width:100px;
   padding:10px;
   background:#1b1b23;
   color:#fff;
@@ -343,8 +367,16 @@ main{
   cursor:default!important
 }
 
+/* =========================
+   SÉRIE
+========================= */
+
 .series-panel{
-  margin:0 20px 15px
+  margin:0 20px 15px;
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:13px;
+  padding:16px
 }
 
 .series-title{
@@ -370,6 +402,11 @@ main{
   transition:.15s
 }
 
+.series-card:hover{
+  transform:translateY(-3px);
+  border-color:#555563
+}
+
 .series-card img{
   display:block;
   width:100%;
@@ -393,6 +430,10 @@ main{
   margin-top:5px
 }
 
+/* =========================
+   BIBLIOTHÈQUE
+========================= */
+
 .library-tools{
   display:grid;
   grid-template-columns:1fr 180px 180px;
@@ -401,8 +442,15 @@ main{
 }
 
 .library-tools input,
-.library-tools select{
-  width:100%
+.library-tools select,
+.wishlist-tools input,
+.wishlist-tools select{
+  width:100%;
+  padding:11px;
+  background:#15151c;
+  color:#fff;
+  border:1px solid #30303a;
+  border-radius:10px
 }
 
 .library-item,
@@ -416,6 +464,11 @@ main{
   border:1px solid #25252f;
   border-radius:13px;
   cursor:pointer
+}
+
+.library-item:hover,
+.wishlist-item:hover{
+  border-color:#444451
 }
 
 .library-item img,
@@ -484,6 +537,10 @@ main{
   background:#20202a
 }
 
+/* =========================
+   SOUHAITS
+========================= */
+
 .wishlist-tools{
   display:grid;
   grid-template-columns:1fr 180px;
@@ -491,10 +548,9 @@ main{
   margin-bottom:15px
 }
 
-.wishlist-tools input,
-.wishlist-tools select{
-  width:100%
-}
+/* =========================
+   SORTIES
+========================= */
 
 .upcoming-grid{
   display:grid;
@@ -509,6 +565,11 @@ main{
   overflow:hidden;
   cursor:pointer;
   transition:.15s
+}
+
+.upcoming-card:hover{
+  transform:translateY(-3px);
+  border-color:#555563
 }
 
 .upcoming-card img{
@@ -533,6 +594,10 @@ main{
   margin-top:6px
 }
 
+/* =========================
+   GENRES
+========================= */
+
 .genre-list{
   display:flex;
   flex-wrap:wrap;
@@ -549,6 +614,10 @@ main{
   font-weight:800;
   cursor:pointer
 }
+
+/* =========================
+   STATS
+========================= */
 
 .stats-grid{
   display:grid;
@@ -580,7 +649,11 @@ main{
 }
 
 .stats-box{
-  margin-top:15px
+  margin-top:15px;
+  background:#14141b;
+  border:1px solid #292933;
+  border-radius:14px;
+  padding:18px
 }
 
 .big{
@@ -614,9 +687,9 @@ main{
   border-radius:8px
 }
 
-/* =========================
+/* =========================================================
    STUDIO
-========================= */
+========================================================= */
 
 .studio-page{
   margin-top:18px
@@ -643,7 +716,7 @@ main{
   right:0;
   bottom:0;
   padding:30px 22px 22px;
-  background:linear-gradient(transparent,rgba(9,9,13,.95))
+  background:linear-gradient(transparent,rgba(9,9,13,.96))
 }
 
 .studio-type{
@@ -675,6 +748,32 @@ main{
   gap:15px
 }
 
+.studio-box{
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:13px;
+  padding:18px
+}
+
+.studio-box-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:13px
+}
+
+.studio-description{
+  color:#c9c9d0;
+  line-height:1.7;
+  font-size:15px;
+  white-space:pre-line
+}
+
+.studio-source{
+  margin-top:15px;
+  color:#777783;
+  font-size:12px
+}
+
 .studio-facts{
   display:flex;
   flex-direction:column;
@@ -689,6 +788,12 @@ main{
 .studio-fact:last-child{
   border-bottom:0;
   padding-bottom:0
+}
+
+.studio-fact-label{
+  font-size:11px;
+  color:#777783;
+  margin-bottom:5px
 }
 
 .studio-fact-value{
@@ -723,13 +828,8 @@ main{
 
 .studio-games-count{
   font-size:13px;
-  color:#858590
-}
-
-.studio-description{
-  color:#c9c9d0;
-  line-height:1.7;
-  font-size:15px
+  color:#858590;
+  margin-top:4px
 }
 
 .studio-loading{
@@ -738,18 +838,29 @@ main{
   color:#858590
 }
 
-.studio-source{
-  color:#777783;
-  font-size:11px;
-  margin-top:15px
+.studio-wiki-link{
+  display:inline-block;
+  margin-top:15px;
+  padding:9px 12px;
+  border-radius:9px;
+  background:#20202a;
+  border:1px solid #353540;
+  color:#fff;
+  text-decoration:none;
+  font-weight:800
 }
 
-.studio-box-title{
-  font-weight:900;
-  margin-bottom:12px
+.studio-no-info{
+  color:#777783;
+  font-size:14px
 }
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:800px){
+
   .detail-top{
     grid-template-columns:1fr
   }
@@ -768,6 +879,7 @@ main{
 }
 
 @media(max-width:600px){
+
   main{
     padding:15px
   }
@@ -809,6 +921,18 @@ main{
   .studio-hero-image{
     height:230px
   }
+
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .series-card{
+    flex-basis:125px
+  }
+
+  .series-card img{
+    height:170px
+  }
 }
 </style>
 </head>
@@ -817,7 +941,7 @@ main{
 
 <header>
   <div class="logo">🎮 GameVault</div>
-  <div class="subtitle">Ta bibliothèque gaming • Genres RAWG</div>
+  <div class="subtitle">Ta bibliothèque gaming • RAWG + Wikipédia</div>
 </header>
 
 <nav>
@@ -830,6 +954,10 @@ main{
 </nav>
 
 <main>
+
+<!-- =========================
+     RECHERCHE
+========================= -->
 
 <section id="searchSection">
 
@@ -847,6 +975,10 @@ main{
 </section>
 
 
+<!-- =========================
+     FICHE JEU
+========================= -->
+
 <section id="detailSection" class="hidden">
 
   <button class="back" onclick="showSearch()">← Retour</button>
@@ -856,6 +988,10 @@ main{
 </section>
 
 
+<!-- =========================
+     FICHE STUDIO
+========================= -->
+
 <section id="studioSection" class="hidden">
 
   <button class="back" onclick="goBackFromStudio()">← Retour</button>
@@ -864,6 +1000,10 @@ main{
 
 </section>
 
+
+<!-- =========================
+     BIBLIOTHÈQUE
+========================= -->
 
 <section id="librarySection" class="hidden">
 
@@ -878,10 +1018,10 @@ main{
     >
 
     <select id="statusFilter" onchange="renderLibrary()">
-      <option>Tous</option>
-      <option>À jouer</option>
-      <option>En cours</option>
-      <option>Terminé</option>
+      <option value="Tous">Tous</option>
+      <option value="À jouer">À jouer</option>
+      <option value="En cours">En cours</option>
+      <option value="Terminé">Terminé</option>
     </select>
 
     <select id="sortFilter" onchange="renderLibrary()">
@@ -900,6 +1040,10 @@ main{
 
 </section>
 
+
+<!-- =========================
+     SOUHAITS
+========================= -->
 
 <section id="wishlistSection" class="hidden">
 
@@ -927,6 +1071,10 @@ main{
 </section>
 
 
+<!-- =========================
+     PROCHAINES SORTIES
+========================= -->
+
 <section id="upcomingSection" class="hidden">
 
   <h2>📅 Prochaines sorties</h2>
@@ -949,6 +1097,10 @@ main{
 </section>
 
 
+<!-- =========================
+     GENRES
+========================= -->
+
 <section id="genresSection" class="hidden">
 
   <h2>🎭 Genres</h2>
@@ -969,7 +1121,7 @@ main{
     <button onclick="loadGenre('racing','Racing')">🏎️ Racing</button>
     <button onclick="loadGenre('sports','Sports')">🏀 Sports</button>
     <button onclick="loadGenre('fighting','Fighting')">🥊 Fighting</button>
-    <button onclick="loadGenre('massively-multiplayer','Massively Multiplayer')">🌐 Massively Multiplayer</button>
+    <button onclick="loadGenre('massively-multiplayer','Massively Multiplayer')">🌐 MMO</button>
     <button onclick="loadGenre('family','Family')">👨‍👩‍👧‍👦 Family</button>
     <button onclick="loadGenre('board-games','Board Games')">🎲 Board Games</button>
     <button onclick="loadGenre('educational','Educational')">🎓 Educational</button>
@@ -995,6 +1147,10 @@ main{
 </section>
 
 
+<!-- =========================
+     STATS
+========================= -->
+
 <section id="statsSection" class="hidden">
 
   <h2>📊 Mes statistiques</h2>
@@ -1008,41 +1164,152 @@ main{
 
 <script>
 
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
 const WORKER_URL =
   "https://gamevault-api.tom-lunel27200.workers.dev";
 
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
 let currentGame = null;
+
+let currentStudio = null;
+
 let previousStudioContext = "detail";
 
 let library =
-  JSON.parse(localStorage.getItem("gamevault_library")) || [];
+  JSON.parse(
+    localStorage.getItem("gamevault_library")
+  ) || [];
 
 let wishlist =
-  JSON.parse(localStorage.getItem("gamevault_wishlist")) || [];
+  JSON.parse(
+    localStorage.getItem("gamevault_wishlist")
+  ) || [];
 
 
-/* =========================
-   SAUVEGARDE
-========================= */
+/* =========================================================
+   STUDIO
+========================================================= */
+
+let studioPage = 1;
+let studioHasMore = false;
+let studioLoading = false;
+let studioGames = [];
+let studioGameIds = new Set();
+
+
+/* =========================================================
+   GENRE
+========================================================= */
+
+let currentGenreSlug = "";
+let currentGenreLabel = "";
+let genrePage = 1;
+let genreHasMore = false;
+let genreLoading = false;
+let genreSeenIds = new Set();
+
+
+/* =========================================================
+   UPCOMING
+========================================================= */
+
+let upcomingPage = 1;
+let upcomingHasMore = false;
+
+
+/* =========================================================
+   SAUVEGARDES
+========================================================= */
 
 function saveLibrary(){
+
   localStorage.setItem(
     "gamevault_library",
     JSON.stringify(library)
   );
+
 }
 
 function saveWishlist(){
+
   localStorage.setItem(
     "gamevault_wishlist",
     JSON.stringify(wishlist)
   );
+
 }
 
 
-/* =========================
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+function placeholder(){
+
+  return "https://via.placeholder.com/400x600?text=Game";
+
+}
+
+
+/* =========================================================
+   SÉCURITÉ HTML
+========================================================= */
+
+function escapeHtml(text){
+
+  const d =
+    document.createElement("div");
+
+  d.textContent =
+    text == null ? "" : String(text);
+
+  return d.innerHTML;
+
+}
+
+function escapeAttr(text){
+
+  return String(
+    text == null ? "" : text
+  )
+  .replace(/\\/g,"\\\\")
+  .replace(/'/g,"&#39;")
+  .replace(/"/g,"&quot;");
+
+}
+
+
+/* =========================================================
+   NETTOYER HTML
+========================================================= */
+
+function stripHtml(html){
+
+  const d =
+    document.createElement("div");
+
+  d.innerHTML =
+    html || "";
+
+  return (
+    d.textContent ||
+    d.innerText ||
+    ""
+  );
+
+}
+
+
+/* =========================================================
    RECHERCHE
-========================= */
+========================================================= */
 
 async function searchGames(){
 
@@ -1064,6 +1331,7 @@ async function searchGames(){
       "Écris au moins 2 caractères.";
 
     return;
+
   }
 
   status.textContent =
@@ -1084,9 +1352,16 @@ async function searchGames(){
     const data =
       await response.json();
 
-    if(!response.ok || !data.results){
+    if(
+      !response.ok ||
+      !data.results
+    ){
 
-      throw new Error("Erreur RAWG");
+      throw new Error(
+        data.error ||
+        "Erreur RAWG"
+      );
+
     }
 
     if(!data.results.length){
@@ -1098,6 +1373,7 @@ async function searchGames(){
         "Aucun résultat.";
 
       return;
+
     }
 
     status.textContent =
@@ -1106,41 +1382,49 @@ async function searchGames(){
 
     games.innerHTML = "";
 
-    data.results.forEach(g => {
+    data.results.forEach(game => {
 
       games.appendChild(
-        createGameCard(g)
+        createGameCard(game)
       );
 
     });
 
-  }catch(e){
+  }catch(error){
 
-    console.error(e);
+    console.error(error);
 
     status.textContent =
       "Erreur lors de la recherche.";
 
     games.innerHTML =
       '<div class="empty">Impossible de contacter GameVault.</div>';
+
   }
+
 }
 
 
-/* =========================
+/* =========================================================
    CARTE JEU
-========================= */
+========================================================= */
 
 function createGameCard(game){
 
   const card =
     document.createElement("div");
 
-  card.className = "card";
+  card.className =
+    "card";
+
+  const image =
+    game.background_image ||
+    placeholder();
 
   card.innerHTML = `
+
     <img
-      src="${escapeHtml(game.background_image || placeholder())}"
+      src="${escapeHtml(image)}"
       alt=""
       loading="lazy"
     >
@@ -1152,33 +1436,32 @@ function createGameCard(game){
       </div>
 
       <div class="card-date">
-        ${escapeHtml(game.released || "Date inconnue")}
+        ${escapeHtml(
+          game.released ||
+          "Date inconnue"
+        )}
       </div>
 
     </div>
+
   `;
 
   card.onclick =
     () => openGame(game);
 
   return card;
-}
-
-
-function placeholder(){
-
-  return "https://via.placeholder.com/400x600?text=Game";
 
 }
 
 
-/* =========================
-   FICHE JEU
-========================= */
+/* =========================================================
+   OUVRIR JEU
+========================================================= */
 
 async function openGame(game){
 
-  currentGame = game;
+  currentGame =
+    game;
 
   hideSections();
 
@@ -1187,14 +1470,18 @@ async function openGame(game){
     .classList.remove("hidden");
 
   await renderDetail();
+
 }
 
 
+/* =========================================================
+   FICHE JEU
+========================================================= */
+
 async function renderDetail(){
 
-  if(!currentGame){
+  if(!currentGame)
     return;
-  }
 
   const detail =
     document.getElementById("detail");
@@ -1202,86 +1489,109 @@ async function renderDetail(){
   detail.innerHTML =
     '<div class="empty">Chargement de la fiche...</div>';
 
-  let game = currentGame;
+  let game =
+    currentGame;
 
   let seriesGames = [];
 
 
-  /* Jeu complet */
+  /* =========================
+     DÉTAIL RAWG
+  ========================= */
 
   try{
 
-    const r =
+    const response =
       await fetch(
         WORKER_URL +
         "/game/" +
         encodeURIComponent(game.id)
       );
 
-    if(r.ok){
+    if(response.ok){
 
-      const d =
-        await r.json();
+      const data =
+        await response.json();
 
       game = {
         ...game,
-        ...d
+        ...data
       };
 
-      currentGame = game;
+      currentGame =
+        game;
+
     }
 
-  }catch(e){
+  }catch(error){
 
-    console.log(e);
+    console.log(
+      "Détail jeu indisponible",
+      error
+    );
 
   }
 
 
-  /* Série */
+  /* =========================
+     SÉRIE
+  ========================= */
 
   try{
 
-    const r =
+    const response =
       await fetch(
         WORKER_URL +
         "/game-series/" +
         encodeURIComponent(game.id)
       );
 
-    if(r.ok){
+    if(response.ok){
 
-      const d =
-        await r.json();
+      const data =
+        await response.json();
 
-      if(Array.isArray(d.results)){
+      if(
+        Array.isArray(data.results)
+      ){
 
         seriesGames =
-          d.results
+          data.results
+
             .filter(
               x =>
                 Number(x.id) !==
                 Number(game.id)
             )
+
             .sort(
               (a,b) =>
-                (a.released || "9999-12-31")
-                .localeCompare(
-                  b.released || "9999-12-31"
+                (
+                  a.released ||
+                  "9999-12-31"
+                ).localeCompare(
+                  b.released ||
+                  "9999-12-31"
                 )
             );
+
       }
+
     }
 
-  }catch(e){
+  }catch(error){
 
     console.log(
       "Série indisponible",
-      e
+      error
     );
 
   }
 
+
+  /* =========================
+     SAUVEGARDES
+  ========================= */
 
   const saved =
     library.find(
@@ -1297,6 +1607,10 @@ async function renderDetail(){
         Number(game.id)
     );
 
+
+  /* =========================
+     INFOS
+  ========================= */
 
   const image =
     game.background_image ||
@@ -1317,7 +1631,6 @@ async function renderDetail(){
       ? game.publishers
       : [];
 
-
   const platforms =
     game.platforms?.length
       ? game.platforms
@@ -1329,7 +1642,6 @@ async function renderDetail(){
           )
           .join(", ")
       : "Inconnues";
-
 
   const rating =
     saved
@@ -1357,111 +1669,133 @@ async function renderDetail(){
       : "À jouer";
 
 
-  /* Genres */
+  /* =========================
+     GENRES
+  ========================= */
 
   const genreHTML =
     game.genres?.length
-      ? game.genres
-          .map(
-            g => `
-              <button
-                class="studio-link"
-                onclick="
-                  event.stopPropagation();
-                  showGenres();
-                  loadGenre(
-                    '${escapeAttr(g.slug || "")}',
-                    '${escapeAttr(g.name || "")}'
-                  )
-                "
-              >
-                ${escapeHtml(g.name || "")}
-              </button>
-            `
-          )
-          .join("")
+
+      ? game.genres.map(
+          g => `
+
+            <button
+              class="genre-tag"
+              onclick="
+                event.stopPropagation();
+                showGenres();
+                loadGenre(
+                  '${escapeAttr(g.slug || "")}',
+                  '${escapeAttr(g.name || "")}'
+                )
+              "
+            >
+              ${escapeHtml(
+                g.name || ""
+              )}
+            </button>
+
+          `
+        ).join("")
+
       : "Inconnu";
 
 
-  /* Développeurs */
+  /* =========================
+     DÉVELOPPEURS
+  ========================= */
 
   const developerHTML =
     developers.length
+
       ? `
+
         <div class="studio-links">
 
           ${
-            developers
-              .map(
-                d => `
-                  <button
-                    class="studio-link"
-                    onclick="
-                      event.stopPropagation();
-                      openStudio(
-                        'developer',
-                        ${Number(d.id)},
-                        '${escapeAttr(d.name || "")}'
-                      )
-                    "
-                  >
-                    ${escapeHtml(
-                      d.name ||
-                      "Développeur"
-                    )}
-                  </button>
-                `
-              )
-              .join("")
+            developers.map(
+              d => `
+
+                <button
+                  class="studio-link"
+                  onclick="
+                    event.stopPropagation();
+                    openStudio(
+                      'developer',
+                      ${Number(d.id)},
+                      '${escapeAttr(d.name || "")}'
+                    )
+                  "
+                >
+                  ${escapeHtml(
+                    d.name ||
+                    "Développeur"
+                  )}
+                </button>
+
+              `
+            ).join("")
           }
 
         </div>
+
       `
+
       : "Inconnu";
 
 
-  /* Éditeurs */
+  /* =========================
+     ÉDITEURS
+  ========================= */
 
   const publisherHTML =
     publishers.length
+
       ? `
+
         <div class="studio-links">
 
           ${
-            publishers
-              .map(
-                p => `
-                  <button
-                    class="studio-link"
-                    onclick="
-                      event.stopPropagation();
-                      openStudio(
-                        'publisher',
-                        ${Number(p.id)},
-                        '${escapeAttr(p.name || "")}'
-                      )
-                    "
-                  >
-                    ${escapeHtml(
-                      p.name ||
-                      "Éditeur"
-                    )}
-                  </button>
-                `
-              )
-              .join("")
+            publishers.map(
+              p => `
+
+                <button
+                  class="studio-link"
+                  onclick="
+                    event.stopPropagation();
+                    openStudio(
+                      'publisher',
+                      ${Number(p.id)},
+                      '${escapeAttr(p.name || "")}'
+                    )
+                  "
+                >
+                  ${escapeHtml(
+                    p.name ||
+                    "Éditeur"
+                  )}
+                </button>
+
+              `
+            ).join("")
           }
 
         </div>
+
       `
+
       : "Inconnu";
 
 
-  /* Série */
+  /* =========================
+     SÉRIE HTML
+  ========================= */
 
   const seriesHTML =
     seriesGames.length
+
       ? `
+
         <div class="series-panel">
 
           <div class="series-title">
@@ -1471,58 +1805,63 @@ async function renderDetail(){
           <div class="series-list">
 
             ${
-              seriesGames
-                .map(
-                  x => `
-                    <div
-                      class="series-card"
-                      onclick="
-                        openSeriesGame(
-                          ${Number(x.id)}
-                        )
-                      "
+              seriesGames.map(
+                x => `
+
+                  <div
+                    class="series-card"
+                    onclick="
+                      openSeriesGame(
+                        ${Number(x.id)}
+                      )
+                    "
+                  >
+
+                    <img
+                      src="${escapeHtml(
+                        x.background_image ||
+                        placeholder()
+                      )}"
+                      alt=""
+                      loading="lazy"
                     >
 
-                      <img
-                        src="${escapeHtml(
-                          x.background_image ||
-                          placeholder()
-                        )}"
-                        alt=""
-                        loading="lazy"
-                      >
+                    <div class="series-card-body">
 
-                      <div class="series-card-body">
+                      <div class="series-card-name">
+                        ${escapeHtml(
+                          x.name ||
+                          "Jeu"
+                        )}
+                      </div>
 
-                        <div class="series-card-name">
-                          ${escapeHtml(
-                            x.name || "Jeu"
-                          )}
-                        </div>
-
-                        <div class="series-card-date">
-                          ${escapeHtml(
-                            x.released ||
-                            "Date inconnue"
-                          )}
-                        </div>
-
+                      <div class="series-card-date">
+                        ${escapeHtml(
+                          x.released ||
+                          "Date inconnue"
+                        )}
                       </div>
 
                     </div>
-                  `
-                )
-                .join("")
+
+                  </div>
+
+                `
+              ).join("")
             }
 
           </div>
 
         </div>
+
       `
+
       : "";
 
 
-  /* HTML fiche */
+  /* =========================
+     AFFICHAGE
+  ========================= */
 
   detail.innerHTML = `
 
@@ -1540,7 +1879,8 @@ async function renderDetail(){
 
           <h1 class="detail-title">
             ${escapeHtml(
-              game.name || "Jeu"
+              game.name ||
+              "Jeu"
             )}
           </h1>
 
@@ -1552,12 +1892,12 @@ async function renderDetail(){
           </div>
 
           <div class="description">
-            ${escapeHtml(description)}
+            ${escapeHtml(
+              description
+            )}
           </div>
 
-
           <div class="meta">
-
 
             <div class="meta-box">
 
@@ -1605,7 +1945,9 @@ async function renderDetail(){
               </div>
 
               <div class="meta-value">
-                ${escapeHtml(platforms)}
+                ${escapeHtml(
+                  platforms
+                )}
               </div>
 
             </div>
@@ -1620,7 +1962,8 @@ async function renderDetail(){
               <div class="meta-value">
                 ${
                   game.rating
-                    ? game.rating + " / 5"
+                    ? game.rating +
+                      " / 5"
                     : "N/A"
                 }
               </div>
@@ -1635,11 +1978,13 @@ async function renderDetail(){
               </div>
 
               <div class="meta-value">
-                ${game.ratings_count || "N/A"}
+                ${
+                  game.ratings_count ||
+                  "N/A"
+                }
               </div>
 
             </div>
-
 
           </div>
 
@@ -1673,7 +2018,9 @@ async function renderDetail(){
             −
           </button>
 
-          <span>par 0,5</span>
+          <span>
+            par 0,5
+          </span>
 
           <button
             id="plusRating"
@@ -1694,11 +2041,9 @@ async function renderDetail(){
         </div>
 
         <div class="progress-number">
-
           <span id="progressValue">
             ${progress}
           </span>%
-
         </div>
 
         <input
@@ -1756,22 +2101,30 @@ async function renderDetail(){
           🎯 Statut
         </div>
 
-        <select onchange="changeStatus(this.value)">
+        <select
+          onchange="changeStatus(this.value)"
+        >
 
           <option
-            ${status === "À jouer" ? "selected" : ""}
+            ${status === "À jouer"
+              ? "selected"
+              : ""}
           >
             À jouer
           </option>
 
           <option
-            ${status === "En cours" ? "selected" : ""}
+            ${status === "En cours"
+              ? "selected"
+              : ""}
           >
             En cours
           </option>
 
           <option
-            ${status === "Terminé" ? "selected" : ""}
+            ${status === "Terminé"
+              ? "selected"
+              : ""}
           >
             Terminé
           </option>
@@ -1785,7 +2138,9 @@ async function renderDetail(){
 
         ${
           saved
+
             ? `
+
               <button class="in-library">
                 ✅ Dans ma bibliothèque
               </button>
@@ -1796,20 +2151,28 @@ async function renderDetail(){
               >
                 🗑️ Supprimer
               </button>
+
             `
+
             : `
+
               <button
                 class="add"
                 onclick="addCurrentGame()"
               >
                 ➕ Ajouter à ma bibliothèque
               </button>
+
             `
         }
 
 
         <button
-          class="${wished ? "in-library" : "add"}"
+          class="${
+            wished
+              ? "in-library"
+              : "add"
+          }"
           onclick="toggleWishlist()"
         >
           ${
@@ -1822,8 +2185,8 @@ async function renderDetail(){
       </div>
 
     </div>
-  `;
 
+  `;
 
   updateRatingButtons();
 
@@ -1834,37 +2197,28 @@ async function renderDetail(){
    STUDIO / DÉVELOPPEUR / ÉDITEUR
 ========================================================= */
 
-let currentStudio = null;
-
-let studioPage = 1;
-let studioHasMore = false;
-let studioLoading = false;
-
-let studioGames = [];
-let studioGameIds = new Set();
-
-
-/* =========================
-   OUVRIR STUDIO
-========================= */
-
 async function openStudio(
   type,
   id,
   name
 ){
 
-  if(!id){
+  if(!id)
     return;
-  }
 
   previousStudioContext =
     "detail";
 
   currentStudio = {
+
     type,
+
     id:Number(id),
-    name:name || "Studio"
+
+    name:
+      name ||
+      "Studio"
+
   };
 
   hideSections();
@@ -1878,57 +2232,70 @@ async function openStudio(
 }
 
 
-/* =========================
+/* =========================================================
    FICHE STUDIO
-========================= */
+========================================================= */
 
 async function renderStudio(){
 
-  const c =
+  const container =
     document.getElementById(
       "studioDetail"
     );
 
-  const s =
+  const studio =
     currentStudio;
 
+  if(!studio)
+    return;
 
-  c.innerHTML =
-    '<div class="studio-loading">🏢 Chargement de la fiche du studio...</div>';
+
+  container.innerHTML = `
+
+    <div class="studio-loading">
+      🏢 Chargement de la fiche de
+      ${escapeHtml(studio.name)}...
+    </div>
+
+  `;
 
 
   try{
 
-    /*
-      CORRECTION IMPORTANTE :
+    /* =====================================================
+       IMPORTANT :
 
-      Le Worker utilise :
+       RAWG :
+       /developers/ID
+       /publishers/ID
 
-      /developers/ID
-      /publishers/ID
-
-      et PAS :
-
-      /studio/developer/ID
-    */
+       Wikipédia :
+       /studio-wikipedia?name=...
+    ===================================================== */
 
     const endpoint =
-      s.type === "developer"
+      studio.type === "developer"
         ? "developers"
         : "publishers";
 
 
-    const r =
+    /* =========================
+       RAWG
+    ========================= */
+
+    const rawgResponse =
       await fetch(
         WORKER_URL +
         "/" +
         endpoint +
         "/" +
-        encodeURIComponent(s.id)
+        encodeURIComponent(
+          studio.id
+        )
       );
 
 
-    if(!r.ok){
+    if(!rawgResponse.ok){
 
       let errorMessage =
         "Impossible de charger le studio.";
@@ -1936,11 +2303,13 @@ async function renderStudio(){
       try{
 
         const errorData =
-          await r.json();
+          await rawgResponse.json();
 
         if(errorData.error){
+
           errorMessage =
             errorData.error;
+
         }
 
       }catch(_){}
@@ -1948,81 +2317,129 @@ async function renderStudio(){
       throw new Error(
         errorMessage +
         " (HTTP " +
-        r.status +
+        rawgResponse.status +
         ")"
       );
+
     }
 
 
-    const d =
-      await r.json();
+    const rawgStudio =
+      await rawgResponse.json();
 
 
-    /*
-      RAWG renvoie directement
-      les informations du studio.
+    /* =========================
+       WIKIPÉDIA
+    ========================= */
 
-      On utilise donc d directement.
-    */
+    let wiki = null;
 
-    const studio =
-      d.studio || d;
+    try{
+
+      const wikiResponse =
+        await fetch(
+          WORKER_URL +
+          "/studio-wikipedia?name=" +
+          encodeURIComponent(
+            rawgStudio.name ||
+            studio.name
+          )
+        );
+
+
+      if(wikiResponse.ok){
+
+        const wikiData =
+          await wikiResponse.json();
+
+        if(
+          wikiData &&
+          wikiData.wikipedia
+        ){
+
+          wiki =
+            wikiData.wikipedia;
+
+        }
+
+      }
+
+    }catch(error){
+
+      console.log(
+        "Wikipédia indisponible",
+        error
+      );
+
+    }
+
+
+    /* =========================
+       DONNÉES
+    ========================= */
+
+    const studioName =
+      rawgStudio.name ||
+      studio.name ||
+      "Studio";
 
 
     const image =
-      studio.image_background ||
-      studio.image ||
+      wiki?.thumbnail ||
+      rawgStudio.image_background ||
+      rawgStudio.image ||
       placeholder();
 
 
     const description =
-      studio.description ||
-      "Aucune description disponible.";
+      wiki?.description ||
+      "Aucune description encyclopédique disponible pour ce studio.";
 
 
     const gamesCount =
       Number(
-        studio.games_count ||
-        studio.count ||
+        rawgStudio.games_count ||
         0
       );
 
 
-    /*
-      Informations disponibles
-      directement chez RAWG.
-    */
-
-    const location =
-      studio.location ||
-      studio.headquarters ||
-      "Non renseigné";
+    const wikiUrl =
+      wiki?.wikipediaUrl ||
+      null;
 
 
-    const founded =
-      studio.founded ||
-      studio.foundation ||
-      studio.dateFounded ||
-      "Non renseigné";
+    /* =========================
+       INFOS RAWG
+    ========================= */
+
+    const website =
+      rawgStudio.website ||
+      null;
 
 
-    const founder =
-      studio.founder ||
-      studio.founders ||
-      "Non renseigné";
+    const slug =
+      rawgStudio.slug ||
+      null;
 
 
-    const ceo =
-      studio.ceo ||
-      studio.president ||
-      studio.director ||
-      "Non renseigné";
+    const gamesCountText =
+      gamesCount
+        ? String(gamesCount)
+        : "N/A";
 
 
-    c.innerHTML = `
+    /* =========================
+       HTML
+    ========================= */
+
+    container.innerHTML = `
 
       <div class="studio-page">
 
+
+        <!-- =====================
+             HERO
+        ====================== -->
 
         <div class="studio-hero">
 
@@ -2036,23 +2453,17 @@ async function renderStudio(){
           <div class="studio-hero-overlay">
 
             <div class="studio-type">
-
               ${
-                s.type === "publisher"
+                studio.type === "publisher"
                   ? "ÉDITEUR"
                   : "DÉVELOPPEUR"
               }
-
             </div>
 
             <div class="studio-name">
-
               ${escapeHtml(
-                studio.name ||
-                s.name ||
-                "Studio"
+                studioName
               )}
-
             </div>
 
           </div>
@@ -2063,8 +2474,16 @@ async function renderStudio(){
         <div class="studio-content">
 
 
+          <!-- =====================
+               INFOS
+          ====================== -->
+
           <div class="studio-wiki-grid">
 
+
+            <!-- =================
+                 DESCRIPTION
+            ================== -->
 
             <div class="studio-box">
 
@@ -2075,17 +2494,46 @@ async function renderStudio(){
               <div class="studio-description">
 
                 ${escapeHtml(
-                  stripHtml(description)
+                  description
                 )}
 
               </div>
 
-              <div class="studio-source">
-                Informations fournies par RAWG.
-              </div>
+
+              ${
+                wikiUrl
+
+                  ? `
+
+                    <a
+                      class="studio-wiki-link"
+                      href="${escapeHtml(
+                        wikiUrl
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📚 Voir la page Wikipédia
+                    </a>
+
+                  `
+
+                  : `
+
+                    <div class="studio-source">
+                      Informations encyclopédiques
+                      non disponibles sur Wikipédia.
+                    </div>
+
+                  `
+              }
 
             </div>
 
+
+            <!-- =================
+                 INFORMATIONS
+            ================== -->
 
             <div class="studio-box">
 
@@ -2100,50 +2548,16 @@ async function renderStudio(){
                 <div class="studio-fact">
 
                   <div class="studio-fact-label">
-                    📍 Localisation
+                    🏷️ Type
                   </div>
 
                   <div class="studio-fact-value">
-                    ${escapeHtml(location)}
-                  </div>
-
-                </div>
-
-
-                <div class="studio-fact">
-
-                  <div class="studio-fact-label">
-                    📅 Fondation
-                  </div>
-
-                  <div class="studio-fact-value">
-                    ${escapeHtml(founded)}
-                  </div>
-
-                </div>
-
-
-                <div class="studio-fact">
-
-                  <div class="studio-fact-label">
-                    👤 Fondateur
-                  </div>
-
-                  <div class="studio-fact-value">
-                    ${escapeHtml(founder)}
-                  </div>
-
-                </div>
-
-
-                <div class="studio-fact">
-
-                  <div class="studio-fact-label">
-                    👔 Direction
-                  </div>
-
-                  <div class="studio-fact-value">
-                    ${escapeHtml(ceo)}
+                    ${
+                      studio.type ===
+                      "publisher"
+                        ? "Éditeur"
+                        : "Développeur"
+                    }
                   </div>
 
                 </div>
@@ -2156,25 +2570,81 @@ async function renderStudio(){
                   </div>
 
                   <div class="studio-count">
-                    ${
-                      gamesCount ||
-                      "N/A"
-                    }
+                    ${gamesCountText}
                   </div>
 
                 </div>
+
+
+                ${
+                  website
+
+                    ? `
+
+                      <div class="studio-fact">
+
+                        <div class="studio-fact-label">
+                          🌐 Site officiel
+                        </div>
+
+                        <div class="studio-fact-value">
+
+                          <a
+                            href="${escapeHtml(
+                              website
+                            )}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:#fff"
+                          >
+                            Visiter le site
+                          </a>
+
+                        </div>
+
+                      </div>
+
+                    `
+
+                    : ""
+                }
+
+
+                ${
+                  slug
+
+                    ? `
+
+                      <div class="studio-fact">
+
+                        <div class="studio-fact-label">
+                          🔑 Identifiant RAWG
+                        </div>
+
+                        <div class="studio-fact-value">
+                          ${escapeHtml(slug)}
+                        </div>
+
+                      </div>
+
+                    `
+
+                    : ""
+                }
 
 
               </div>
 
             </div>
 
-
           </div>
 
 
-          <div class="studio-games-section">
+          <!-- =====================
+               JEUX
+          ====================== -->
 
+          <div class="studio-games-section">
 
             <div class="studio-games-header">
 
@@ -2211,7 +2681,6 @@ async function renderStudio(){
               Charger plus
             </button>
 
-
           </div>
 
 
@@ -2222,11 +2691,20 @@ async function renderStudio(){
     `;
 
 
+    /* =========================
+       CHARGER JEUX STUDIO
+    ========================= */
+
     studioPage = 1;
+
     studioHasMore = false;
+
     studioLoading = false;
+
     studioGames = [];
-    studioGameIds = new Set();
+
+    studioGameIds =
+      new Set();
 
 
     await loadStudioGames(
@@ -2235,15 +2713,15 @@ async function renderStudio(){
     );
 
 
-  }catch(e){
+  }catch(error){
 
     console.error(
-      "Erreur fiche studio :",
-      e
+      "Erreur studio :",
+      error
     );
 
 
-    c.innerHTML = `
+    container.innerHTML = `
 
       <div class="empty">
 
@@ -2251,14 +2729,15 @@ async function renderStudio(){
 
         <strong>
           ${escapeHtml(
-            s.name
+            studio.name
           )}
         </strong>
 
         <br><br>
 
         ${escapeHtml(
-          e.message
+          error.message ||
+          "Erreur inconnue"
         )}
 
       </div>
@@ -2270,23 +2749,22 @@ async function renderStudio(){
 }
 
 
-/* =========================
+/* =========================================================
    JEUX DU STUDIO
-========================= */
+========================================================= */
 
 async function loadStudioGames(
   page = 1,
   append = false
 ){
 
-  if(studioLoading){
+  if(studioLoading)
     return;
-  }
 
   studioLoading = true;
 
 
-  const c =
+  const container =
     document.getElementById(
       "studioGames"
     );
@@ -2302,47 +2780,43 @@ async function loadStudioGames(
     );
 
 
-  if(!c){
+  if(!container){
 
-    studioLoading = false;
+    studioLoading =
+      false;
 
     return;
+
   }
 
 
   if(!append){
 
-    c.innerHTML =
+    container.innerHTML =
       '<div class="studio-loading">🎮 Chargement des jeux...</div>';
 
     studioGames = [];
-    studioGameIds = new Set();
+
+    studioGameIds =
+      new Set();
 
   }
 
 
-  /*
-    CORRECTION IMPORTANTE :
-
-    Développeur :
-
-    /developers/ID/games
-
-    Éditeur :
-
-    /publishers/ID/games
-  */
-
-  const endpoint =
-    currentStudio.type === "developer"
-      ? "developers"
-      : "publishers";
-
-
   try{
 
-    const r =
+    const endpoint =
+      currentStudio.type ===
+      "developer"
+
+        ? "developers"
+
+        : "publishers";
+
+
+    const response =
       await fetch(
+
         WORKER_URL +
         "/" +
         endpoint +
@@ -2352,58 +2826,69 @@ async function loadStudioGames(
         ) +
         "/games?page=" +
         page
+
       );
 
 
-    if(!r.ok){
+    if(!response.ok){
 
-      throw new Error(
-        "Impossible de charger les jeux du studio."
-      );
+      let msg =
+        "Impossible de charger les jeux du studio.";
+
+      try{
+
+        const data =
+          await response.json();
+
+        if(data.error)
+          msg = data.error;
+
+      }catch(_){}
+
+      throw new Error(msg);
 
     }
 
 
-    const d =
-      await r.json();
+    const data =
+      await response.json();
 
 
     if(!append){
 
-      c.innerHTML = "";
+      container.innerHTML = "";
 
     }
 
 
-    (d.results || [])
-      .forEach(g => {
+    (data.results || [])
+      .forEach(game => {
 
         const id =
-          Number(g.id);
-
+          Number(game.id);
 
         if(
           studioGameIds.has(id)
         ){
+
           return;
+
         }
 
 
         studioGameIds.add(id);
 
-        studioGames.push(g);
+        studioGames.push(game);
 
-
-        c.appendChild(
-          createGameCard(g)
+        container.appendChild(
+          createGameCard(game)
         );
 
       });
 
 
     studioHasMore =
-      Boolean(d.next);
-
+      Boolean(data.next);
 
     studioPage =
       page;
@@ -2422,45 +2907,52 @@ async function loadStudioGames(
     if(count){
 
       count.textContent =
-        `${studioGames.length} jeu(x) chargé(s)` +
-        (
-          d.count
-            ? ` sur ${d.count}`
+        `${
+          studioGames.length
+        } jeu(x) chargé(s)${
+          data.count
+            ? ` sur ${data.count}`
             : ""
-        );
+        }`;
 
     }
 
 
-    if(!studioGames.length){
+    if(
+      !studioGames.length
+    ){
 
-      c.innerHTML =
+      container.innerHTML =
         '<div class="empty">🎮 Aucun jeu trouvé pour ce studio.</div>';
 
     }
 
 
-  }catch(e){
+  }catch(error){
 
-    console.error(e);
+    console.error(error);
 
 
     if(!append){
 
-      c.innerHTML =
-        `
+      container.innerHTML = `
+
         <div class="empty">
+
           ❌ ${escapeHtml(
-            e.message
+            error.message
           )}
+
         </div>
-        `;
+
+      `;
 
     }
 
   }finally{
 
-    studioLoading = false;
+    studioLoading =
+      false;
 
   }
 
@@ -2469,7 +2961,9 @@ async function loadStudioGames(
 
 async function loadMoreStudioGames(){
 
-  if(studioHasMore){
+  if(
+    studioHasMore
+  ){
 
     await loadStudioGames(
       studioPage + 1,
@@ -2481,9 +2975,9 @@ async function loadMoreStudioGames(){
 }
 
 
-/* =========================
+/* =========================================================
    RETOUR STUDIO
-========================= */
+========================================================= */
 
 function goBackFromStudio(){
 
@@ -2492,8 +2986,12 @@ function goBackFromStudio(){
     hideSections();
 
     document
-      .getElementById("detailSection")
-      .classList.remove("hidden");
+      .getElementById(
+        "detailSection"
+      )
+      .classList.remove(
+        "hidden"
+      );
 
     renderDetail();
 
@@ -2506,76 +3004,83 @@ function goBackFromStudio(){
 }
 
 
-/* =========================
-   OUVRIR JEU DE LA SÉRIE
-========================= */
+/* =========================================================
+   JEU DE LA SÉRIE
+========================================================= */
 
 async function openSeriesGame(id){
 
   try{
 
-    const r =
+    const response =
       await fetch(
         WORKER_URL +
         "/game/" +
         encodeURIComponent(id)
       );
 
-
-    if(!r.ok){
+    if(!response.ok){
 
       throw new Error(
-        "Impossible de charger le jeu"
+        "Impossible de charger le jeu."
       );
 
     }
 
-
     currentGame =
-      await r.json();
+      await response.json();
+
+
+    hideSections();
+
+    document
+      .getElementById(
+        "detailSection"
+      )
+      .classList.remove(
+        "hidden"
+      );
 
 
     await renderDetail();
 
+  }catch(error){
 
-  }catch(e){
-
-    console.error(e);
+    console.error(error);
 
   }
 
 }
 
 
-/* =========================
+/* =========================================================
    BIBLIOTHÈQUE
-========================= */
+========================================================= */
 
 function getCurrentSaved(){
 
-  return currentGame
-    ? library.find(
-        x =>
-          Number(x.id) ===
-          Number(currentGame.id)
-      )
-    : null;
+  if(!currentGame)
+    return null;
+
+  return library.find(
+    x =>
+      Number(x.id) ===
+      Number(currentGame.id)
+  );
 
 }
 
 
 function ensureSaved(){
 
-  let g =
+  let game =
     getCurrentSaved();
 
-
-  if(g){
-    return g;
-  }
+  if(game)
+    return game;
 
 
-  g = {
+  game = {
 
     id:
       currentGame.id,
@@ -2589,20 +3094,15 @@ function ensureSaved(){
     released:
       currentGame.released,
 
-    note:
-      0,
+    note:0,
 
-    progress:
-      0,
+    progress:0,
 
-    hours:
-      0,
+    hours:0,
 
-    minutes:
-      0,
+    minutes:0,
 
-    status:
-      "À jouer",
+    status:"À jouer",
 
     addedAt:
       Date.now()
@@ -2610,12 +3110,11 @@ function ensureSaved(){
   };
 
 
-  library.push(g);
+  library.push(game);
 
   saveLibrary();
 
-
-  return g;
+  return game;
 
 }
 
@@ -2629,21 +3128,23 @@ function addCurrentGame(){
 }
 
 
-function changeRating(a){
+function changeRating(amount){
 
-  const g =
+  const game =
     ensureSaved();
 
 
-  g.note =
+  game.note =
     Math.max(
       0,
       Math.min(
         10,
         Math.round(
           (
-            Number(g.note || 0) +
-            a
+            Number(
+              game.note || 0
+            ) +
+            amount
           ) * 2
         ) / 2
       )
@@ -2658,7 +3159,7 @@ function changeRating(a){
       "ratingValue"
     )
     .textContent =
-      g.note;
+      game.note;
 
 
   updateRatingButtons();
@@ -2668,50 +3169,60 @@ function changeRating(a){
 
 function updateRatingButtons(){
 
-  const g =
+  const game =
     getCurrentSaved();
 
-
-  if(!g){
+  if(!game)
     return;
+
+
+  const minus =
+    document.getElementById(
+      "minusRating"
+    );
+
+  const plus =
+    document.getElementById(
+      "plusRating"
+    );
+
+
+  if(minus){
+
+    minus.disabled =
+      Number(
+        game.note || 0
+      ) <= 0;
+
   }
 
 
-  document
-    .getElementById(
-      "minusRating"
-    )
-    .disabled =
-      Number(g.note || 0) <= 0;
+  if(plus){
 
+    plus.disabled =
+      Number(
+        game.note || 0
+      ) >= 10;
 
-  document
-    .getElementById(
-      "plusRating"
-    )
-    .disabled =
-      Number(g.note || 0) >= 10;
+  }
 
 }
 
 
-function changeProgress(v){
+function changeProgress(value){
 
-  const g =
+  const game =
     ensureSaved();
 
-
-  g.progress =
-    Number(v);
-
+  game.progress =
+    Number(value);
 
   document
     .getElementById(
       "progressValue"
     )
     .textContent =
-      v;
-
+      value;
 
   saveLibrary();
 
@@ -2720,11 +3231,11 @@ function changeProgress(v){
 
 function saveTime(){
 
-  const g =
+  const game =
     ensureSaved();
 
 
-  let h =
+  let hours =
     parseInt(
       document
         .getElementById(
@@ -2734,7 +3245,7 @@ function saveTime(){
     ) || 0;
 
 
-  let m =
+  let minutes =
     parseInt(
       document
         .getElementById(
@@ -2744,26 +3255,24 @@ function saveTime(){
     ) || 0;
 
 
-  h +=
+  hours +=
     Math.floor(
-      m / 60
+      minutes / 60
     );
 
+  minutes %= 60;
 
-  m %= 60;
 
-
-  g.hours =
+  game.hours =
     Math.max(
       0,
-      h
+      hours
     );
 
-
-  g.minutes =
+  game.minutes =
     Math.max(
       0,
-      m
+      minutes
     );
 
 
@@ -2774,15 +3283,13 @@ function saveTime(){
 }
 
 
-function changeStatus(v){
+function changeStatus(value){
 
-  const g =
+  const game =
     ensureSaved();
 
-
-  g.status =
-    v;
-
+  game.status =
+    value;
 
   saveLibrary();
 
@@ -2794,15 +3301,17 @@ function changeStatus(v){
 function deleteCurrentGame(){
 
   if(
-    !currentGame ||
+    !currentGame
+  )
+    return;
+
+
+  if(
     !confirm(
       "Supprimer ce jeu de ta bibliothèque ?"
     )
-  ){
-
+  )
     return;
-
-  }
 
 
   library =
@@ -2822,7 +3331,7 @@ function deleteCurrentGame(){
 
 function deleteLibraryGame(id){
 
-  const g =
+  const game =
     library.find(
       x =>
         Number(x.id) ===
@@ -2831,15 +3340,12 @@ function deleteLibraryGame(id){
 
 
   if(
-    !g ||
+    !game ||
     !confirm(
-      `Supprimer "${g.name}" de ta bibliothèque ?`
+      `Supprimer "${game.name}" de ta bibliothèque ?`
     )
-  ){
-
+  )
     return;
-
-  }
 
 
   library =
@@ -2859,7 +3365,7 @@ function deleteLibraryGame(id){
 
 function renderLibrary(){
 
-  const c =
+  const container =
     document.getElementById(
       "library"
     );
@@ -2869,13 +3375,14 @@ function renderLibrary(){
     (
       document.getElementById(
         "librarySearch"
-      ).value || ""
+      ).value ||
+      ""
     )
-      .toLowerCase()
-      .trim();
+    .toLowerCase()
+    .trim();
 
 
-  const sf =
+  const status =
     document.getElementById(
       "statusFilter"
     ).value;
@@ -2889,51 +3396,81 @@ function renderLibrary(){
 
   let items =
     library.filter(
-      g =>
+      game =>
         (
-          g.name || ""
+          game.name || ""
         )
-          .toLowerCase()
-          .includes(search)
+        .toLowerCase()
+        .includes(search)
+
         &&
+
         (
-          sf === "Tous" ||
-          g.status === sf
+          status === "Tous" ||
+          game.status === status
         )
     );
 
 
   items.sort(
-    (a,b) =>
-      sort === "name"
-        ? (
-            a.name || ""
-          ).localeCompare(
-            b.name || "",
-            "fr"
+    (a,b) => {
+
+      if(sort === "name"){
+
+        return (
+          a.name || ""
+        ).localeCompare(
+          b.name || "",
+          "fr"
+        );
+
+      }
+
+
+      if(sort === "rating"){
+
+        return (
+          Number(b.note || 0) -
+          Number(a.note || 0)
+        );
+
+      }
+
+
+      if(sort === "progress"){
+
+        return (
+          Number(b.progress || 0) -
+          Number(a.progress || 0)
+        );
+
+      }
+
+
+      if(sort === "time"){
+
+        return (
+          (
+            Number(b.hours || 0) * 60 +
+            Number(b.minutes || 0)
           )
+          -
 
-        : sort === "rating"
-          ? Number(b.note || 0) -
-            Number(a.note || 0)
+          (
+            Number(a.hours || 0) * 60 +
+            Number(a.minutes || 0)
+          )
+        );
 
-        : sort === "progress"
-          ? Number(b.progress || 0) -
-            Number(a.progress || 0)
+      }
 
-        : sort === "time"
-          ? (
-              Number(b.hours || 0) * 60 +
-              Number(b.minutes || 0)
-            )
-            -
-            (
-              Number(a.hours || 0) * 60 +
-              Number(a.minutes || 0)
-            )
 
-        : Number(b.addedAt || 0) -
-          Number(a.addedAt || 0)
+      return (
+        Number(b.addedAt || 0) -
+        Number(a.addedAt || 0)
+      );
+
+    }
   );
 
 
@@ -2947,7 +3484,7 @@ function renderLibrary(){
 
   if(!items.length){
 
-    c.innerHTML =
+    container.innerHTML =
       '<div class="empty">📚 Aucun jeu trouvé.</div>';
 
     return;
@@ -2955,31 +3492,30 @@ function renderLibrary(){
   }
 
 
-  c.innerHTML = "";
+  container.innerHTML = "";
 
 
-  items.forEach(g => {
+  items.forEach(game => {
 
-    const i =
+    const item =
       document.createElement(
         "div"
       );
 
-
-    i.className =
+    item.className =
       "library-item";
 
 
-    const mins =
-      Number(g.hours || 0) * 60 +
-      Number(g.minutes || 0);
+    const minutes =
+      Number(game.hours || 0) * 60 +
+      Number(game.minutes || 0);
 
 
-    i.innerHTML = `
+    item.innerHTML = `
 
       <img
         src="${escapeHtml(
-          g.background_image ||
+          game.background_image ||
           placeholder()
         )}"
         alt=""
@@ -2990,43 +3526,45 @@ function renderLibrary(){
 
         <div class="library-name">
           ${escapeHtml(
-            g.name || "Jeu"
+            game.name ||
+            "Jeu"
           )}
         </div>
 
         <div class="library-small">
           ${escapeHtml(
-            g.released ||
+            game.released ||
             "Date inconnue"
           )}
         </div>
 
         <div class="library-line">
-          ⭐ ${Number(g.note || 0)}/10
+          ⭐ ${Number(game.note || 0)}/10
           •
-          📊 ${Number(g.progress || 0)}%
+          📊 ${Number(game.progress || 0)}%
         </div>
 
         <div class="library-line">
-          🕐 ${Math.floor(mins / 60)}h
-          ${mins % 60}min
+          🕐 ${Math.floor(minutes / 60)}h
+          ${minutes % 60}min
         </div>
 
         <div class="badge">
           ${escapeHtml(
-            g.status ||
+            game.status ||
             "À jouer"
           )}
         </div>
 
       </div>
 
+
       <button
         class="library-delete"
         onclick="
           event.stopPropagation();
           deleteLibraryGame(
-            ${Number(g.id)}
+            ${Number(game.id)}
           )
         "
       >
@@ -3036,29 +3574,30 @@ function renderLibrary(){
     `;
 
 
-    i.onclick =
-      () => openGame(g);
+    item.onclick =
+      () => openGame(game);
 
 
-    c.appendChild(i);
+    container.appendChild(
+      item
+    );
 
   });
 
 }
 
 
-/* =========================
+/* =========================================================
    SOUHAITS
-========================= */
+========================================================= */
 
 function toggleWishlist(){
 
-  if(!currentGame){
+  if(!currentGame)
     return;
-  }
 
 
-  const idx =
+  const index =
     wishlist.findIndex(
       x =>
         Number(x.id) ===
@@ -3066,10 +3605,10 @@ function toggleWishlist(){
     );
 
 
-  if(idx >= 0){
+  if(index >= 0){
 
     wishlist.splice(
-      idx,
+      index,
       1
     );
 
@@ -3117,7 +3656,6 @@ function removeFromWishlist(id){
         Number(id)
     );
 
-
   saveWishlist();
 
   renderWishlist();
@@ -3125,49 +3663,51 @@ function removeFromWishlist(id){
 }
 
 
-function daysUntil(s){
+function daysUntil(date){
 
-  if(!s){
+  if(!date)
     return null;
-  }
 
 
-  const t =
+  const today =
     new Date();
 
-
-  t.setHours(
-    0,
-    0,
-    0,
-    0
+  today.setHours(
+    0,0,0,0
   );
 
 
-  const d =
+  const target =
     new Date(
-      s +
+      date +
       "T00:00:00"
     );
 
 
-  return isNaN(d)
-    ? null
-    : Math.ceil(
-        (
-          d - t
-        ) /
-        86400000
-      );
+  if(
+    isNaN(
+      target.getTime()
+    )
+  )
+    return null;
+
+
+  return Math.ceil(
+    (
+      target -
+      today
+    ) /
+    86400000
+  );
 
 }
 
 
-function releaseLabel(g){
+function releaseLabel(game){
 
   if(
-    g.tba ||
-    !g.released
+    game.tba ||
+    !game.released
   ){
 
     return "📅 Date à confirmer";
@@ -3175,65 +3715,49 @@ function releaseLabel(g){
   }
 
 
-  const d =
+  const days =
     daysUntil(
-      g.released
+      game.released
     );
 
 
-  if(d === null){
-
+  if(days === null)
     return "📅 Date inconnue";
 
-  }
-
-
-  if(d < 0){
-
+  if(days < 0)
     return "🟢 Sorti";
 
-  }
-
-
-  if(d === 0){
-
+  if(days === 0)
     return "🔥 Sortie aujourd'hui";
 
-  }
-
-
-  if(d === 1){
-
+  if(days === 1)
     return "⏳ Sortie demain";
 
-  }
 
-
-  return `
-    ⏳ Sortie dans
-    ${d}
-    jours
-  `;
+  return (
+    `⏳ Sortie dans ${days} jours`
+  );
 
 }
 
 
 function renderWishlist(){
 
-  const c =
+  const container =
     document.getElementById(
       "wishlist"
     );
 
 
-  const s =
+  const search =
     (
       document.getElementById(
         "wishlistSearch"
-      ).value || ""
+      ).value ||
+      ""
     )
-      .toLowerCase()
-      .trim();
+    .toLowerCase()
+    .trim();
 
 
   const sort =
@@ -3248,27 +3772,35 @@ function renderWishlist(){
         (
           x.name || ""
         )
-          .toLowerCase()
-          .includes(s)
+        .toLowerCase()
+        .includes(search)
     );
 
 
   items.sort(
-    (a,b) =>
-      sort === "name"
-        ? (
-            a.name || ""
-          ).localeCompare(
-            b.name || "",
-            "fr"
-          )
-        : (
-            a.released ||
-            "9999-12-31"
-          ).localeCompare(
-            b.released ||
-            "9999-12-31"
-          )
+    (a,b) => {
+
+      if(sort === "name"){
+
+        return (
+          a.name || ""
+        ).localeCompare(
+          b.name || "",
+          "fr"
+        );
+
+      }
+
+
+      return (
+        a.released ||
+        "9999-12-31"
+      ).localeCompare(
+        b.released ||
+        "9999-12-31"
+      );
+
+    }
   );
 
 
@@ -3282,7 +3814,7 @@ function renderWishlist(){
 
   if(!items.length){
 
-    c.innerHTML =
+    container.innerHTML =
       '<div class="empty">❤️ Aucun jeu dans ta liste de souhaits.</div>';
 
     return;
@@ -3290,26 +3822,25 @@ function renderWishlist(){
   }
 
 
-  c.innerHTML = "";
+  container.innerHTML = "";
 
 
-  items.forEach(g => {
+  items.forEach(game => {
 
-    const i =
+    const item =
       document.createElement(
         "div"
       );
 
-
-    i.className =
+    item.className =
       "wishlist-item";
 
 
-    i.innerHTML = `
+    item.innerHTML = `
 
       <img
         src="${escapeHtml(
-          g.background_image ||
+          game.background_image ||
           placeholder()
         )}"
         alt=""
@@ -3320,29 +3851,31 @@ function renderWishlist(){
 
         <div class="wishlist-name">
           ${escapeHtml(
-            g.name || "Jeu"
+            game.name ||
+            "Jeu"
           )}
         </div>
 
         <div class="wishlist-date">
           ${escapeHtml(
-            g.released ||
+            game.released ||
             "Date à confirmer"
           )}
         </div>
 
         <div class="wishlist-badge">
-          ${releaseLabel(g)}
+          ${releaseLabel(game)}
         </div>
 
       </div>
+
 
       <button
         class="wishlist-delete"
         onclick="
           event.stopPropagation();
           removeFromWishlist(
-            ${Number(g.id)}
+            ${Number(game.id)}
           )
         "
       >
@@ -3352,41 +3885,37 @@ function renderWishlist(){
     `;
 
 
-    i.onclick =
-      () => openGame(g);
+    item.onclick =
+      () => openGame(game);
 
 
-    c.appendChild(i);
+    container.appendChild(
+      item
+    );
 
   });
 
 }
 
 
-/* =========================
+/* =========================================================
    PROCHAINES SORTIES
-========================= */
-
-let upcomingPage = 1;
-let upcomingHasMore = false;
-
+========================================================= */
 
 async function fetchUpcomingPage(
   page = 1,
   append = false
 ){
 
-  const c =
+  const container =
     document.getElementById(
       "upcoming"
     );
 
-
-  const s =
+  const status =
     document.getElementById(
       "upcomingStatus"
     );
-
 
   const more =
     document.getElementById(
@@ -3396,15 +3925,16 @@ async function fetchUpcomingPage(
 
   if(!append){
 
-    c.innerHTML =
+    container.innerHTML =
       '<div class="empty">📅 Chargement...</div>';
 
-    upcomingPage = 1;
+    upcomingPage =
+      1;
 
   }
 
 
-  s.textContent =
+  status.textContent =
     append
       ? "Chargement de jeux supplémentaires..."
       : "Recherche des prochaines sorties...";
@@ -3425,7 +3955,8 @@ async function fetchUpcomingPage(
 
 
   future.setDate(
-    future.getDate() + 365
+    future.getDate() +
+    365
   );
 
 
@@ -3437,24 +3968,32 @@ async function fetchUpcomingPage(
 
   try{
 
-    const r =
+    const response =
       await fetch(
+
         WORKER_URL +
-        `/upcoming?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&page=${page}`
+        `/upcoming?from=${
+          encodeURIComponent(from)
+        }&to=${
+          encodeURIComponent(to)
+        }&page=${page}`
+
       );
 
 
-    const d =
-      await r.json();
+    const data =
+      await response.json();
 
 
     if(
-      !r.ok ||
-      !Array.isArray(d.results)
+      !response.ok ||
+      !Array.isArray(
+        data.results
+      )
     ){
 
       throw new Error(
-        d.error ||
+        data.error ||
         "Impossible de charger les sorties"
       );
 
@@ -3463,29 +4002,31 @@ async function fetchUpcomingPage(
 
     if(!append){
 
-      c.innerHTML = "";
+      container.innerHTML = "";
 
     }
 
 
-    d.results
+    data.results
+
       .filter(
         x =>
           x.released
       )
+
       .sort(
         (a,b) =>
           a.released.localeCompare(
             b.released
           )
       )
-      .forEach(g => {
+
+      .forEach(game => {
 
         const card =
           document.createElement(
             "div"
           );
-
 
         card.className =
           "upcoming-card";
@@ -3495,7 +4036,7 @@ async function fetchUpcomingPage(
 
           <img
             src="${escapeHtml(
-              g.background_image ||
+              game.background_image ||
               placeholder()
             )}"
             alt=""
@@ -3506,18 +4047,19 @@ async function fetchUpcomingPage(
 
             <div class="upcoming-name">
               ${escapeHtml(
-                g.name || "Jeu"
+                game.name ||
+                "Jeu"
               )}
             </div>
 
             <div class="upcoming-date">
               📅 ${escapeHtml(
-                g.released
+                game.released
               )}
             </div>
 
             <div class="countdown">
-              ${releaseLabel(g)}
+              ${releaseLabel(game)}
             </div>
 
           </div>
@@ -3526,17 +4068,18 @@ async function fetchUpcomingPage(
 
 
         card.onclick =
-          () => openGame(g);
+          () => openGame(game);
 
 
-        c.appendChild(card);
+        container.appendChild(
+          card
+        );
 
       });
 
 
     upcomingHasMore =
-      Boolean(d.next);
-
+      Boolean(data.next);
 
     upcomingPage =
       page;
@@ -3548,43 +4091,47 @@ async function fetchUpcomingPage(
     );
 
 
-    s.textContent =
-      `${c.querySelectorAll(
-        ".upcoming-card"
-      ).length} prochaine(s) sortie(s) affichée(s).`;
+    status.textContent =
+      `${
+        container.querySelectorAll(
+          ".upcoming-card"
+        ).length
+      } prochaine(s) sortie(s) affichée(s).`;
 
 
     if(
-      !c.querySelector(
+      !container.querySelector(
         ".upcoming-card"
       )
     ){
 
-      c.innerHTML =
+      container.innerHTML =
         '<div class="empty">Aucune sortie trouvée.</div>';
 
     }
 
 
-  }catch(e){
+  }catch(error){
 
-    console.error(e);
+    console.error(error);
 
-
-    s.textContent =
+    status.textContent =
       "Erreur lors du chargement des sorties.";
 
 
     if(!append){
 
-      c.innerHTML =
-        `
+      container.innerHTML = `
+
         <div class="empty">
+
           ❌ ${escapeHtml(
-            e.message
+            error.message
           )}
+
         </div>
-        `;
+
+      `;
 
     }
 
@@ -3605,7 +4152,9 @@ async function loadUpcoming(){
 
 async function loadMoreUpcoming(){
 
-  if(upcomingHasMore){
+  if(
+    upcomingHasMore
+  ){
 
     await fetchUpcomingPage(
       upcomingPage + 1,
@@ -3617,45 +4166,31 @@ async function loadMoreUpcoming(){
 }
 
 
-/* =========================
+/* =========================================================
    GENRES
-========================= */
-
-let currentGenreSlug = "";
-let currentGenreLabel = "";
-
-let genrePage = 1;
-let genreHasMore = false;
-let genreLoading = false;
-
-let genreSeenIds =
-  new Set();
-
+========================================================= */
 
 async function fetchGenrePage(
   page = 1,
   append = false
 ){
 
-  if(genreLoading){
+  if(genreLoading)
     return;
-  }
+
+  genreLoading =
+    true;
 
 
-  genreLoading = true;
-
-
-  const c =
+  const container =
     document.getElementById(
       "genreGames"
     );
 
-
-  const s =
+  const status =
     document.getElementById(
       "genreStatus"
     );
-
 
   const more =
     document.getElementById(
@@ -3665,7 +4200,7 @@ async function fetchGenrePage(
 
   if(!append){
 
-    c.innerHTML =
+    container.innerHTML =
       '<div class="empty">🎭 Chargement des jeux...</div>';
 
     genreSeenIds =
@@ -3674,14 +4209,17 @@ async function fetchGenrePage(
   }
 
 
-  s.textContent =
-    `Recherche des jeux ${currentGenreLabel}...`;
+  status.textContent =
+    `Recherche des jeux ${
+      currentGenreLabel
+    }...`;
 
 
   try{
 
-    const r =
+    const response =
       await fetch(
+
         WORKER_URL +
         "/genre/" +
         encodeURIComponent(
@@ -3689,20 +4227,23 @@ async function fetchGenrePage(
         ) +
         "?page=" +
         page
+
       );
 
 
-    const d =
-      await r.json();
+    const data =
+      await response.json();
 
 
     if(
-      !r.ok ||
-      !Array.isArray(d.results)
+      !response.ok ||
+      !Array.isArray(
+        data.results
+      )
     ){
 
       throw new Error(
-        d.error ||
+        data.error ||
         "Impossible de charger ce genre"
       );
 
@@ -3711,32 +4252,29 @@ async function fetchGenrePage(
 
     if(!append){
 
-      c.innerHTML = "";
+      container.innerHTML = "";
 
     }
 
 
-    d.results.forEach(
-      g => {
+    data.results.forEach(
+      game => {
 
         const id =
-          Number(g.id);
+          Number(game.id);
 
 
         if(
           genreSeenIds.has(id)
-        ){
-
+        )
           return;
-
-        }
 
 
         genreSeenIds.add(id);
 
 
-        c.appendChild(
-          createGameCard(g)
+        container.appendChild(
+          createGameCard(game)
         );
 
       }
@@ -3744,8 +4282,7 @@ async function fetchGenrePage(
 
 
     genreHasMore =
-      Boolean(d.next);
-
+      Boolean(data.next);
 
     genrePage =
       page;
@@ -3757,49 +4294,57 @@ async function fetchGenrePage(
     );
 
 
-    s.textContent =
-      `${c.querySelectorAll(
-        ".card"
-      ).length} jeu(x) affiché(s) dans ${currentGenreLabel}.`;
+    status.textContent =
+      `${
+        container.querySelectorAll(
+          ".card"
+        ).length
+      } jeu(x) affiché(s) dans ${
+        currentGenreLabel
+      }.`;
+
 
 
     if(
-      !c.querySelector(
+      !container.querySelector(
         ".card"
       )
     ){
 
-      c.innerHTML =
+      container.innerHTML =
         '<div class="empty">Aucun jeu trouvé dans ce genre RAWG.</div>';
 
     }
 
 
-  }catch(e){
+  }catch(error){
 
-    console.error(e);
+    console.error(error);
 
-
-    s.textContent =
+    status.textContent =
       "Erreur lors du chargement du genre.";
 
 
     if(!append){
 
-      c.innerHTML =
-        `
+      container.innerHTML = `
+
         <div class="empty">
+
           ❌ ${escapeHtml(
-            e.message
+            error.message
           )}
+
         </div>
-        `;
+
+      `;
 
     }
 
   }finally{
 
-    genreLoading = false;
+    genreLoading =
+      false;
 
   }
 
@@ -3857,201 +4402,13 @@ async function loadMoreGenre(){
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
-
-function hideSections(){
-
-  [
-    "searchSection",
-    "detailSection",
-    "studioSection",
-    "librarySection",
-    "wishlistSection",
-    "upcomingSection",
-    "genresSection",
-    "statsSection"
-  ]
-  .forEach(
-    id =>
-      document
-        .getElementById(id)
-        ?.classList
-        .add("hidden")
-  );
-
-
-  [
-    "tabSearch",
-    "tabLibrary",
-    "tabWishlist",
-    "tabUpcoming",
-    "tabGenres",
-    "tabStats"
-  ]
-  .forEach(
-    id =>
-      document
-        .getElementById(id)
-        ?.classList
-        .remove("active")
-  );
-
-}
-
-
-function showSearch(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "searchSection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabSearch"
-    )
-    .classList
-    .add("active");
-
-}
-
-
-function showLibrary(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "librarySection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabLibrary"
-    )
-    .classList
-    .add("active");
-
-
-  renderLibrary();
-
-}
-
-
-function showWishlist(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "wishlistSection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabWishlist"
-    )
-    .classList
-    .add("active");
-
-
-  renderWishlist();
-
-}
-
-
-function showUpcoming(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "upcomingSection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabUpcoming"
-    )
-    .classList
-    .add("active");
-
-
-  loadUpcoming();
-
-}
-
-
-function showGenres(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "genresSection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabGenres"
-    )
-    .classList
-    .add("active");
-
-}
-
-
-function showStats(){
-
-  hideSections();
-
-  document
-    .getElementById(
-      "statsSection"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "tabStats"
-    )
-    .classList
-    .add("active");
-
-
-  renderStats();
-
-}
-
-
-/* =========================
-   STATISTIQUES
-========================= */
+/* =========================================================
+   STATS
+========================================================= */
 
 function renderStats(){
 
-  const c =
+  const container =
     document.getElementById(
       "statsContent"
     );
@@ -4087,41 +4444,49 @@ function renderStats(){
 
   const totalMinutes =
     library.reduce(
-      (s,g) =>
-        s +
-        Number(g.hours || 0) * 60 +
-        Number(g.minutes || 0),
+      (sum,game) =>
+        sum +
+        Number(
+          game.hours || 0
+        ) * 60 +
+        Number(
+          game.minutes || 0
+        ),
       0
     );
 
 
-  const avg =
+  const average =
     total
+
       ? (
           library.reduce(
-            (s,g) =>
-              s +
-              Number(g.note || 0),
+            (sum,game) =>
+              sum +
+              Number(
+                game.note || 0
+              ),
             0
-          ) /
-          total
+          ) / total
         ).toFixed(1)
+
       : "0.0";
 
 
-  const prog =
+  const progress =
     total
+
       ? Math.round(
           library.reduce(
-            (s,g) =>
-              s +
+            (sum,game) =>
+              sum +
               Number(
-                g.progress || 0
+                game.progress || 0
               ),
             0
-          ) /
-          total
+          ) / total
         )
+
       : 0;
 
 
@@ -4134,10 +4499,9 @@ function renderStats(){
       )[0];
 
 
-  c.innerHTML = `
+  container.innerHTML = `
 
     <div class="stats-grid">
-
 
       <div class="stat">
 
@@ -4199,7 +4563,7 @@ function renderStats(){
         </div>
 
         <div class="stat-number">
-          ${avg}
+          ${average}
         </div>
 
         <div class="stat-label">
@@ -4207,7 +4571,6 @@ function renderStats(){
         </div>
 
       </div>
-
 
     </div>
 
@@ -4241,14 +4604,14 @@ function renderStats(){
       </div>
 
       <div class="big">
-        ${prog}%
+        ${progress}%
       </div>
 
       <div class="bar">
 
         <div
           class="fill"
-          style="width:${prog}%"
+          style="width:${progress}%"
         ></div>
 
       </div>
@@ -4258,6 +4621,7 @@ function renderStats(){
 
     ${
       best
+
         ? `
 
           <div class="stats-box">
@@ -4284,12 +4648,14 @@ function renderStats(){
                   )}
                 </strong>
 
-                <div style="margin-top:6px">
-
-                  ⭐ ${Number(
-                    best.note || 0
-                  )}/10
-
+                <div
+                  style="margin-top:6px"
+                >
+                  ⭐ ${
+                    Number(
+                      best.note || 0
+                    )
+                  }/10
                 </div>
 
               </div>
@@ -4299,6 +4665,7 @@ function renderStats(){
           </div>
 
         `
+
         : ""
     }
 
@@ -4307,76 +4674,199 @@ function renderStats(){
 }
 
 
-/* =========================
-   OUTILS
-========================= */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-function stripHtml(html){
+function hideSections(){
 
-  const d =
-    document.createElement(
-      "div"
-    );
+  [
+    "searchSection",
+    "detailSection",
+    "studioSection",
+    "librarySection",
+    "wishlistSection",
+    "upcomingSection",
+    "genresSection",
+    "statsSection"
+  ]
+  .forEach(
+    id =>
+      document
+        .getElementById(id)
+        ?.classList
+        .add("hidden")
+  );
 
 
-  d.innerHTML =
-    html || "";
-
-
-  return (
-    d.textContent ||
-    d.innerText ||
-    ""
+  [
+    "tabSearch",
+    "tabLibrary",
+    "tabWishlist",
+    "tabUpcoming",
+    "tabGenres",
+    "tabStats"
+  ]
+  .forEach(
+    id =>
+      document
+        .getElementById(id)
+        ?.classList
+        .remove("active")
   );
 
 }
 
 
-function escapeHtml(text){
+function showSearch(){
 
-  const d =
-    document.createElement(
-      "div"
+  hideSections();
+
+  document
+    .getElementById(
+      "searchSection"
+    )
+    .classList.remove(
+      "hidden"
     );
 
-
-  d.textContent =
-    text == null
-      ? ""
-      : String(text);
-
-
-  return d.innerHTML;
-
-}
-
-
-function escapeAttr(text){
-
-  return String(
-    text == null
-      ? ""
-      : text
-  )
-    .replace(
-      /\\/g,
-      "\\\\"
+  document
+    .getElementById(
+      "tabSearch"
     )
-    .replace(
-      /'/g,
-      "&#39;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
+    .classList.add(
+      "active"
     );
 
 }
 
 
-/* =========================
-   ENTRÉE
-========================= */
+function showLibrary(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "librarySection"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "tabLibrary"
+    )
+    .classList.add(
+      "active"
+    );
+
+  renderLibrary();
+
+}
+
+
+function showWishlist(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "wishlistSection"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "tabWishlist"
+    )
+    .classList.add(
+      "active"
+    );
+
+  renderWishlist();
+
+}
+
+
+function showUpcoming(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "upcomingSection"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "tabUpcoming"
+    )
+    .classList.add(
+      "active"
+    );
+
+  loadUpcoming();
+
+}
+
+
+function showGenres(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "genresSection"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "tabGenres"
+    )
+    .classList.add(
+      "active"
+    );
+
+}
+
+
+function showStats(){
+
+  hideSections();
+
+  document
+    .getElementById(
+      "statsSection"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+  document
+    .getElementById(
+      "tabStats"
+    )
+    .classList.add(
+      "active"
+    );
+
+  renderStats();
+
+}
+
+
+/* =========================================================
+   ENTER
+========================================================= */
 
 document
   .getElementById(
@@ -4384,10 +4874,10 @@ document
   )
   .addEventListener(
     "keydown",
-    e => {
+    event => {
 
       if(
-        e.key ===
+        event.key ===
         "Enter"
       ){
 
