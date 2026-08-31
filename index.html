@@ -683,7 +683,8 @@ main{
 
 .studio-fact{
   border-bottom:1px solid #24242d;
-  padding-bottom:10px
+  padding-bottom:10px;
+  min-width:0
 }
 
 .studio-fact:last-child{
@@ -691,9 +692,17 @@ main{
   padding-bottom:0
 }
 
+.studio-fact-label{
+  font-size:12px;
+  color:#777783;
+  margin-bottom:5px
+}
+
 .studio-fact-value{
   font-weight:800;
-  font-size:14px
+  font-size:15px;
+  line-height:1.35;
+  overflow-wrap:anywhere
 }
 
 .studio-count{
@@ -1952,6 +1961,9 @@ async function renderStudio(){
           founded,
           founder,
           ceo,
+          chairman,
+          country,
+          foundedLocation,
           officialWebsite,
           wikipediaUrl,
           wikipediaTitle,
@@ -2017,6 +2029,132 @@ async function renderStudio(){
        DONNÉES COMBINÉES
     ========================= */
 
+    const firstValue = (...values) => {
+
+      for (const value of values) {
+
+        if (value === null || value === undefined) {
+          continue;
+        }
+
+        if (Array.isArray(value)) {
+
+          const clean =
+            value
+              .map(x => {
+                if (x === null || x === undefined) {
+                  return "";
+                }
+
+                if (typeof x === "object") {
+                  return String(
+                    x.name ||
+                    x.label ||
+                    x.value ||
+                    ""
+                  ).trim();
+                }
+
+                return String(x).trim();
+              })
+              .filter(Boolean);
+
+          if (clean.length) {
+            return clean.join(", ");
+          }
+
+          continue;
+        }
+
+        if (typeof value === "object") {
+
+          const clean =
+            value.name ||
+            value.label ||
+            value.value;
+
+          if (clean) {
+            return String(clean).trim();
+          }
+
+          continue;
+        }
+
+        const text = String(value).trim();
+
+        if (text) {
+          return text;
+        }
+      }
+
+      return null;
+    };
+
+    const normalizeFoundedDate = value => {
+
+      if (!value) {
+        return null;
+      }
+
+      const text = String(value).trim();
+
+      if (!text) {
+        return null;
+      }
+
+      let match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+      if (match) {
+
+        const day = match[1];
+        const month = match[2];
+        const year = match[3];
+
+        if (day === "00" && month === "00") {
+          return year;
+        }
+
+        if (day === "00") {
+          return `${month}/${year}`;
+        }
+
+        if (month === "00") {
+          return year;
+        }
+
+        return `${day}/${month}/${year}`;
+      }
+
+      match = text.match(/^(\d{2})\/(\d{4})$/);
+
+      if (match) {
+        return match[1] === "00"
+          ? match[2]
+          : `${match[1]}/${match[2]}`;
+      }
+
+      match = text.match(/^[+-]?(\d{4})-(\d{2})-(\d{2})/);
+
+      if (match) {
+
+        const year = match[1];
+        const month = match[2];
+        const day = match[3];
+
+        if (month === "00" && day === "00") {
+          return year;
+        }
+
+        if (day === "00") {
+          return `${month}/${year}`;
+        }
+
+        return `${day}/${month}/${year}`;
+      }
+
+      return text;
+    };
+
     const image =
       wiki.thumbnail ||
       studio.image_background ||
@@ -2036,153 +2174,189 @@ async function renderStudio(){
       );
 
     const location =
-      wiki.location ||
-      null;
+      firstValue(
+        wiki.location,
+        wiki.headquarters,
+        wiki.city
+      );
+
+    const country =
+      firstValue(
+        wiki.country,
+        studio.country
+      );
 
     const founded =
-      wiki.founded ||
-      null;
+      normalizeFoundedDate(
+        firstValue(
+          wiki.founded,
+          wiki.foundation,
+          wiki.dateFounded,
+          studio.founded,
+          studio.foundation
+        )
+      );
+
+    const foundedLocation =
+      firstValue(
+        wiki.foundedLocation,
+        wiki.foundingLocation,
+        wiki.placeFounded,
+        wiki.foundedPlace
+      );
 
     const founder =
-      wiki.founder ||
-      null;
+      firstValue(
+        wiki.founder,
+        wiki.founders,
+        wiki.founderNames
+      );
 
     const ceo =
-      wiki.ceo ||
-      null;
+      firstValue(
+        wiki.ceo,
+        wiki.CEO,
+        wiki.director,
+        wiki.president,
+        wiki.chiefExecutive,
+        wiki.chiefExecutiveOfficer,
+        wiki.leader,
+        wiki.leadership
+      );
+
+    const chairman =
+      firstValue(
+        wiki.chairman,
+        wiki.chairperson
+      );
 
     const officialWebsite =
-      wiki.officialWebsite ||
-      studio.website ||
-      null;
+      firstValue(
+        wiki.officialWebsite,
+        wiki.website,
+        studio.website
+      );
 
     const wikipediaUrl =
-      wiki.wikipediaUrl ||
-      null;
+      firstValue(wiki.wikipediaUrl);
 
     const wikipediaTitle =
-      wiki.wikipediaTitle ||
-      null;
+      firstValue(wiki.wikipediaTitle);
 
     const wikidataId =
-      wiki.wikidataId ||
-      null;
+      firstValue(wiki.wikidataId);
 
-    const hasWikipedia =
-      Boolean(wikipediaUrl);
+    const studioType =
+      d.studioType === "publisher" ||
+      s.type === "publisher"
+        ? "ÉDITEUR"
+        : "DÉVELOPPEUR";
 
-    const hasWikidata =
-      Boolean(wikidataId);
+    const hasWikipedia = Boolean(wikipediaUrl);
+    const hasWikidata = Boolean(wikidataId);
 
-    /* =========================
-       PETITES FONCTIONS HTML
-    ========================= */
+    const fact = (icon, label, value) => {
 
-    const fact = (
-      icon,
-      label,
-      value
-    ) => {
-
-      if(
+      if (
         value === null ||
         value === undefined ||
         String(value).trim() === ""
-      ){
+      ) {
         return "";
       }
 
       return `
         <div class="studio-fact">
-
           <div class="studio-fact-label">
             ${icon} ${escapeHtml(label)}
           </div>
-
           <div class="studio-fact-value">
             ${escapeHtml(value)}
           </div>
-
         </div>
       `;
     };
 
-    const linkFact = (
-      icon,
-      label,
-      url,
-      text
-    ) => {
+    const linkFact = (icon, label, url, text) => {
 
-      if(!url){
+      if (!url) {
         return "";
       }
 
       return `
         <div class="studio-fact">
-
           <div class="studio-fact-label">
             ${icon} ${escapeHtml(label)}
           </div>
-
           <div class="studio-fact-value">
-
             <a
               href="${escapeHtml(url)}"
               target="_blank"
               rel="noopener noreferrer"
               class="studio-external-link"
             >
-              ${escapeHtml(text)} ↗
+              ${escapeHtml(text || "Visiter")} ↗
             </a>
-
           </div>
-
         </div>
       `;
     };
 
     const factsHTML = [
-      fact("📍", "Localisation", location),
-      fact("📅", "Fondation", founded),
+      fact("🏢", "Type", studioType),
+      fact("📍", "Lieu", location),
+      fact("🌍", "Pays", country),
+      fact("📅", "Date de création", founded),
+      fact("🏙️", "Lieu de création", foundedLocation),
       fact("👤", "Fondateur(s)", founder),
-      fact("👔", "PDG / Direction", ceo),
+      fact("👔", "Dirigeant", ceo),
+      fact("🪑", "Président", chairman),
       linkFact("🌐", "Site officiel", officialWebsite, "Visiter le site"),
       linkFact("📚", "Wikipédia", wikipediaUrl, wikipediaTitle || "Voir Wikipédia"),
       gamesCount > 0
-        ? fact("🎮", "Jeux", String(gamesCount))
+        ? fact("🎮", "Jeux du studio", String(gamesCount))
         : ""
     ].join("");
 
     const sourceHTML = `
       <div class="studio-sources">
-
         <div class="studio-source-title">
           Sources encyclopédiques
         </div>
-
         <div class="studio-source-badges">
-
           ${
             hasWikipedia
-              ? `<span class="studio-source-badge">📚 Wikipédia</span>`
+              ? `
+                <a
+                  href="${escapeHtml(wikipediaUrl)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="studio-source-badge"
+                >
+                  📚 Wikipédia
+                </a>
+              `
               : ""
           }
-
           ${
             hasWikidata
-              ? `<span class="studio-source-badge">🔷 Wikidata</span>`
+              ? `
+                <span class="studio-source-badge">
+                  🔷 Wikidata
+                </span>
+              `
               : ""
           }
-
           ${
             !hasWikipedia && !hasWikidata
-              ? `<span class="studio-source-badge">RAWG uniquement</span>`
+              ? `
+                <span class="studio-source-badge">
+                  RAWG uniquement
+                </span>
+              `
               : ""
           }
-
         </div>
-
       </div>
     `;
 
@@ -2206,11 +2380,7 @@ async function renderStudio(){
           <div class="studio-hero-overlay">
 
             <div class="studio-type">
-              ${
-                s.type === "publisher"
-                  ? "ÉDITEUR"
-                  : "DÉVELOPPEUR"
-              }
+              ${escapeHtml(studioType)}
             </div>
 
             <div class="studio-name">
