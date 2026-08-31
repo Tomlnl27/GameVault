@@ -2186,6 +2186,16 @@ async function renderStudio(){
         studio.country
       );
 
+    const locationWithCountry =
+      [location, country]
+        .filter(Boolean)
+        .filter((value, index, arr) =>
+          arr.findIndex(
+            x => x.toLowerCase() === value.toLowerCase()
+          ) === index
+        )
+        .join(', ');
+
     const founded =
       normalizeFoundedDate(
         firstValue(
@@ -2227,7 +2237,8 @@ async function renderStudio(){
     const chairman =
       firstValue(
         wiki.chairman,
-        wiki.chairperson
+        wiki.chairperson,
+        wiki.president
       );
 
     const officialWebsite =
@@ -2302,15 +2313,25 @@ async function renderStudio(){
       `;
     };
 
-    const factsHTML = [
-      fact("🏢", "Type", studioType),
-      fact("📍", "Lieu", location),
-      fact("🌍", "Pays", country),
-      fact("📅", "Date de création", founded),
-      fact("🏙️", "Lieu de création", foundedLocation),
+    // On affiche toutes les personnes réellement renseignées.
+    // S'il n'y en a aucune, on garde malgré tout une ligne dédiée
+    // pour ne jamais supprimer complètement cette information.
+    const leadershipFacts = [
       fact("👤", "Fondateur(s)", founder),
       fact("👔", "Dirigeant", ceo),
-      fact("🪑", "Président", chairman),
+      fact("🪑", "Président", chairman)
+    ].join("");
+
+    const leadershipFallback =
+      leadershipFacts ||
+      fact("👤", "Fondateur / direction", "Non renseigné");
+
+    const factsHTML = [
+      fact("🏢", "Type", studioType),
+      fact("📍", "Lieu", locationWithCountry),
+      fact("📅", "Date de création", founded),
+      fact("🏙️", "Lieu de création", foundedLocation),
+      leadershipFallback,
       linkFact("🌐", "Site officiel", officialWebsite, "Visiter le site"),
       linkFact("📚", "Wikipédia", wikipediaUrl, wikipediaTitle || "Voir Wikipédia"),
       gamesCount > 0
@@ -2325,36 +2346,17 @@ async function renderStudio(){
         </div>
         <div class="studio-source-badges">
           ${
-            hasWikipedia
-              ? `
-                <a
-                  href="${escapeHtml(wikipediaUrl)}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="studio-source-badge"
-                >
-                  📚 Wikipédia
-                </a>
-              `
-              : ""
-          }
-          ${
             hasWikidata
               ? `
                 <span class="studio-source-badge">
                   🔷 Wikidata
                 </span>
               `
-              : ""
-          }
-          ${
-            !hasWikipedia && !hasWikidata
-              ? `
+              : `
                 <span class="studio-source-badge">
-                  RAWG uniquement
+                  Données encyclopédiques
                 </span>
               `
-              : ""
           }
         </div>
       </div>
