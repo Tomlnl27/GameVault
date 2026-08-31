@@ -423,7 +423,14 @@ main{
   width:65px;
   height:85px;
   object-fit:cover;
-  border-radius:8px
+  background:#0d0d12;
+  border-radius:8px;
+  flex:none
+}
+
+.wishlist-item img{
+  object-fit:contain;
+  border:1px solid #292933
 }
 
 .library-info,
@@ -901,7 +908,7 @@ main{
 
 <section id="detailSection" class="hidden">
 
-  <button class="back" onclick="showSearch()">← Retour</button>
+  <button class="back" onclick="goBackFromDetail()">← Retour</button>
 
   <div id="detail"></div>
 
@@ -1064,13 +1071,24 @@ const WORKER_URL =
   "https://gamevault-api.tom-lunel27200.workers.dev";
 
 let currentGame = null;
-let previousStudioContext = "detail";
+let previousContext = "search";
+let detailRequestToken = 0;
+let studioRequestToken = 0;
 
-let library =
-  JSON.parse(localStorage.getItem("gamevault_library")) || [];
+function readStorage(key, fallback = []){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : fallback;
+  }catch(e){
+    console.warn("Stockage local invalide :", key, e);
+    return fallback;
+  }
+}
 
-let wishlist =
-  JSON.parse(localStorage.getItem("gamevault_wishlist")) || [];
+let library = readStorage("gamevault_library");
+let wishlist = readStorage("gamevault_wishlist");
 
 
 /* =========================
@@ -1191,11 +1209,7 @@ function createGameCard(game){
   card.className = "card";
 
   card.innerHTML = `
-    <img
-      src="${escapeHtml(game.background_image || placeholder())}"
-      alt=""
-      loading="lazy"
-    >
+    ${imageMarkup(gameImage(game), game.name || "Jeu")}
 
     <div class="card-content">
 
@@ -1218,9 +1232,27 @@ function createGameCard(game){
 
 
 function placeholder(){
-
   return "https://via.placeholder.com/400x600?text=Game";
+}
 
+function gameImage(game){
+  return (
+    game?.background_image ||
+    game?.background_image_additional ||
+    game?.image ||
+    placeholder()
+  );
+}
+
+function imageMarkup(src, alt = ""){
+  return `
+    <img
+      src="${escapeHtml(src || placeholder())}"
+      alt="${escapeHtml(alt)}"
+      loading="lazy"
+      onerror="this.onerror=null;this.src=placeholder()"
+    >
+  `;
 }
 
 
@@ -1230,6 +1262,16 @@ function placeholder(){
 
 async function openGame(game){
 
+  const visibleSection = [
+    ["librarySection", "library"],
+    ["wishlistSection", "wishlist"],
+    ["upcomingSection", "upcoming"],
+    ["genresSection", "genres"],
+    ["studioSection", "studio"],
+    ["searchSection", "search"]
+  ].find(([id]) => !document.getElementById(id)?.classList.contains("hidden"));
+
+  previousContext = visibleSection?.[1] || "search";
   currentGame = game;
 
   hideSections();
@@ -1247,6 +1289,8 @@ async function renderDetail(){
   if(!currentGame){
     return;
   }
+
+  const requestToken = ++detailRequestToken;
 
   const detail =
     document.getElementById("detail");
@@ -1274,6 +1318,10 @@ async function renderDetail(){
 
       const d =
         await r.json();
+
+      if(requestToken !== detailRequestToken || !currentGame){
+        return;
+      }
 
       game = {
         ...game,
@@ -1335,6 +1383,10 @@ async function renderDetail(){
   }
 
 
+  if(requestToken !== detailRequestToken || !currentGame){
+    return;
+  }
+
   const saved =
     library.find(
       x =>
@@ -1351,8 +1403,7 @@ async function renderDetail(){
 
 
   const image =
-    game.background_image ||
-    placeholder();
+    gameImage(game);
 
   const description =
     game.description_raw ||
@@ -1535,14 +1586,7 @@ async function renderDetail(){
                       "
                     >
 
-                      <img
-                        src="${escapeHtml(
-                          x.background_image ||
-                          placeholder()
-                        )}"
-                        alt=""
-                        loading="lazy"
-                      >
+                      ${imageMarkup(gameImage(x), x.name || "Jeu")}
 
                       <div class="series-card-body">
 
@@ -1910,8 +1954,7 @@ async function openStudio(
     return;
   }
 
-  previousStudioContext =
-    "detail";
+  previousContext = "detail";
 
   currentStudio = {
     type,
@@ -1936,13 +1979,10 @@ async function openStudio(
 
 async function renderStudio(){
 
-  const c =
-    document.getElementById(
-      "studioDetail"
-    );
+  const requestToken = ++studioRequestToken;
 
-  const s =
-    currentStudio;
+  const c = document.getElementById("studioDetail");
+  const s = currentStudio;
 
   c.innerHTML =
     '<div class="studio-loading">🏢 Chargement de la fiche du studio...</div>';
@@ -1950,8 +1990,12 @@ async function renderStudio(){
   try{
 
     /*
-      Le Worker GameVault renvoie :
+      Le Worker fournit directement les données RAWG + Wikidata/Wikipédia :
 
+      /studio/developer/ID
+      /studio/publisher/ID
+
+      Réponse attendue :
       {
         studio: RAWG,
         wiki: {
@@ -1959,65 +2003,59 @@ async function renderStudio(){
           thumbnail,
           location,
           founded,
+          founders,
           founder,
           ceo,
-          chairman,
-          country,
-          foundedLocation,
           officialWebsite,
           wikipediaUrl,
           wikipediaTitle,
-          wikidataId
+          wikidataId,
+          gamesCount,
+          gameCount,
+          totalGames
         },
         studioType,
-        source: {...}
+        source
       }
 
-      On utilise donc les données encyclopédiques
-      fournies par le Worker au lieu de chercher
-      Wikipédia/Wikidata directement depuis le navigateur.
+      IMPORTANT : on n'invente plus de lieu, de date ou de personne
+      à partir de la description. On affiche uniquement les données
+      réellement renvoyées par le Worker.
     */
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/studio/" +
-        encodeURIComponent(s.type) +
-        "/" +
-        encodeURIComponent(s.id)
-      );
-
-    let errorMessage =
-      "Impossible de charger le studio.";
+    const r = await fetch(
+      WORKER_URL +
+      "/studio/" +
+      encodeURIComponent(s.type) +
+      "/" +
+      encodeURIComponent(s.id)
+    );
 
     if(!r.ok){
 
-      try{
-        const errorData =
-          await r.json();
+      let message = "Impossible de charger le studio.";
 
+      try{
+        const errorData = await r.json();
         if(errorData?.error){
-          errorMessage =
-            errorData.error;
+          message = errorData.error;
         }
       }catch(_){ }
 
       throw new Error(
-        errorMessage +
-        " (HTTP " +
-        r.status +
-        ")"
+        message + " (HTTP " + r.status + ")"
       );
     }
 
-    const d =
-      await r.json();
+    const d = await r.json();
 
-    const studio =
-      d.studio || {};
+    if(requestToken !== studioRequestToken || !currentStudio){
+      return;
+    }
 
-    const wiki =
-      d.wiki || {};
+    const studio = d.studio || {};
+    const wiki = d.wiki || {};
+    const source = d.source || {};
 
     const studioName =
       studio.name ||
@@ -2025,140 +2063,82 @@ async function renderStudio(){
       s.name ||
       "Studio";
 
-    /* =========================
-       DONNÉES COMBINÉES
-    ========================= */
+    const studioType =
+      d.studioType === "publisher" || s.type === "publisher"
+        ? "ÉDITEUR"
+        : "DÉVELOPPEUR";
 
-    const firstValue = (...values) => {
+    const cleanValue = value => {
 
-      for (const value of values) {
-
-        if (value === null || value === undefined) {
-          continue;
-        }
-
-        if (Array.isArray(value)) {
-
-          const clean =
-            value
-              .map(x => {
-                if (x === null || x === undefined) {
-                  return "";
-                }
-
-                if (typeof x === "object") {
-                  return String(
-                    x.name ||
-                    x.label ||
-                    x.value ||
-                    ""
-                  ).trim();
-                }
-
-                return String(x).trim();
-              })
-              .filter(Boolean);
-
-          if (clean.length) {
-            return clean.join(", ");
-          }
-
-          continue;
-        }
-
-        if (typeof value === "object") {
-
-          const clean =
-            value.name ||
-            value.label ||
-            value.value;
-
-          if (clean) {
-            return String(clean).trim();
-          }
-
-          continue;
-        }
-
-        const text = String(value).trim();
-
-        if (text) {
-          return text;
-        }
+      if(value === null || value === undefined){
+        return null;
       }
 
-      return null;
-    };
+      if(Array.isArray(value)){
 
-    const normalizeFoundedDate = value => {
+        const values = value
+          .map(item => {
+            if(item === null || item === undefined){
+              return "";
+            }
 
-      if (!value) {
-        return null;
+            if(typeof item === "object"){
+              return String(
+                item.name ||
+                item.label ||
+                item.value ||
+                ""
+              ).trim();
+            }
+
+            return String(item).trim();
+          })
+          .filter(Boolean);
+
+        return values.length ? values.join(", ") : null;
+      }
+
+      if(typeof value === "object"){
+        const text =
+          value.name ||
+          value.label ||
+          value.value;
+
+        return text ? String(text).trim() : null;
       }
 
       const text = String(value).trim();
-
-      if (!text) {
-        return null;
-      }
-
-      let match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-
-      if (match) {
-
-        const day = match[1];
-        const month = match[2];
-        const year = match[3];
-
-        if (day === "00" && month === "00") {
-          return year;
-        }
-
-        if (day === "00") {
-          return `${month}/${year}`;
-        }
-
-        if (month === "00") {
-          return year;
-        }
-
-        return `${day}/${month}/${year}`;
-      }
-
-      match = text.match(/^(\d{2})\/(\d{4})$/);
-
-      if (match) {
-        return match[1] === "00"
-          ? match[2]
-          : `${match[1]}/${match[2]}`;
-      }
-
-      match = text.match(/^[+-]?(\d{4})-(\d{2})-(\d{2})/);
-
-      if (match) {
-
-        const year = match[1];
-        const month = match[2];
-        const day = match[3];
-
-        if (month === "00" && day === "00") {
-          return year;
-        }
-
-        if (day === "00") {
-          return `${month}/${year}`;
-        }
-
-        return `${day}/${month}/${year}`;
-      }
-
-      return text;
+      return text || null;
     };
+
+    const founded = cleanValue(wiki.founded);
+    const location = cleanValue(wiki.location);
+    const founder = cleanValue(
+      wiki.founders?.length
+        ? wiki.founders
+        : wiki.founder
+    );
+    const ceo = cleanValue(wiki.ceo);
+    const officialWebsite = cleanValue(wiki.officialWebsite);
+    const wikipediaUrl = cleanValue(wiki.wikipediaUrl);
+    const wikipediaTitle = cleanValue(wiki.wikipediaTitle);
+    const wikidataId = cleanValue(wiki.wikidataId);
+
+    const gamesCount = Number(
+      wiki.gamesCount ??
+      wiki.gameCount ??
+      wiki.totalGames ??
+      studio.games_count ??
+      studio.game_count ??
+      studio.total_games ??
+      0
+    );
 
     const image =
       wiki.thumbnail ||
       studio.image_background ||
       studio.image ||
+      studio.background_image ||
       placeholder();
 
     const description =
@@ -2166,236 +2146,9 @@ async function renderStudio(){
       studio.description ||
       "Aucune description disponible.";
 
-    const descriptionText =
-      stripHtml(description)
-        .replace(/\s+/g, " ")
-        .trim();
-
-    const normalizePersonList = value => {
-
-      if (!value) {
-        return null;
-      }
-
-      let text = String(value)
-        .replace(/\s+/g, " ")
-        .trim();
-
-      if (!text) {
-        return null;
-      }
-
-      text = text
-        .replace(/\s+(?:et|and)\s+/gi, ", ")
-        .replace(/\s*,\s*/g, ", ")
-        .replace(/\s+$/, "");
-
-      return text || null;
-    };
-
-    const extractFounderFromDescription = text => {
-
-      if (!text) {
-        return null;
-      }
-
-      const patterns = [
-        /\bfond[ée]e?\b[\s\S]{0,100}\bpar\s+([^.;]+)/i,
-        /\bfounded\b[\s\S]{0,100}\bby\s+([^.;]+)/i,
-        /\bcré[ée]e?\b[\s\S]{0,100}\bpar\s+([^.;]+)/i,
-        /\bcreated\b[\s\S]{0,100}\bby\s+([^.;]+)/i
-      ];
-
-      for (const pattern of patterns) {
-        const match = text.match(pattern);
-
-        if (match && match[1]) {
-          const value = normalizePersonList(match[1]);
-
-          if (value) {
-            return value;
-          }
-        }
-      }
-
-      return null;
-    };
-
-    const extractFoundedFromDescription = text => {
-
-      if (!text) {
-        return null;
-      }
-
-      const months = {
-        janvier: "01", février: "02", fevrier: "02", mars: "03",
-        avril: "04", mai: "05", juin: "06", juillet: "07",
-        août: "08", aout: "08", septembre: "09", octobre: "10",
-        novembre: "11", décembre: "12", decembre: "12",
-        january: "01", february: "02", march: "03", april: "04",
-        may: "05", june: "06", july: "07", august: "08",
-        september: "09", october: "10", november: "11", december: "12"
-      };
-
-      let match = text.match(/\b(?:fond[ée]e?|cr[ée][ée]e?|founded|created)\b[\s\S]{0,50}?\b(?:en|in)\s+(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{4})/i);
-
-      if (match) {
-        return `${months[match[1].toLowerCase()]}/${match[2]}`;
-      }
-
-      match = text.match(/\b(?:fond[ée]e?|cr[ée][ée]e?|founded|created)\b[\s\S]{0,50}?\b(?:en|in)\s+(\d{4})/i);
-
-      return match ? match[1] : null;
-    };
-
-    const extractCountryFromDescription = text => {
-
-      if (!text) {
-        return null;
-      }
-
-      const countries = [
-        ["suédois", "Suède"], ["suédoise", "Suède"], ["swedish", "Suède"],
-        ["polonais", "Pologne"], ["polonaise", "Pologne"], ["polish", "Pologne"],
-        ["japonais", "Japon"], ["japonaise", "Japon"], ["japanese", "Japon"],
-        ["américain", "États-Unis"], ["américaine", "États-Unis"], ["american", "États-Unis"],
-        ["britannique", "Royaume-Uni"], ["british", "Royaume-Uni"],
-        ["canadien", "Canada"], ["canadienne", "Canada"], ["canadian", "Canada"],
-        ["français", "France"], ["française", "France"], ["french", "France"],
-        ["allemand", "Allemagne"], ["allemande", "Allemagne"], ["german", "Allemagne"],
-        ["espagnol", "Espagne"], ["espagnole", "Espagne"], ["spanish", "Espagne"],
-        ["italien", "Italie"], ["italienne", "Italie"], ["italian", "Italie"],
-        ["belge", "Belgique"], ["belgian", "Belgique"],
-        ["finlandais", "Finlande"], ["finlandaise", "Finlande"], ["finnish", "Finlande"],
-        ["norvégien", "Norvège"], ["norvégienne", "Norvège"], ["norwegian", "Norvège"],
-        ["danois", "Danemark"], ["danoise", "Danemark"], ["danish", "Danemark"],
-        ["néerlandais", "Pays-Bas"], ["néerlandaise", "Pays-Bas"], ["dutch", "Pays-Bas"],
-        ["australien", "Australie"], ["australienne", "Australie"], ["australian", "Australie"],
-        ["chinois", "Chine"], ["chinoise", "Chine"], ["chinese", "Chine"],
-        ["coréen", "Corée du Sud"], ["coréenne", "Corée du Sud"], ["korean", "Corée du Sud"]
-      ];
-
-      const lower = text.toLowerCase();
-
-      for (const [adjective, country] of countries) {
-        if (new RegExp(`\\b${adjective}\\b`, "i").test(lower)) {
-          return country;
-        }
-      }
-
-      return null;
-    };
-
-    const gamesCount =
-      Number(
-        studio.games_count ||
-        studio.count ||
-        0
-      );
-
-    const location =
-      firstValue(
-        wiki.location,
-        wiki.headquarters,
-        wiki.city
-      );
-
-    const country =
-      firstValue(
-        wiki.country,
-        studio.country,
-        extractCountryFromDescription(descriptionText)
-      );
-
-    const locationWithCountry =
-      [location, country]
-        .filter(Boolean)
-        .filter((value, index, arr) =>
-          arr.findIndex(
-            x => x.toLowerCase() === value.toLowerCase()
-          ) === index
-        )
-        .join(', ');
-
-    const founded =
-      normalizeFoundedDate(
-        firstValue(
-          wiki.founded,
-          wiki.foundation,
-          wiki.dateFounded,
-          studio.founded,
-          studio.foundation,
-          extractFoundedFromDescription(descriptionText)
-        )
-      );
-
-    const foundedLocation =
-      firstValue(
-        wiki.foundedLocation,
-        wiki.foundingLocation,
-        wiki.placeFounded,
-        wiki.foundedPlace
-      );
-
-    const founder =
-      firstValue(
-        wiki.founder,
-        wiki.founders,
-        wiki.founderNames,
-        extractFounderFromDescription(descriptionText)
-      );
-
-    const ceo =
-      firstValue(
-        wiki.ceo,
-        wiki.CEO,
-        wiki.director,
-        wiki.president,
-        wiki.chiefExecutive,
-        wiki.chiefExecutiveOfficer,
-        wiki.leader,
-        wiki.leadership
-      );
-
-    const chairman =
-      firstValue(
-        wiki.chairman,
-        wiki.chairperson,
-        wiki.president
-      );
-
-    const officialWebsite =
-      firstValue(
-        wiki.officialWebsite,
-        wiki.website,
-        studio.website
-      );
-
-    const wikipediaUrl =
-      firstValue(wiki.wikipediaUrl);
-
-    const wikipediaTitle =
-      firstValue(wiki.wikipediaTitle);
-
-    const wikidataId =
-      firstValue(wiki.wikidataId);
-
-    const studioType =
-      d.studioType === "publisher" ||
-      s.type === "publisher"
-        ? "ÉDITEUR"
-        : "DÉVELOPPEUR";
-
-    const hasWikipedia = Boolean(wikipediaUrl);
-    const hasWikidata = Boolean(wikidataId);
-
     const fact = (icon, label, value) => {
 
-      if (
-        value === null ||
-        value === undefined ||
-        String(value).trim() === ""
-      ) {
+      if(!value){
         return "";
       }
 
@@ -2413,7 +2166,7 @@ async function renderStudio(){
 
     const linkFact = (icon, label, url, text) => {
 
-      if (!url) {
+      if(!url){
         return "";
       }
 
@@ -2436,70 +2189,64 @@ async function renderStudio(){
       `;
     };
 
-    // On affiche toutes les personnes réellement renseignées.
-    // S'il n'y en a aucune, on garde malgré tout une ligne dédiée
-    // pour ne jamais supprimer complètement cette information.
-    const leadershipFacts = [
+    const leadership = [
       fact("👤", "Fondateur(s)", founder),
-      fact("👔", "Dirigeant", ceo),
-      fact("🪑", "Président", chairman)
+      fact("👔", "Dirigeant", ceo)
     ].join("");
-
-    const leadershipFallback =
-      leadershipFacts ||
-      fact("👤", "Fondateur / direction", "Non renseigné");
 
     const factsHTML = [
       fact("🏢", "Type", studioType),
-      fact("📍", "Lieu", locationWithCountry),
+      fact("📍", "Siège", location),
       fact("📅", "Date de création", founded),
-      fact("🏙️", "Lieu de création", foundedLocation),
-      leadershipFallback,
+      leadership,
+      fact("🎮", "Jeux du studio", gamesCount > 0 ? String(gamesCount) : null),
       linkFact("🌐", "Site officiel", officialWebsite, "Visiter le site"),
-      linkFact("📚", "Wikipédia", wikipediaUrl, wikipediaTitle || "Voir Wikipédia"),
-      gamesCount > 0
-        ? fact("🎮", "Jeux du studio", String(gamesCount))
-        : ""
+      linkFact("📚", "Wikipédia", wikipediaUrl, wikipediaTitle || "Voir Wikipédia")
     ].join("");
 
-    const sourceHTML = `
-      <div class="studio-sources">
-        <div class="studio-source-title">
-          Sources encyclopédiques
-        </div>
-        <div class="studio-source-badges">
-          ${
-            hasWikidata
-              ? `
+    const sourceBadges = [];
+
+    if(source.rawg){
+      sourceBadges.push("🎮 RAWG");
+    }
+
+    if(source.wikidata){
+      sourceBadges.push("🔷 Wikidata");
+    }
+
+    if(source.wikipedia){
+      sourceBadges.push("📚 Wikipédia");
+    }
+
+    const sourceHTML = sourceBadges.length
+      ? `
+          <div class="studio-sources">
+            <div class="studio-source-title">
+              Sources
+            </div>
+            <div class="studio-source-badges">
+              ${sourceBadges.map(x => `
                 <span class="studio-source-badge">
-                  🔷 Wikidata
+                  ${escapeHtml(x)}
                 </span>
-              `
-              : `
-                <span class="studio-source-badge">
-                  Données encyclopédiques
-                </span>
-              `
-          }
-        </div>
-      </div>
-    `;
+              `).join("")}
+            </div>
+          </div>
+        `
+      : "";
 
     c.innerHTML = `
 
       <div class="studio-page">
-
-        <!-- =====================
-             HERO
-        ====================== -->
 
         <div class="studio-hero">
 
           <img
             class="studio-hero-image"
             src="${escapeHtml(image)}"
-            alt=""
+            alt="${escapeHtml(studioName)}"
             loading="lazy"
+            onerror="this.onerror=null;this.src=placeholder()"
           >
 
           <div class="studio-hero-overlay">
@@ -2518,10 +2265,6 @@ async function renderStudio(){
 
         <div class="studio-content">
 
-          <!-- =====================
-               INFOS
-          ====================== -->
-
           <div class="studio-wiki-grid">
 
             <div class="studio-box">
@@ -2531,9 +2274,7 @@ async function renderStudio(){
               </div>
 
               <div class="studio-description">
-                ${escapeHtml(
-                  stripHtml(description)
-                )}
+                ${escapeHtml(stripHtml(description))}
               </div>
 
               ${sourceHTML}
@@ -2547,23 +2288,17 @@ async function renderStudio(){
               </div>
 
               <div class="studio-facts">
-
                 ${
                   factsHTML ||
                   `<div class="studio-source">
                     Aucune information encyclopédique supplémentaire disponible.
                   </div>`
                 }
-
               </div>
 
             </div>
 
           </div>
-
-          <!-- =====================
-               JEUX
-          ====================== -->
 
           <div class="studio-games-section">
 
@@ -2579,7 +2314,11 @@ async function renderStudio(){
                   id="studioGamesCount"
                   class="studio-games-count"
                 >
-                  Chargement...
+                  ${
+                    gamesCount > 0
+                      ? `${gamesCount} jeu(x) au total`
+                      : "Chargement..."
+                  }
                 </div>
 
               </div>
@@ -2614,43 +2353,22 @@ async function renderStudio(){
     studioGames = [];
     studioGameIds = new Set();
 
-    await loadStudioGames(
-      1,
-      false
-    );
+    await loadStudioGames(1, false, gamesCount);
 
   }catch(e){
 
-    console.error(
-      "Erreur fiche studio :",
-      e
-    );
+    console.error("Erreur fiche studio :", e);
 
     c.innerHTML = `
-
       <div class="empty">
-
         ❌ Impossible de charger la fiche de
-
-        <strong>
-          ${escapeHtml(
-            s.name || "Studio"
-          )}
-        </strong>
-
+        <strong>${escapeHtml(s?.name || "Studio")}</strong>
         <br><br>
-
-        ${escapeHtml(
-          e.message ||
-          "Erreur inconnue"
-        )}
-
+        ${escapeHtml(e.message || "Erreur inconnue")}
       </div>
-
     `;
 
   }
-
 }
 
 
@@ -2658,7 +2376,7 @@ async function renderStudio(){
    JEUX DU STUDIO
 ========================= */
 
-async function loadStudioGames(
+(
   page = 1,
   append = false
 ){
@@ -2706,21 +2424,16 @@ async function loadStudioGames(
 
 
   /*
-    CORRECTION IMPORTANTE :
+    Le Worker actuel utilise les nouvelles routes :
 
-    Développeur :
-
-    /developers/ID/games
-
-    Éditeur :
-
-    /publishers/ID/games
+    /studio/developer/ID/games
+    /studio/publisher/ID/games
   */
 
   const endpoint =
     currentStudio.type === "developer"
-      ? "developers"
-      : "publishers";
+      ? "developer"
+      : "publisher";
 
 
   try{
@@ -2728,7 +2441,7 @@ async function loadStudioGames(
     const r =
       await fetch(
         WORKER_URL +
-        "/" +
+        "/studio/" +
         endpoint +
         "/" +
         encodeURIComponent(
@@ -2805,13 +2518,13 @@ async function loadStudioGames(
 
     if(count){
 
+      const total =
+        Number(d.count || totalGames || 0);
+
       count.textContent =
-        `${studioGames.length} jeu(x) chargé(s)` +
-        (
-          d.count
-            ? ` sur ${d.count}`
-            : ""
-        );
+        total > 0
+          ? `${studioGames.length} jeu(x) chargé(s) sur ${total}`
+          : `${studioGames.length} jeu(x) chargé(s)`;
 
     }
 
@@ -2857,11 +2570,36 @@ async function loadMoreStudioGames(){
 
     await loadStudioGames(
       studioPage + 1,
-      true
+      true,
+      0
     );
 
   }
 
+}
+
+
+/* =========================
+   RETOUR FICHE
+========================= */
+
+function goBackFromDetail(){
+  switch(previousContext){
+    case "library":
+      showLibrary();
+      return;
+    case "wishlist":
+      showWishlist();
+      return;
+    case "upcoming":
+      showUpcoming();
+      return;
+    case "genres":
+      showGenres();
+      return;
+    default:
+      showSearch();
+  }
 }
 
 
@@ -2905,29 +2643,25 @@ async function openSeriesGame(id){
         encodeURIComponent(id)
       );
 
-
     if(!r.ok){
-
       throw new Error(
         "Impossible de charger le jeu"
       );
-
     }
 
+    currentGame = await r.json();
+    previousContext = "detail";
 
-    currentGame =
-      await r.json();
-
+    hideSections();
+    document
+      .getElementById("detailSection")
+      ?.classList.remove("hidden");
 
     await renderDetail();
 
-
   }catch(e){
-
-    console.error(e);
-
+    console.error("Erreur jeu de série :", e);
   }
-
 }
 
 
@@ -2968,7 +2702,7 @@ function ensureSaved(){
       currentGame.name,
 
     background_image:
-      currentGame.background_image,
+      gameImage(currentGame),
 
     released:
       currentGame.released,
@@ -3198,6 +2932,7 @@ function deleteCurrentGame(){
 
 
   saveLibrary();
+  currentGame = null;
 
   showLibrary();
 
@@ -3361,14 +3096,7 @@ function renderLibrary(){
 
     i.innerHTML = `
 
-      <img
-        src="${escapeHtml(
-          g.background_image ||
-          placeholder()
-        )}"
-        alt=""
-        loading="lazy"
-      >
+      ${imageMarkup(gameImage(g), g.name || "Jeu")}
 
       <div class="library-info">
 
@@ -3468,7 +3196,7 @@ function toggleWishlist(){
         currentGame.name,
 
       background_image:
-        currentGame.background_image,
+        gameImage(currentGame),
 
       released:
         currentGame.released ||
@@ -3691,14 +3419,7 @@ function renderWishlist(){
 
     i.innerHTML = `
 
-      <img
-        src="${escapeHtml(
-          g.background_image ||
-          placeholder()
-        )}"
-        alt=""
-        loading="lazy"
-      >
+      ${imageMarkup(gameImage(g), g.name || "Jeu")}
 
       <div class="wishlist-info">
 
@@ -3753,6 +3474,7 @@ function renderWishlist(){
 
 let upcomingPage = 1;
 let upcomingHasMore = false;
+let upcomingSeenIds = new Set();
 
 
 async function fetchUpcomingPage(
@@ -3784,6 +3506,7 @@ async function fetchUpcomingPage(
       '<div class="empty">📅 Chargement...</div>';
 
     upcomingPage = 1;
+    upcomingSeenIds = new Set();
 
   }
 
@@ -3865,6 +3588,14 @@ async function fetchUpcomingPage(
       )
       .forEach(g => {
 
+        const id = Number(g.id);
+        if(id && upcomingSeenIds.has(id)){
+          return;
+        }
+        if(id){
+          upcomingSeenIds.add(id);
+        }
+
         const card =
           document.createElement(
             "div"
@@ -3877,14 +3608,7 @@ async function fetchUpcomingPage(
 
         card.innerHTML = `
 
-          <img
-            src="${escapeHtml(
-              g.background_image ||
-              placeholder()
-            )}"
-            alt=""
-            loading="lazy"
-          >
+          ${imageMarkup(gameImage(g), g.name || "Jeu")}
 
           <div class="upcoming-body">
 
@@ -4479,16 +4203,16 @@ function renderStats(){
     );
 
 
+  const ratedGames =
+    library.filter(g => Number(g.note || 0) > 0);
+
   const avg =
-    total
+    ratedGames.length
       ? (
-          library.reduce(
-            (s,g) =>
-              s +
-              Number(g.note || 0),
+          ratedGames.reduce(
+            (s,g) => s + Number(g.note || 0),
             0
-          ) /
-          total
+          ) / ratedGames.length
         ).toFixed(1)
       : "0.0";
 
@@ -4510,7 +4234,7 @@ function renderStats(){
 
 
   const best =
-    [...library]
+    [...ratedGames]
       .sort(
         (a,b) =>
           Number(b.note || 0) -
@@ -4652,13 +4376,7 @@ function renderStats(){
 
             <div class="best">
 
-              <img
-                src="${escapeHtml(
-                  best.background_image ||
-                  placeholder()
-                )}"
-                alt=""
-              >
+              ${imageMarkup(gameImage(best), best.name || "Jeu")}
 
               <div>
 
@@ -4742,18 +4460,10 @@ function escapeAttr(text){
       ? ""
       : text
   )
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-    .replace(
-      /'/g,
-      "&#39;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    );
+    .replace(/&/g, "&amp;")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "&#39;")
+    .replace(/"/g, "&quot;");
 
 }
 
@@ -4781,6 +4491,9 @@ document
 
     }
   );
+
+  // État initial
+  showSearch();
 
 </script>
 
