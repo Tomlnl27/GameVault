@@ -2166,6 +2166,126 @@ async function renderStudio(){
       studio.description ||
       "Aucune description disponible.";
 
+    const descriptionText =
+      stripHtml(description)
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const normalizePersonList = value => {
+
+      if (!value) {
+        return null;
+      }
+
+      let text = String(value)
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (!text) {
+        return null;
+      }
+
+      text = text
+        .replace(/\s+(?:et|and)\s+/gi, ", ")
+        .replace(/\s*,\s*/g, ", ")
+        .replace(/\s+$/, "");
+
+      return text || null;
+    };
+
+    const extractFounderFromDescription = text => {
+
+      if (!text) {
+        return null;
+      }
+
+      const patterns = [
+        /\bfond[ée]e?\b[\s\S]{0,100}\bpar\s+([^.;]+)/i,
+        /\bfounded\b[\s\S]{0,100}\bby\s+([^.;]+)/i,
+        /\bcré[ée]e?\b[\s\S]{0,100}\bpar\s+([^.;]+)/i,
+        /\bcreated\b[\s\S]{0,100}\bby\s+([^.;]+)/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+
+        if (match && match[1]) {
+          const value = normalizePersonList(match[1]);
+
+          if (value) {
+            return value;
+          }
+        }
+      }
+
+      return null;
+    };
+
+    const extractFoundedFromDescription = text => {
+
+      if (!text) {
+        return null;
+      }
+
+      const months = {
+        janvier: "01", février: "02", fevrier: "02", mars: "03",
+        avril: "04", mai: "05", juin: "06", juillet: "07",
+        août: "08", aout: "08", septembre: "09", octobre: "10",
+        novembre: "11", décembre: "12", decembre: "12",
+        january: "01", february: "02", march: "03", april: "04",
+        may: "05", june: "06", july: "07", august: "08",
+        september: "09", october: "10", november: "11", december: "12"
+      };
+
+      let match = text.match(/\b(?:fond[ée]e?|cr[ée][ée]e?|founded|created)\b[\s\S]{0,50}?\b(?:en|in)\s+(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{4})/i);
+
+      if (match) {
+        return `${months[match[1].toLowerCase()]}/${match[2]}`;
+      }
+
+      match = text.match(/\b(?:fond[ée]e?|cr[ée][ée]e?|founded|created)\b[\s\S]{0,50}?\b(?:en|in)\s+(\d{4})/i);
+
+      return match ? match[1] : null;
+    };
+
+    const extractCountryFromDescription = text => {
+
+      if (!text) {
+        return null;
+      }
+
+      const countries = [
+        ["suédois", "Suède"], ["suédoise", "Suède"], ["swedish", "Suède"],
+        ["polonais", "Pologne"], ["polonaise", "Pologne"], ["polish", "Pologne"],
+        ["japonais", "Japon"], ["japonaise", "Japon"], ["japanese", "Japon"],
+        ["américain", "États-Unis"], ["américaine", "États-Unis"], ["american", "États-Unis"],
+        ["britannique", "Royaume-Uni"], ["british", "Royaume-Uni"],
+        ["canadien", "Canada"], ["canadienne", "Canada"], ["canadian", "Canada"],
+        ["français", "France"], ["française", "France"], ["french", "France"],
+        ["allemand", "Allemagne"], ["allemande", "Allemagne"], ["german", "Allemagne"],
+        ["espagnol", "Espagne"], ["espagnole", "Espagne"], ["spanish", "Espagne"],
+        ["italien", "Italie"], ["italienne", "Italie"], ["italian", "Italie"],
+        ["belge", "Belgique"], ["belgian", "Belgique"],
+        ["finlandais", "Finlande"], ["finlandaise", "Finlande"], ["finnish", "Finlande"],
+        ["norvégien", "Norvège"], ["norvégienne", "Norvège"], ["norwegian", "Norvège"],
+        ["danois", "Danemark"], ["danoise", "Danemark"], ["danish", "Danemark"],
+        ["néerlandais", "Pays-Bas"], ["néerlandaise", "Pays-Bas"], ["dutch", "Pays-Bas"],
+        ["australien", "Australie"], ["australienne", "Australie"], ["australian", "Australie"],
+        ["chinois", "Chine"], ["chinoise", "Chine"], ["chinese", "Chine"],
+        ["coréen", "Corée du Sud"], ["coréenne", "Corée du Sud"], ["korean", "Corée du Sud"]
+      ];
+
+      const lower = text.toLowerCase();
+
+      for (const [adjective, country] of countries) {
+        if (new RegExp(`\\b${adjective}\\b`, "i").test(lower)) {
+          return country;
+        }
+      }
+
+      return null;
+    };
+
     const gamesCount =
       Number(
         studio.games_count ||
@@ -2183,7 +2303,8 @@ async function renderStudio(){
     const country =
       firstValue(
         wiki.country,
-        studio.country
+        studio.country,
+        extractCountryFromDescription(descriptionText)
       );
 
     const locationWithCountry =
@@ -2203,7 +2324,8 @@ async function renderStudio(){
           wiki.foundation,
           wiki.dateFounded,
           studio.founded,
-          studio.foundation
+          studio.foundation,
+          extractFoundedFromDescription(descriptionText)
         )
       );
 
@@ -2219,7 +2341,8 @@ async function renderStudio(){
       firstValue(
         wiki.founder,
         wiki.founders,
-        wiki.founderNames
+        wiki.founderNames,
+        extractFounderFromDescription(descriptionText)
       );
 
     const ceo =
