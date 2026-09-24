@@ -235,6 +235,62 @@ main{
   font-weight:700
 }
 
+.media-section{
+  margin:20px;
+  padding:18px;
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:13px
+}
+
+.media-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:14px
+}
+
+.media-trailer{
+  width:100%;
+  max-height:520px;
+  display:block;
+  border-radius:12px;
+  background:#000;
+  margin-bottom:18px
+}
+
+.screenshots{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px
+}
+
+.screenshot{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:10px;
+  cursor:pointer;
+  border:1px solid #292933;
+  transition:transform .15s ease,opacity .15s ease
+}
+
+.screenshot:hover{
+  transform:scale(1.02);
+  opacity:.9
+}
+
+@media(max-width:800px){
+  .screenshots{
+    grid-template-columns:repeat(2,1fr)
+  }
+}
+
+@media(max-width:600px){
+  .screenshots{
+    grid-template-columns:1fr
+  }
+}
+
 .studio-link{
   display:inline-block;
   background:#20202a;
@@ -1405,6 +1461,74 @@ async function renderDetail(){
   const image =
     gameImage(game);
 
+  /* Médias RAWG : trailer + screenshots */
+
+  const trailerUrl =
+    game?.clip?.clip ||
+    game?.clip?.video ||
+    null;
+
+  const screenshots =
+    Array.isArray(game?.short_screenshots)
+      ? game.short_screenshots
+          .filter(x => x?.image)
+          .slice(0, 12)
+      : [];
+
+  const mediaHTML =
+    trailerUrl || screenshots.length
+      ? `
+        <div class="media-section">
+
+          <div class="media-title">
+            🎬 Images & vidéos
+          </div>
+
+          ${
+            trailerUrl
+              ? `
+                <video
+                  class="media-trailer"
+                  controls
+                  preload="metadata"
+                  poster="${escapeHtml(image)}"
+                  src="${escapeHtml(trailerUrl)}"
+                >
+                  Votre navigateur ne peut pas lire cette vidéo.
+                </video>
+              `
+              : ""
+          }
+
+          ${
+            screenshots.length
+              ? `
+                <div class="screenshots">
+                  ${
+                    screenshots
+                      .map(
+                        (shot, index) => `
+                          <img
+                            class="screenshot"
+                            src="${escapeHtml(shot.image)}"
+                            alt="Screenshot ${index + 1} de ${escapeHtml(game.name || "Jeu")}"
+                            loading="lazy"
+                            onclick="window.open('${escapeAttr(shot.image)}', '_blank')"
+                            onerror="this.style.display='none'"
+                          >
+                        `
+                      )
+                      .join("")
+                  }
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+      `
+      : "";
+
   const description =
     game.description_raw ||
     stripHtml(game.description) ||
@@ -1745,6 +1869,9 @@ async function renderDetail(){
 
 
       ${seriesHTML}
+
+
+      ${mediaHTML}
 
 
       <div class="panel">
