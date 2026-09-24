@@ -258,6 +258,23 @@ main{
   margin-bottom:18px
 }
 
+.media-trailer-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:90px;
+  margin-bottom:18px;
+  border:1px solid #353540;
+  border-radius:12px;
+  background:#15151c;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  font-size:18px
+}
+
+.media-trailer-link:hover{background:#20202a}
+
 .screenshots{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -1366,7 +1383,7 @@ async function renderDetail(){
     const r =
       await fetch(
         WORKER_URL +
-        "/game/" +
+        "/game-media/" +
         encodeURIComponent(game.id)
       );
 
@@ -1381,7 +1398,8 @@ async function renderDetail(){
 
       game = {
         ...game,
-        ...d
+        ...(d.game || {}),
+        _movies: Array.isArray(d.movies) ? d.movies : []
       };
 
       currentGame = game;
@@ -1461,70 +1479,49 @@ async function renderDetail(){
   const image =
     gameImage(game);
 
-  /* Médias RAWG : trailer + screenshots */
+  /* Médias RAWG : trailers + screenshots */
+
+  const movies = Array.isArray(game?._movies) ? game._movies : [];
+
+  const trailer = movies.find(movie => movie?.data || movie?.preview || movie?.external_id) || null;
 
   const trailerUrl =
     game?.clip?.clip ||
     game?.clip?.video ||
+    trailer?.data ||
     null;
 
-  const screenshots =
-    Array.isArray(game?.short_screenshots)
-      ? game.short_screenshots
-          .filter(x => x?.image)
-          .slice(0, 12)
-      : [];
+  const trailerPoster = trailer?.preview || trailer?.thumbnail || image;
+
+  const screenshots = Array.isArray(game?.short_screenshots)
+    ? game.short_screenshots.filter(x => x?.image).slice(0, 12)
+    : [];
 
   const mediaHTML =
-    trailerUrl || screenshots.length
+    trailerUrl || trailer?.external_id || screenshots.length
       ? `
         <div class="media-section">
+          <div class="media-title">🎬 Images & vidéos</div>
 
-          <div class="media-title">
-            🎬 Images & vidéos
-          </div>
+          ${trailerUrl ? `
+            <video class="media-trailer" controls preload="metadata" poster="${escapeHtml(trailerPoster)}" src="${escapeHtml(trailerUrl)}">
+              Votre navigateur ne peut pas lire cette vidéo.
+            </video>
+          ` : ""}
 
-          ${
-            trailerUrl
-              ? `
-                <video
-                  class="media-trailer"
-                  controls
-                  preload="metadata"
-                  poster="${escapeHtml(image)}"
-                  src="${escapeHtml(trailerUrl)}"
-                >
-                  Votre navigateur ne peut pas lire cette vidéo.
-                </video>
-              `
-              : ""
-          }
+          ${!trailerUrl && trailer?.external_id ? `
+            <a class="media-trailer-link" href="https://www.youtube.com/watch?v=${escapeAttr(trailer.external_id)}" target="_blank" rel="noopener noreferrer">
+              ▶️ Voir le trailer sur YouTube
+            </a>
+          ` : ""}
 
-          ${
-            screenshots.length
-              ? `
-                <div class="screenshots">
-                  ${
-                    screenshots
-                      .map(
-                        (shot, index) => `
-                          <img
-                            class="screenshot"
-                            src="${escapeHtml(shot.image)}"
-                            alt="Screenshot ${index + 1} de ${escapeHtml(game.name || "Jeu")}"
-                            loading="lazy"
-                            onclick="window.open('${escapeAttr(shot.image)}', '_blank')"
-                            onerror="this.style.display='none'"
-                          >
-                        `
-                      )
-                      .join("")
-                  }
-                </div>
-              `
-              : ""
-          }
-
+          ${screenshots.length ? `
+            <div class="screenshots">
+              ${screenshots.map((shot,index) => `
+                <img class="screenshot" src="${escapeHtml(shot.image)}" alt="Screenshot ${index + 1} de ${escapeHtml(game.name || "Jeu")}" loading="lazy" onclick="window.open('${escapeAttr(shot.image)}', '_blank')" onerror="this.style.display='none'">
+              `).join("")}
+            </div>
+          ` : ""}
         </div>
       `
       : "";
