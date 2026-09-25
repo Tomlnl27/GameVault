@@ -249,46 +249,120 @@ main{
   margin-bottom:14px
 }
 
-.media-trailer{
-  width:100%;
-  max-height:520px;
-  display:block;
-  border-radius:12px;
-  background:#000;
-  margin-bottom:18px
-}
-
-.screenshots{
+.media-gallery{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
   gap:12px
 }
 
-.screenshot{
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  border-radius:10px;
+.media-tile{
+  position:relative;
   cursor:pointer;
+  border-radius:10px;
+  overflow:hidden;
   border:1px solid #292933;
+  aspect-ratio:16/9;
+  background:#000
+}
+
+.media-tile img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
   transition:transform .15s ease,opacity .15s ease
 }
 
-.screenshot:hover{
-  transform:scale(1.02);
-  opacity:.9
+.media-tile:hover img{
+  transform:scale(1.05);
+  opacity:.85
 }
 
-@media(max-width:800px){
-  .screenshots{
-    grid-template-columns:repeat(2,1fr)
-  }
+.media-play-icon{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  color:#fff;
+  background:rgba(0,0,0,.28);
+  text-shadow:0 2px 8px rgba(0,0,0,.7);
+  pointer-events:none
 }
 
-@media(max-width:600px){
-  .screenshots{
-    grid-template-columns:1fr
-  }
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(5,5,8,.94);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  padding:20px
+}
+
+.lightbox-inner{
+  position:relative;
+  max-width:1100px;
+  width:100%
+}
+
+.lightbox-inner video,
+.lightbox-inner img{
+  width:100%;
+  max-height:78vh;
+  display:block;
+  border-radius:12px;
+  background:#000;
+  object-fit:contain;
+  margin:auto
+}
+
+.lightbox-close,
+.lightbox-nav{
+  position:absolute;
+  z-index:2;
+  background:rgba(20,20,27,.9);
+  border:1px solid #353540;
+  color:#fff;
+  cursor:pointer
+}
+
+.lightbox-close{
+  top:10px;
+  right:10px;
+  width:38px;
+  height:38px;
+  border-radius:9px;
+  font-size:18px
+}
+
+.lightbox-nav{
+  top:50%;
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  font-size:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+
+.lightbox-prev{
+  left:10px
+}
+
+.lightbox-next{
+  right:10px
+}
+
+.lightbox-caption{
+  color:#c9c9d0;
+  font-size:13px;
+  margin-top:10px;
+  text-align:center
 }
 
 .studio-link{
@@ -1121,6 +1195,29 @@ main{
 </main>
 
 
+<div
+  id="mediaLightbox"
+  class="lightbox hidden"
+  onclick="if(event.target===this) closeLightbox()"
+>
+
+  <div class="lightbox-inner">
+
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+
+    <button class="lightbox-nav lightbox-prev" onclick="lightboxPrev()">‹</button>
+
+    <div id="lightboxContent"></div>
+
+    <button class="lightbox-nav lightbox-next" onclick="lightboxNext()">›</button>
+
+    <div id="lightboxCaption" class="lightbox-caption"></div>
+
+  </div>
+
+</div>
+
+
 <script>
 
 const WORKER_URL =
@@ -1130,6 +1227,9 @@ let currentGame = null;
 let previousContext = "search";
 let detailRequestToken = 0;
 let studioRequestToken = 0;
+
+let currentMediaItems = [];
+let currentLightboxIndex = 0;
 
 function readStorage(key, fallback = []){
   try{
@@ -1439,6 +1539,39 @@ async function renderDetail(){
   }
 
 
+  /* Vidéos / bandes-annonces */
+
+  let movies = [];
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/game-movies/" +
+        encodeURIComponent(game.id)
+      );
+
+    if(r.ok){
+
+      const d =
+        await r.json();
+
+      if(Array.isArray(d.results)){
+        movies = d.results;
+      }
+    }
+
+  }catch(e){
+
+    console.log(
+      "Vidéos indisponibles",
+      e
+    );
+
+  }
+
+
   if(requestToken !== detailRequestToken || !currentGame){
     return;
   }
@@ -1461,22 +1594,51 @@ async function renderDetail(){
   const image =
     gameImage(game);
 
-  /* Médias RAWG : trailer + screenshots */
-
-  const trailerUrl =
-    game?.clip?.clip ||
-    game?.clip?.video ||
-    null;
+  /* Médias RAWG : vidéos (en premier) + screenshots, façon Steam/PS5 */
 
   const screenshots =
     Array.isArray(game?.short_screenshots)
       ? game.short_screenshots
           .filter(x => x?.image)
-          .slice(0, 12)
+          .slice(0, 14)
       : [];
 
+  const videoItems =
+    movies.length
+      ? movies
+          .filter(m => m?.data?.max || m?.data?.["480"])
+          .map(m => ({
+            type: "video",
+            src: m.data.max || m.data["480"],
+            thumbnail: m.preview || image,
+            name: m.name || "Bande-annonce"
+          }))
+      : (
+          game?.clip?.clip
+            ? [{
+                type: "video",
+                src: game.clip.clip,
+                thumbnail: game.clip.preview || image,
+                name: "Bande-annonce"
+              }]
+            : []
+        );
+
+  const imageItems =
+    screenshots.map(shot => ({
+      type: "image",
+      src: shot.image,
+      thumbnail: shot.image,
+      name: game.name || "Jeu"
+    }));
+
+  currentMediaItems = [
+    ...videoItems,
+    ...imageItems
+  ];
+
   const mediaHTML =
-    trailerUrl || screenshots.length
+    currentMediaItems.length
       ? `
         <div class="media-section">
 
@@ -1484,46 +1646,37 @@ async function renderDetail(){
             🎬 Images & vidéos
           </div>
 
-          ${
-            trailerUrl
-              ? `
-                <video
-                  class="media-trailer"
-                  controls
-                  preload="metadata"
-                  poster="${escapeHtml(image)}"
-                  src="${escapeHtml(trailerUrl)}"
-                >
-                  Votre navigateur ne peut pas lire cette vidéo.
-                </video>
-              `
-              : ""
-          }
+          <div class="media-gallery">
 
-          ${
-            screenshots.length
-              ? `
-                <div class="screenshots">
-                  ${
-                    screenshots
-                      .map(
-                        (shot, index) => `
-                          <img
-                            class="screenshot"
-                            src="${escapeHtml(shot.image)}"
-                            alt="Screenshot ${index + 1} de ${escapeHtml(game.name || "Jeu")}"
-                            loading="lazy"
-                            onclick="window.open('${escapeAttr(shot.image)}', '_blank')"
-                            onerror="this.style.display='none'"
-                          >
-                        `
-                      )
-                      .join("")
-                  }
-                </div>
-              `
-              : ""
-          }
+            ${
+              currentMediaItems
+                .map(
+                  (item, index) => `
+                    <div
+                      class="media-tile"
+                      onclick="openLightbox(${index})"
+                    >
+
+                      <img
+                        src="${escapeHtml(item.thumbnail || placeholder())}"
+                        alt="${escapeHtml(item.name || "")}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src=placeholder()"
+                      >
+
+                      ${
+                        item.type === "video"
+                          ? '<div class="media-play-icon">▶</div>'
+                          : ""
+                      }
+
+                    </div>
+                  `
+                )
+                .join("")
+            }
+
+          </div>
 
         </div>
       `
@@ -2051,6 +2204,146 @@ async function renderDetail(){
   updateRatingButtons();
 
 }
+
+
+/* =========================================================
+   LIGHTBOX MÉDIAS (vidéos + screenshots)
+========================================================= */
+
+function openLightbox(index){
+
+  if(
+    !currentMediaItems.length ||
+    index < 0 ||
+    index >= currentMediaItems.length
+  ){
+    return;
+  }
+
+  currentLightboxIndex = index;
+
+  document
+    .getElementById("mediaLightbox")
+    .classList.remove("hidden");
+
+  renderLightboxContent();
+
+}
+
+
+function closeLightbox(){
+
+  const box =
+    document.getElementById("mediaLightbox");
+
+  const video =
+    box.querySelector("video");
+
+  if(video){
+    video.pause();
+  }
+
+  box.classList.add("hidden");
+
+}
+
+
+function renderLightboxContent(){
+
+  const item =
+    currentMediaItems[currentLightboxIndex];
+
+  if(!item){
+    return;
+  }
+
+  const content =
+    document.getElementById("lightboxContent");
+
+  const caption =
+    document.getElementById("lightboxCaption");
+
+  content.innerHTML =
+    item.type === "video"
+      ? `
+        <video
+          controls
+          autoplay
+          playsinline
+          poster="${escapeHtml(item.thumbnail || "")}"
+          src="${escapeHtml(item.src)}"
+        >
+          Votre navigateur ne peut pas lire cette vidéo.
+        </video>
+      `
+      : `
+        <img
+          src="${escapeHtml(item.src)}"
+          alt="${escapeHtml(item.name || "")}"
+        >
+      `;
+
+  caption.textContent =
+    `${currentLightboxIndex + 1} / ${currentMediaItems.length}` +
+    (item.name ? " • " + item.name : "");
+
+}
+
+
+function lightboxPrev(){
+
+  if(!currentMediaItems.length){
+    return;
+  }
+
+  currentLightboxIndex =
+    (
+      currentLightboxIndex -
+      1 +
+      currentMediaItems.length
+    ) %
+    currentMediaItems.length;
+
+  renderLightboxContent();
+
+}
+
+
+function lightboxNext(){
+
+  if(!currentMediaItems.length){
+    return;
+  }
+
+  currentLightboxIndex =
+    (
+      currentLightboxIndex + 1
+    ) %
+    currentMediaItems.length;
+
+  renderLightboxContent();
+
+}
+
+
+document.addEventListener("keydown", e => {
+
+  const box =
+    document.getElementById("mediaLightbox");
+
+  if(!box || box.classList.contains("hidden")){
+    return;
+  }
+
+  if(e.key === "Escape"){
+    closeLightbox();
+  }else if(e.key === "ArrowLeft"){
+    lightboxPrev();
+  }else if(e.key === "ArrowRight"){
+    lightboxNext();
+  }
+
+});
 
 
 /* =========================================================
