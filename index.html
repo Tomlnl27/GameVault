@@ -743,6 +743,12 @@ main{
   color:#bbb
 }
 
+.badge-steam{
+  background:#1b2838;
+  color:#66c0f4;
+  margin-left:6px
+}
+
 .library-delete,
 .wishlist-delete{
   margin-left:auto;
@@ -1204,6 +1210,20 @@ main{
 
   <h2>📚 Ma bibliothèque</h2>
 
+  <div style="margin-bottom:14px">
+
+    <button
+      id="importSteamBtn"
+      class="add"
+      onclick="importSteamLibrary()"
+    >
+      🎮 Importer depuis Steam
+    </button>
+
+    <span id="importSteamStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
+
+  </div>
+
   <div class="library-tools">
 
     <input
@@ -1646,6 +1666,11 @@ async function openGame(game){
   document
     .getElementById("detailSection")
     .classList.remove("hidden");
+
+  if(game.source === "steam"){
+    await renderSteamLibraryDetail();
+    return;
+  }
 
   await renderDetail();
 }
@@ -3846,6 +3871,12 @@ function renderLibrary(){
           )}
         </div>
 
+        ${
+          g.source === "steam"
+            ? '<div class="badge badge-steam">🕹️ Steam</div>'
+            : ""
+        }
+
       </div>
 
       <button
@@ -5440,6 +5471,432 @@ async function renderSteamGameDetail(){
       .getElementById("steamAchievementsSummary")
       .textContent =
         "Erreur lors du chargement des succès.";
+
+  }
+
+}
+
+
+/* =========================================================
+   STEAM → BIBLIOTHÈQUE PRINCIPALE
+========================================================= */
+
+async function importSteamLibrary(){
+
+  if(!steamId){
+
+    alert(
+      "Connecte d'abord ton compte Steam dans l'onglet 🕹️ Steam."
+    );
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      "Importer tous tes jeux Steam dans ta bibliothèque ?\n\nLes heures de jeu sont ajoutées tout de suite. Les succès et le % de complétion se chargent automatiquement quand tu ouvres un jeu."
+    )
+  ){
+
+    return;
+
+  }
+
+  const btn =
+    document.getElementById("importSteamBtn");
+
+  const status =
+    document.getElementById("importSteamStatus");
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Import en cours...";
+  }
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/games?steamid=" +
+        encodeURIComponent(steamId)
+      );
+
+    const d =
+      await r.json();
+
+    if(!r.ok){
+      throw new Error(
+        d.error ||
+        "Impossible de récupérer ta bibliothèque Steam."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    let added = 0;
+    let updated = 0;
+
+    games.forEach(g => {
+
+      const hours =
+        Math.floor(g.playtimeMinutes / 60);
+
+      const minutes =
+        g.playtimeMinutes % 60;
+
+      const existing =
+        library.find(
+          x =>
+            Number(x.id) === Number(g.appid) &&
+            x.source === "steam"
+        );
+
+      if(existing){
+
+        existing.name = g.name;
+        existing.background_image = g.headerUrl;
+        existing.hours = hours;
+        existing.minutes = minutes;
+
+        updated++;
+
+      }else{
+
+        library.push({
+          id: g.appid,
+          name: g.name,
+          background_image: g.headerUrl,
+          released: null,
+          note: 0,
+          progress: 0,
+          hours,
+          minutes,
+          status:
+            g.playtimeMinutes > 0
+              ? "En cours"
+              : "À jouer",
+          addedAt: Date.now(),
+          source: "steam"
+        });
+
+        added++;
+
+      }
+
+    });
+
+    saveLibrary();
+
+    status.textContent =
+      `✅ ${added} jeu(x) ajouté(s), ${updated} mis à jour.`;
+
+    renderLibrary();
+
+  }catch(e){
+
+    console.error(e);
+
+    status.textContent =
+      "❌ " + e.message;
+
+  }finally{
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = "🎮 Importer depuis Steam";
+    }
+
+  }
+
+}
+
+
+async function renderSteamLibraryDetail(){
+
+  const detail =
+    document.getElementById("detail");
+
+  const g =
+    currentGame;
+
+  if(!g){
+    return;
+  }
+
+  const saved =
+    getCurrentSaved() || g;
+
+  const rating =
+    Number(saved.note || 0);
+
+  const progress =
+    Number(saved.progress || 0);
+
+  const hours =
+    Number(saved.hours || 0);
+
+  const minutes =
+    Number(saved.minutes || 0);
+
+  const status =
+    saved.status || "À jouer";
+
+  detail.innerHTML = `
+
+    <div class="detail">
+
+      <div class="detail-top">
+
+        <img
+          class="cover"
+          src="${escapeHtml(gameImage(g))}"
+          alt=""
+        >
+
+        <div>
+
+          <h1 class="detail-title">
+            ${escapeHtml(g.name || "Jeu")}
+          </h1>
+
+          <div class="release">
+            🕹️ Importé depuis ta bibliothèque Steam
+          </div>
+
+          <div class="meta">
+
+            <div class="meta-box">
+              <div class="meta-label">🕐 TEMPS DE JEU STEAM</div>
+              <div class="meta-value">${hours}h ${minutes}min</div>
+            </div>
+
+            <div class="meta-box">
+              <div class="meta-label">🔗 LIEN</div>
+              <div class="meta-value">
+                <a
+                  href="https://store.steampowered.com/app/${Number(g.id)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="studio-external-link"
+                >
+                  Voir sur Steam ↗
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🏆 Succès Steam
+        </div>
+
+        <div id="steamLibAchSummary" class="status">
+          Chargement des succès...
+        </div>
+
+        <div class="bar">
+          <div id="steamLibAchBar" class="fill" style="width:0%"></div>
+        </div>
+
+        <div id="steamLibAchList" class="achievement-list" style="margin-top:14px"></div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          ⭐ Ma note
+        </div>
+
+        <div class="rating">
+          <span id="ratingValue">${rating}</span> / 10
+        </div>
+
+        <div class="rating-controls">
+          <button id="minusRating" onclick="changeRating(-.5)">−</button>
+          <span>par 0,5</span>
+          <button id="plusRating" onclick="changeRating(.5)">+</button>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          📊 Progression (synchronisée avec les succès Steam)
+        </div>
+
+        <div class="progress-number">
+          <span id="progressValue">${progress}</span>%
+        </div>
+
+        <input
+          class="slider"
+          type="range"
+          min="0"
+          max="100"
+          value="${progress}"
+          oninput="changeProgress(this.value)"
+        >
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🕐 Temps de jeu
+        </div>
+
+        <div class="time-inputs">
+
+          <input id="hoursInput" type="number" min="0" value="${hours}" placeholder="Heures">
+          <input id="minutesInput" type="number" min="0" max="59" value="${minutes}" placeholder="Minutes">
+
+          <button class="add" onclick="saveTime()">Enregistrer</button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🎯 Statut
+        </div>
+
+        <select onchange="changeStatus(this.value)">
+          <option ${status === "À jouer" ? "selected" : ""}>À jouer</option>
+          <option ${status === "En cours" ? "selected" : ""}>En cours</option>
+          <option ${status === "Terminé" ? "selected" : ""}>Terminé</option>
+        </select>
+
+      </div>
+
+
+      <div class="action">
+
+        <button class="in-library">🕹️ Dans ta bibliothèque (Steam)</button>
+
+        <button class="delete" onclick="deleteCurrentGame()">🗑️ Supprimer</button>
+
+      </div>
+
+    </div>
+  `;
+
+  updateRatingButtons();
+
+  /* Succès + synchronisation automatique de la progression */
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/achievements/" +
+        encodeURIComponent(g.id) +
+        "?steamid=" +
+        encodeURIComponent(steamId)
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("steamLibAchSummary");
+
+    const bar =
+      document.getElementById("steamLibAchBar");
+
+    const list =
+      document.getElementById("steamLibAchList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun succès disponible pour ce jeu.";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+
+    bar.style.width =
+      d.percentage + "%";
+
+    list.innerHTML =
+      (d.results || [])
+        .slice(0, 30)
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+            <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
+            <div class="achievement-body">
+              <div class="achievement-name">${escapeHtml(a.name)}</div>
+              ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
+              ${a.achieved && a.unlockedAt ? `<div class="achievement-date">Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}</div>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+
+    /*
+     * On synchronise automatiquement la progression de la
+     * bibliothèque sur le % de succès Steam — c'est justement
+     * ce que cette vue est censée faire.
+     */
+
+    const entry =
+      ensureSaved();
+
+    entry.progress =
+      d.percentage;
+
+    saveLibrary();
+
+    const progressValue =
+      document.getElementById("progressValue");
+
+    const slider =
+      document.querySelector('.slider[type="range"]');
+
+    if(progressValue){
+      progressValue.textContent = d.percentage;
+    }
+
+    if(slider){
+      slider.value = d.percentage;
+    }
+
+  }catch(e){
+
+    console.error(e);
+
+    const summary =
+      document.getElementById("steamLibAchSummary");
+
+    if(summary){
+      summary.textContent =
+        "Erreur lors du chargement des succès.";
+    }
 
   }
 
