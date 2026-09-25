@@ -6146,7 +6146,7 @@ async function renderSteamLibraryDetail(){
       <div class="panel">
 
         <div class="panel-title">
-          📊 Progression (synchronisée avec les succès Steam)
+          📊 Ma progression
         </div>
 
         <div class="progress-number">
@@ -6286,28 +6286,6 @@ async function renderSteamLibraryDetail(){
           </div>
         `)
         .join("");
-
-    const entry =
-      ensureSaved();
-
-    entry.progress =
-      merged.percentage;
-
-    saveLibrary();
-
-    const progressValue =
-      document.getElementById("progressValue");
-
-    const slider =
-      document.querySelector('.slider[type="range"]');
-
-    if(progressValue){
-      progressValue.textContent = merged.percentage;
-    }
-
-    if(slider){
-      slider.value = merged.percentage;
-    }
 
   }catch(e){
 
@@ -6860,7 +6838,6 @@ async function importXboxLibrary(){
 
         existing.name = g.name;
         existing.background_image = g.imageUrl;
-        existing.progress = g.percentage;
         existing.xboxAccounts = g.accounts;
 
         updated++;
@@ -6873,7 +6850,7 @@ async function importXboxLibrary(){
           background_image: g.imageUrl,
           released: null,
           note: 0,
-          progress: g.percentage,
+          progress: 0,
           hours: 0,
           minutes: 0,
           status,
@@ -7010,7 +6987,7 @@ async function renderXboxLibraryDetail(){
       <div class="panel">
 
         <div class="panel-title">
-          📊 Progression (synchronisée avec les succès Xbox)
+          📊 Ma progression
         </div>
 
         <div class="progress-number">
@@ -7125,28 +7102,6 @@ async function renderXboxLibraryDetail(){
           </div>
         `)
         .join("");
-
-    const entry =
-      ensureSaved();
-
-    entry.progress =
-      merged.percentage;
-
-    saveLibrary();
-
-    const progressValue =
-      document.getElementById("progressValue");
-
-    const slider =
-      document.querySelector('.slider[type="range"]');
-
-    if(progressValue){
-      progressValue.textContent = merged.percentage;
-    }
-
-    if(slider){
-      slider.value = merged.percentage;
-    }
 
   }catch(e){
 
@@ -7595,7 +7550,6 @@ async function importPsnLibrary(){
 
         existing.name = g.name;
         existing.background_image = g.imageUrl;
-        existing.progress = g.progress;
         existing.hours = hours;
         existing.minutes = minutes;
         existing.psnServiceName = g.npServiceName;
@@ -7610,7 +7564,7 @@ async function importPsnLibrary(){
           background_image: g.imageUrl,
           released: null,
           note: 0,
-          progress: g.progress,
+          progress: 0,
           hours,
           minutes,
           status,
@@ -7755,7 +7709,7 @@ async function renderPsnLibraryDetail(){
       <div class="panel">
 
         <div class="panel-title">
-          📊 Progression (synchronisée avec les trophées PSN)
+          📊 Ma progression
         </div>
 
         <div class="progress-number">
@@ -7873,28 +7827,6 @@ async function renderPsnLibraryDetail(){
           </div>
         `)
         .join("");
-
-    const entry =
-      ensureSaved();
-
-    entry.progress =
-      d.percentage;
-
-    saveLibrary();
-
-    const progressValue =
-      document.getElementById("progressValue");
-
-    const slider =
-      document.querySelector('.slider[type="range"]');
-
-    if(progressValue){
-      progressValue.textContent = d.percentage;
-    }
-
-    if(slider){
-      slider.value = d.percentage;
-    }
 
   }catch(e){
 
