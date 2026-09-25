@@ -2062,6 +2062,7 @@ let currentStudio = null;
 let studioPage = 1;
 let studioHasMore = false;
 let studioLoading = false;
+let studioTotalGames = 0;
 
 let studioGames = [];
 let studioGameIds = new Set();
@@ -2479,8 +2480,9 @@ async function renderStudio(){
     studioLoading = false;
     studioGames = [];
     studioGameIds = new Set();
+    studioTotalGames = gamesCount;
 
-    await loadStudioGames(1, false, gamesCount);
+    await loadStudioGames(1, false);
 
   }catch(e){
 
@@ -2646,7 +2648,7 @@ async function loadStudioGames(
     if(count){
 
       const total =
-        Number(d.count || totalGames || 0);
+        Number(d.count || studioTotalGames || 0);
 
       count.textContent =
         total > 0
@@ -2697,8 +2699,7 @@ async function loadMoreStudioGames(){
 
     await loadStudioGames(
       studioPage + 1,
-      true,
-      0
+      true
     );
 
   }
