@@ -362,6 +362,25 @@ main{
   flex-wrap:wrap
 }
 
+.steam-accounts-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:14px
+}
+
+.steam-account-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#14141b;
+  border:1px solid #25252f;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px
+}
+
 .steam-block-title{
   font-size:19px;
   font-weight:900;
@@ -752,6 +771,12 @@ main{
 .badge-xbox{
   background:#0e3b1a;
   color:#7fdb8f;
+  margin-left:6px
+}
+
+.badge-psn{
+  background:#0a2e5c;
+  color:#7fb8ff;
   margin-left:6px
 }
 
@@ -1175,6 +1200,7 @@ main{
   <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
   <button id="tabSteam" onclick="showSteam()">🕹️ Steam</button>
   <button id="tabXbox" onclick="showXbox()">🟩 Xbox</button>
+  <button id="tabPsn" onclick="showPsn()">🎮 PlayStation</button>
 </nav>
 
 <main>
@@ -1235,9 +1261,19 @@ main{
       🟩 Importer depuis Xbox
     </button>
 
+    <button
+      id="importPsnBtn"
+      class="add"
+      onclick="importPsnLibrary()"
+    >
+      🎮 Importer depuis PlayStation
+    </button>
+
     <span id="importSteamStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
 
     <span id="importXboxStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
+
+    <span id="importPsnStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
 
   </div>
 
@@ -1378,13 +1414,13 @@ main{
 
 <section id="steamSection" class="hidden">
 
-  <h2>🕹️ Mon compte Steam</h2>
+  <h2>🕹️ Mes comptes Steam</h2>
 
-  <div id="steamConnectBox" class="steam-connect hidden">
+  <div class="steam-connect">
 
     <p class="status" style="margin-bottom:10px">
-      Connecte ton compte Steam pour importer automatiquement tes jeux, tes heures de jeu, tes succès et ta liste de souhaits.
-      Ton profil (et les détails du jeu) doivent être publics.
+      Connecte un ou plusieurs comptes Steam pour importer automatiquement tes jeux, tes heures de jeu, tes succès et ta liste de souhaits (fusionnés si tu en connectes plusieurs).
+      Chaque profil (et ses détails de jeu) doit être public.
     </p>
 
     <div class="search">
@@ -1392,18 +1428,12 @@ main{
         id="steamIdInput"
         placeholder="Pseudo Steam (ex: gaben) ou SteamID64"
       >
-      <button onclick="connectSteam()">Connecter</button>
+      <button onclick="connectSteam()">Ajouter ce compte</button>
     </div>
 
     <div id="steamConnectStatus" class="status"></div>
 
-  </div>
-
-  <div id="steamConnectedBar" class="steam-connected-bar hidden">
-
-    <span id="steamConnectedLabel"></span>
-
-    <button class="back" onclick="disconnectSteam()">Déconnecter</button>
+    <div id="steamAccountsList" class="steam-accounts-list"></div>
 
   </div>
 
@@ -1467,6 +1497,36 @@ main{
   <button class="back" onclick="goBackFromXboxGame()">← Retour</button>
 
   <div id="xboxGameDetail"></div>
+
+</section>
+
+
+<section id="psnSection" class="hidden">
+
+  <h2>🎮 Mon compte PlayStation</h2>
+
+  <div id="psnError" class="steam-connect hidden"></div>
+
+  <div id="psnStats"></div>
+
+  <div id="psnGamesBlock">
+
+    <h3 class="steam-block-title">🏆 Trophées PlayStation</h3>
+
+    <div id="psnGamesStatus" class="status"></div>
+
+    <div id="psnGames" class="games"></div>
+
+  </div>
+
+</section>
+
+
+<section id="psnGameSection" class="hidden">
+
+  <button class="back" onclick="goBackFromPsnGame()">← Retour</button>
+
+  <div id="psnGameDetail"></div>
 
 </section>
 
@@ -1721,6 +1781,11 @@ async function openGame(game){
 
   if(game.source === "xbox"){
     await renderXboxLibraryDetail();
+    return;
+  }
+
+  if(game.source === "psn"){
+    await renderPsnLibraryDetail();
     return;
   }
 
@@ -3466,8 +3531,8 @@ function getCurrentSaved(){
   return currentGame
     ? library.find(
         x =>
-          Number(x.id) ===
-          Number(currentGame.id)
+          String(x.id) ===
+          String(currentGame.id)
       )
     : null;
 
@@ -3718,8 +3783,8 @@ function deleteCurrentGame(){
   library =
     library.filter(
       x =>
-        Number(x.id) !==
-        Number(currentGame.id)
+        String(x.id) !==
+        String(currentGame.id)
     );
 
 
@@ -3736,8 +3801,8 @@ function deleteLibraryGame(id){
   const g =
     library.find(
       x =>
-        Number(x.id) ===
-        Number(id)
+        String(x.id) ===
+        String(id)
     );
 
 
@@ -3756,8 +3821,8 @@ function deleteLibraryGame(id){
   library =
     library.filter(
       x =>
-        Number(x.id) !==
-        Number(id)
+        String(x.id) !==
+        String(id)
     );
 
 
@@ -3935,6 +4000,12 @@ function renderLibrary(){
             : ""
         }
 
+        ${
+          g.source === "psn"
+            ? '<div class="badge badge-psn">🎮 PSN</div>'
+            : ""
+        }
+
       </div>
 
       <button
@@ -3942,7 +4013,7 @@ function renderLibrary(){
         onclick="
           event.stopPropagation();
           deleteLibraryGame(
-            ${Number(g.id)}
+            '${escapeAttr(String(g.id))}'
           )
         "
       >
@@ -4787,7 +4858,9 @@ function hideSections(){
     "steamSection",
     "steamGameSection",
     "xboxSection",
-    "xboxGameSection"
+    "xboxGameSection",
+    "psnSection",
+    "psnGameSection"
   ]
   .forEach(
     id =>
@@ -4806,7 +4879,8 @@ function hideSections(){
     "tabGenres",
     "tabStats",
     "tabSteam",
-    "tabXbox"
+    "tabXbox",
+    "tabPsn"
   ]
   .forEach(
     id =>
@@ -4967,11 +5041,158 @@ function showStats(){
    STEAM
 ========================================================= */
 
-let steamId =
-  localStorage.getItem("gamevault_steamid") || null;
+let steamAccounts =
+  readStorage("gamevault_steam_accounts", []);
+
+(function migrateOldSteamId(){
+
+  try{
+
+    const old =
+      localStorage.getItem("gamevault_steamid");
+
+    if(old && !steamAccounts.length){
+
+      steamAccounts = [
+        { id: old, label: "Compte 1" }
+      ];
+
+      localStorage.setItem(
+        "gamevault_steam_accounts",
+        JSON.stringify(steamAccounts)
+      );
+
+      localStorage.removeItem("gamevault_steamid");
+
+    }
+
+  }catch(e){
+
+    console.warn("Migration SteamID impossible :", e);
+
+  }
+
+})();
+
 
 let currentSteamGame = null;
 
+
+function saveSteamAccounts(){
+
+  localStorage.setItem(
+    "gamevault_steam_accounts",
+    JSON.stringify(steamAccounts)
+  );
+
+}
+
+
+/* =========================================================
+   FUSION DE PLUSIEURS RÉPONSES DE SUCCÈS
+   (utilisé par Steam ET Xbox multi-comptes)
+========================================================= */
+
+function mergeAchievementResponses(responses){
+
+  const valid =
+    (responses || []).filter(r => r && r.available);
+
+  if(!valid.length){
+
+    const withMessage =
+      (responses || []).find(r => r && r.message);
+
+    return {
+      available: false,
+      message:
+        withMessage?.message ||
+        "Aucun succès disponible pour ce jeu.",
+      results: [],
+      unlocked: 0,
+      total: 0,
+      percentage: 0
+    };
+
+  }
+
+  const byKey = new Map();
+
+  valid.forEach(r => {
+
+    (r.results || []).forEach(a => {
+
+      const key =
+        a.apiname || a.id || a.name;
+
+      const existing =
+        byKey.get(key);
+
+      if(existing){
+
+        if(a.achieved && !existing.achieved){
+
+          existing.achieved = true;
+          existing.unlockedAt = a.unlockedAt;
+
+        }else if(
+          a.achieved &&
+          existing.achieved &&
+          a.unlockedAt &&
+          existing.unlockedAt
+        ){
+
+          existing.unlockedAt =
+            Math.min(existing.unlockedAt, a.unlockedAt);
+
+        }
+
+      }else{
+
+        byKey.set(key, { ...a });
+
+      }
+
+    });
+
+  });
+
+  const results =
+    [...byKey.values()];
+
+  const unlocked =
+    results.filter(a => a.achieved).length;
+
+  const total =
+    results.length;
+
+  results.sort((a,b) => {
+
+    if(a.achieved !== b.achieved){
+      return a.achieved ? -1 : 1;
+    }
+
+    return (b.unlockedAt || 0) - (a.unlockedAt || 0);
+
+  });
+
+  return {
+    available: true,
+    results,
+    unlocked,
+    total,
+    percentage:
+      total > 0
+        ? Math.round((unlocked / total) * 100)
+        : 0
+  };
+
+}
+
+
+/* =========================================================
+   STEAM
+========================================================= */
 
 function showSteam(){
 
@@ -4992,11 +5213,7 @@ function showSteam(){
 
 function renderSteamPage(){
 
-  const connectBox =
-    document.getElementById("steamConnectBox");
-
-  const connectedBar =
-    document.getElementById("steamConnectedBar");
+  renderSteamAccountsList();
 
   const gamesBlock =
     document.getElementById("steamGamesBlock");
@@ -5007,10 +5224,8 @@ function renderSteamPage(){
   const statsBox =
     document.getElementById("steamStats");
 
-  if(!steamId){
+  if(!steamAccounts.length){
 
-    connectBox.classList.remove("hidden");
-    connectedBar.classList.add("hidden");
     gamesBlock.classList.add("hidden");
     wishlistBlock.classList.add("hidden");
     statsBox.innerHTML = "";
@@ -5019,18 +5234,45 @@ function renderSteamPage(){
 
   }
 
-  connectBox.classList.add("hidden");
-  connectedBar.classList.remove("hidden");
   gamesBlock.classList.remove("hidden");
   wishlistBlock.classList.remove("hidden");
 
-  document
-    .getElementById("steamConnectedLabel")
-    .textContent =
-      "✅ Connecté (SteamID: " + steamId + ")";
-
   loadSteamGames();
   loadSteamWishlist();
+
+}
+
+
+function renderSteamAccountsList(){
+
+  const c =
+    document.getElementById("steamAccountsList");
+
+  if(!steamAccounts.length){
+
+    c.innerHTML =
+      '<div class="status">Aucun compte Steam connecté pour l\'instant.</div>';
+
+    return;
+
+  }
+
+  c.innerHTML =
+    steamAccounts
+      .map(
+        (acc, i) => `
+          <div class="steam-account-row">
+            <span>
+              ✅ ${escapeHtml(acc.label || ("Compte " + (i + 1)))}
+              — SteamID ${escapeHtml(acc.id)}
+            </span>
+            <button class="back" onclick="removeSteamAccount(${i})">
+              Retirer
+            </button>
+          </div>
+        `
+      )
+      .join("");
 
 }
 
@@ -5080,14 +5322,26 @@ async function connectSteam(){
 
     }
 
-    steamId = d.steamid;
+    if(steamAccounts.some(a => a.id === d.steamid)){
 
-    localStorage.setItem(
-      "gamevault_steamid",
-      steamId
-    );
+      status.textContent =
+        "Ce compte est déjà connecté.";
 
-    status.textContent = "";
+      return;
+
+    }
+
+    steamAccounts.push({
+      id: d.steamid,
+      label: "Compte " + (steamAccounts.length + 1)
+    });
+
+    saveSteamAccounts();
+
+    input.value = "";
+
+    status.textContent =
+      "✅ Compte ajouté.";
 
     renderSteamPage();
 
@@ -5103,11 +5357,11 @@ async function connectSteam(){
 }
 
 
-function disconnectSteam(){
+function removeSteamAccount(index){
 
   if(
     !confirm(
-      "Déconnecter ton compte Steam ? (aucune donnée n'est supprimée sur Steam, juste ici)"
+      "Retirer ce compte Steam ? (aucune donnée n'est supprimée sur Steam, juste ici)"
     )
   ){
 
@@ -5115,9 +5369,9 @@ function disconnectSteam(){
 
   }
 
-  steamId = null;
+  steamAccounts.splice(index, 1);
 
-  localStorage.removeItem("gamevault_steamid");
+  saveSteamAccounts();
 
   renderSteamPage();
 
@@ -5142,25 +5396,62 @@ async function loadSteamGames(){
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/steam/games?steamid=" +
-        encodeURIComponent(steamId)
+    const responses =
+      await Promise.all(
+        steamAccounts.map(acc =>
+          fetch(
+            WORKER_URL +
+            "/steam/games?steamid=" +
+            encodeURIComponent(acc.id)
+          )
+            .then(r => r.json().then(d => ({ acc, r, d })))
+            .catch(() => ({ acc, r: null, d: null }))
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      new Map();
 
-    if(!r.ok){
-      throw new Error(
-        d.error ||
-        "Impossible de charger la bibliothèque Steam."
-      );
-    }
+    responses.forEach(({ acc, r, d }) => {
+
+      if(!r || !r.ok || !d || !Array.isArray(d.results)){
+        return;
+      }
+
+      d.results.forEach(g => {
+
+        const existing =
+          merged.get(g.appid);
+
+        if(existing){
+
+          existing.playtimeMinutes +=
+            g.playtimeMinutes || 0;
+
+          existing.playtimeMinutes2Weeks +=
+            g.playtimeMinutes2Weeks || 0;
+
+          existing.ownerIds.push(acc.id);
+
+        }else{
+
+          merged.set(g.appid, {
+            ...g,
+            ownerIds: [acc.id]
+          });
+
+        }
+
+      });
+
+    });
 
     const games =
-      d.results || [];
+      [...merged.values()]
+        .sort(
+          (a,b) =>
+            b.playtimeMinutes - a.playtimeMinutes
+        );
 
     if(!games.length){
 
@@ -5185,7 +5476,9 @@ async function loadSteamGames(){
         <div class="stat">
           <div class="stat-icon">🎮</div>
           <div class="stat-number">${games.length}</div>
-          <div class="stat-label">Jeux possédés (Steam)</div>
+          <div class="stat-label">
+            Jeux possédés (${steamAccounts.length} compte${steamAccounts.length > 1 ? "s" : ""} Steam)
+          </div>
         </div>
 
         <div class="stat">
@@ -5204,7 +5497,7 @@ async function loadSteamGames(){
     `;
 
     status.textContent =
-      `${games.length} jeu(x), triés par temps de jeu.`;
+      `${games.length} jeu(x), triés par temps de jeu cumulé.`;
 
     c.innerHTML = "";
 
@@ -5234,6 +5527,7 @@ async function loadSteamGames(){
           <div class="steam-playtime">
             🕐 ${hours}h ${mins}min
             ${g.playtimeMinutes2Weeks > 0 ? " • 🔥 actif" : ""}
+            ${g.ownerIds.length > 1 ? " • 👥 " + g.ownerIds.length + " comptes" : ""}
           </div>
 
         </div>
@@ -5268,36 +5562,51 @@ async function loadSteamWishlist(){
     document.getElementById("steamWishlistStatus");
 
   c.innerHTML =
-    '<div class="empty">❤️ Chargement de ta liste de souhaits Steam...</div>';
+    '<div class="empty">❤️ Chargement de tes listes de souhaits Steam...</div>';
 
   status.textContent = "";
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/steam/wishlist?steamid=" +
-        encodeURIComponent(steamId)
+    const responses =
+      await Promise.all(
+        steamAccounts.map(acc =>
+          fetch(
+            WORKER_URL +
+            "/steam/wishlist?steamid=" +
+            encodeURIComponent(acc.id)
+          )
+            .then(r => r.json().then(d => ({ r, d })))
+            .catch(() => ({ r: null, d: null }))
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      new Map();
 
-    if(!r.ok){
-      throw new Error(
-        d.error ||
-        "Impossible de charger la liste de souhaits Steam."
-      );
-    }
+    responses.forEach(({ r, d }) => {
+
+      if(!r || !r.ok || !d || !Array.isArray(d.results)){
+        return;
+      }
+
+      d.results.forEach(g => {
+
+        if(!merged.has(g.appid)){
+          merged.set(g.appid, g);
+        }
+
+      });
+
+    });
 
     const items =
-      d.results || [];
+      [...merged.values()];
 
     if(!items.length){
 
       c.innerHTML =
-        '<div class="empty">Aucun jeu dans ta liste de souhaits Steam.</div>';
+        '<div class="empty">Aucun jeu dans tes listes de souhaits Steam.</div>';
 
       status.textContent = "";
 
@@ -5306,9 +5615,7 @@ async function loadSteamWishlist(){
     }
 
     status.textContent =
-      d.truncated
-        ? `${items.length} jeu(x) affiché(s) sur ${d.totalOnWishlist} au total (limite technique).`
-        : `${items.length} jeu(x) dans ta liste de souhaits Steam.`;
+      `${items.length} jeu(x) dans tes listes de souhaits Steam${steamAccounts.length > 1 ? " (fusionnées)" : ""}.`;
 
     c.innerHTML = "";
 
@@ -5428,6 +5735,7 @@ async function renderSteamGameDetail(){
 
         <div class="release">
           🕐 ${hours}h ${mins}min de jeu
+          ${g.ownerIds && g.ownerIds.length > 1 ? " (cumulé sur " + g.ownerIds.length + " comptes)" : ""}
         </div>
 
         <div id="steamAchievementsSummary" class="status">
@@ -5448,17 +5756,28 @@ async function renderSteamGameDetail(){
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/steam/achievements/" +
-        encodeURIComponent(g.appid) +
-        "?steamid=" +
-        encodeURIComponent(steamId)
+    const ownerIds =
+      (g.ownerIds && g.ownerIds.length)
+        ? g.ownerIds
+        : steamAccounts.map(a => a.id);
+
+    const responses =
+      await Promise.all(
+        ownerIds.map(id =>
+          fetch(
+            WORKER_URL +
+            "/steam/achievements/" +
+            encodeURIComponent(g.appid) +
+            "?steamid=" +
+            encodeURIComponent(id)
+          )
+            .then(r => r.json())
+            .catch(() => null)
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      mergeAchievementResponses(responses);
 
     const summary =
       document.getElementById("steamAchievementsSummary");
@@ -5469,10 +5788,10 @@ async function renderSteamGameDetail(){
     const list =
       document.getElementById("steamAchievementsList");
 
-    if(!r.ok || !d.available){
+    if(!merged.available){
 
       summary.textContent =
-        d.message ||
+        merged.message ||
         "Aucun succès disponible pour ce jeu.";
 
       bar.style.width = "0%";
@@ -5484,13 +5803,13 @@ async function renderSteamGameDetail(){
     }
 
     summary.textContent =
-      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+      `🏆 ${merged.unlocked} / ${merged.total} succès débloqués (${merged.percentage}%)`;
 
     bar.style.width =
-      d.percentage + "%";
+      merged.percentage + "%";
 
     list.innerHTML =
-      (d.results || [])
+      merged.results
         .map(a => `
           <div class="achievement-item ${a.achieved ? "" : "locked"}">
 
@@ -5544,10 +5863,10 @@ async function renderSteamGameDetail(){
 
 async function importSteamLibrary(){
 
-  if(!steamId){
+  if(!steamAccounts.length){
 
     alert(
-      "Connecte d'abord ton compte Steam dans l'onglet 🕹️ Steam."
+      "Connecte d'abord au moins un compte Steam dans l'onglet 🕹️ Steam."
     );
 
     return;
@@ -5556,7 +5875,7 @@ async function importSteamLibrary(){
 
   if(
     !confirm(
-      "Importer tous tes jeux Steam dans ta bibliothèque ?\n\nLes heures de jeu sont ajoutées tout de suite. Les succès et le % de complétion se chargent automatiquement quand tu ouvres un jeu."
+      "Importer tous tes jeux Steam (tous comptes connectés, fusionnés) dans ta bibliothèque ?\n\nLes heures de jeu sont ajoutées tout de suite. Les succès et le % de complétion se chargent automatiquement quand tu ouvres un jeu."
     )
   ){
 
@@ -5579,30 +5898,57 @@ async function importSteamLibrary(){
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/steam/games?steamid=" +
-        encodeURIComponent(steamId)
+    const responses =
+      await Promise.all(
+        steamAccounts.map(acc =>
+          fetch(
+            WORKER_URL +
+            "/steam/games?steamid=" +
+            encodeURIComponent(acc.id)
+          )
+            .then(r => r.json().then(d => ({ acc, r, d })))
+            .catch(() => ({ acc, r: null, d: null }))
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      new Map();
 
-    if(!r.ok){
-      throw new Error(
-        d.error ||
-        "Impossible de récupérer ta bibliothèque Steam."
-      );
-    }
+    responses.forEach(({ acc, r, d }) => {
 
-    const games =
-      d.results || [];
+      if(!r || !r.ok || !d || !Array.isArray(d.results)){
+        return;
+      }
+
+      d.results.forEach(g => {
+
+        const existing =
+          merged.get(g.appid);
+
+        if(existing){
+
+          existing.playtimeMinutes +=
+            g.playtimeMinutes || 0;
+
+          existing.ownerIds.push(acc.id);
+
+        }else{
+
+          merged.set(g.appid, {
+            ...g,
+            ownerIds: [acc.id]
+          });
+
+        }
+
+      });
+
+    });
 
     let added = 0;
     let updated = 0;
 
-    games.forEach(g => {
+    merged.forEach(g => {
 
       const hours =
         Math.floor(g.playtimeMinutes / 60);
@@ -5623,6 +5969,7 @@ async function importSteamLibrary(){
         existing.background_image = g.headerUrl;
         existing.hours = hours;
         existing.minutes = minutes;
+        existing.steamOwnerIds = g.ownerIds;
 
         updated++;
 
@@ -5642,7 +5989,8 @@ async function importSteamLibrary(){
               ? "En cours"
               : "À jouer",
           addedAt: Date.now(),
-          source: "steam"
+          source: "steam",
+          steamOwnerIds: g.ownerIds
         });
 
         added++;
@@ -5863,21 +6211,41 @@ async function renderSteamLibraryDetail(){
 
   updateRatingButtons();
 
-  /* Succès + synchronisation automatique de la progression */
-
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/steam/achievements/" +
-        encodeURIComponent(g.id) +
-        "?steamid=" +
-        encodeURIComponent(steamId)
+    const ownerIds =
+      (saved.steamOwnerIds && saved.steamOwnerIds.length)
+        ? saved.steamOwnerIds
+        : steamAccounts.map(a => a.id);
+
+    if(!ownerIds.length){
+
+      document
+        .getElementById("steamLibAchSummary")
+        .textContent =
+          "Aucun compte Steam connecté.";
+
+      return;
+
+    }
+
+    const responses =
+      await Promise.all(
+        ownerIds.map(id =>
+          fetch(
+            WORKER_URL +
+            "/steam/achievements/" +
+            encodeURIComponent(g.id) +
+            "?steamid=" +
+            encodeURIComponent(id)
+          )
+            .then(r => r.json())
+            .catch(() => null)
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      mergeAchievementResponses(responses);
 
     const summary =
       document.getElementById("steamLibAchSummary");
@@ -5888,10 +6256,10 @@ async function renderSteamLibraryDetail(){
     const list =
       document.getElementById("steamLibAchList");
 
-    if(!r.ok || !d.available){
+    if(!merged.available){
 
       summary.textContent =
-        d.message ||
+        merged.message ||
         "Aucun succès disponible pour ce jeu.";
 
       return;
@@ -5899,13 +6267,13 @@ async function renderSteamLibraryDetail(){
     }
 
     summary.textContent =
-      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+      `🏆 ${merged.unlocked} / ${merged.total} succès débloqués (${merged.percentage}%)`;
 
     bar.style.width =
-      d.percentage + "%";
+      merged.percentage + "%";
 
     list.innerHTML =
-      (d.results || [])
+      merged.results
         .slice(0, 30)
         .map(a => `
           <div class="achievement-item ${a.achieved ? "" : "locked"}">
@@ -5919,17 +6287,11 @@ async function renderSteamLibraryDetail(){
         `)
         .join("");
 
-    /*
-     * On synchronise automatiquement la progression de la
-     * bibliothèque sur le % de succès Steam — c'est justement
-     * ce que cette vue est censée faire.
-     */
-
     const entry =
       ensureSaved();
 
     entry.progress =
-      d.percentage;
+      merged.percentage;
 
     saveLibrary();
 
@@ -5940,11 +6302,11 @@ async function renderSteamLibraryDetail(){
       document.querySelector('.slider[type="range"]');
 
     if(progressValue){
-      progressValue.textContent = d.percentage;
+      progressValue.textContent = merged.percentage;
     }
 
     if(slider){
-      slider.value = d.percentage;
+      slider.value = merged.percentage;
     }
 
   }catch(e){
@@ -5964,9 +6326,13 @@ async function renderSteamLibraryDetail(){
 }
 
 
+
 /* =========================================================
    XBOX
 ========================================================= */
+
+let xboxAccountIndexes = [];
+
 
 async function showXbox(){
 
@@ -5980,8 +6346,37 @@ async function showXbox(){
     .getElementById("tabXbox")
     .classList.add("active");
 
+  await loadXboxAccountIndexes();
   await loadXboxProfile();
   await loadXboxGames();
+
+}
+
+
+async function loadXboxAccountIndexes(){
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/xbox/accounts");
+
+    const d =
+      await r.json();
+
+    xboxAccountIndexes =
+      (d.accounts || []).map(a => a.index);
+
+  }catch(e){
+
+    console.error(e);
+
+    xboxAccountIndexes = [1];
+
+  }
+
+  if(!xboxAccountIndexes.length){
+    xboxAccountIndexes = [1];
+  }
 
 }
 
@@ -5999,25 +6394,46 @@ async function loadXboxProfile(){
 
   try{
 
-    const r =
-      await fetch(WORKER_URL + "/xbox/profile");
+    const responses =
+      await Promise.all(
+        xboxAccountIndexes.map(index =>
+          fetch(WORKER_URL + "/xbox/profile?account=" + index)
+            .then(r => r.json().then(d => ({ r, d })))
+            .catch(() => ({ r: null, d: null }))
+        )
+      );
 
-    const d =
-      await r.json();
+    const profiles =
+      responses
+        .map(({ r, d }) => (r && r.ok && !d?.error ? d : null))
+        .filter(Boolean);
 
-    if(!r.ok || d.error){
+    if(!profiles.length){
+
       throw new Error(
-        d.error ||
+        responses.find(({ d }) => d?.error)?.d?.error ||
         "Impossible de charger ton profil Xbox."
       );
+
     }
 
     statsBox.innerHTML = `
-      <div class="steam-connected-bar" style="margin-bottom:18px">
-        <span>
-          🟩 Connecté en tant que <strong>${escapeHtml(d.gamertag || "Joueur Xbox")}</strong>
-          ${d.gamerscore ? " • 🏆 " + escapeHtml(String(d.gamerscore)) + " Gamerscore" : ""}
-        </span>
+      <div class="steam-connected-bar" style="margin-bottom:18px; flex-direction:column; align-items:flex-start; gap:6px">
+        ${
+          profiles
+            .map(p => `
+              <span>
+                🟩 Connecté en tant que <strong>${escapeHtml(p.gamertag || "Joueur Xbox")}</strong>
+                ${p.gamerscore ? " • 🏆 " + escapeHtml(String(p.gamerscore)) + " Gamerscore" : ""}
+              </span>
+            `)
+            .join("")
+        }
+        ${
+          profiles.length > 1
+            ? '<span class="status" style="margin:0">Comptes fusionnés dans la liste ci-dessous.</span>'
+            : ""
+        }
       </div>
     `;
 
@@ -6030,7 +6446,7 @@ async function loadXboxProfile(){
     errorBox.innerHTML = `
       <div class="status">
         ❌ ${escapeHtml(e.message)}<br><br>
-        Vérifie que <code>XBOX_API_KEY</code> est bien configurée sur ton Worker (clé OpenXBL depuis xbl.io).
+        Vérifie que <code>XBOX_API_KEY</code> (et <code>XBOX_API_KEY_2</code> pour un 2ᵉ compte) est bien configurée sur ton Worker (clé OpenXBL depuis xbl.io).
       </div>
     `;
 
@@ -6056,26 +6472,76 @@ async function loadXboxGames(){
 
   try{
 
-    const r =
-      await fetch(WORKER_URL + "/xbox/games");
-
-    const d =
-      await r.json();
-
-    if(!r.ok || d.error){
-      throw new Error(
-        d.error ||
-        "Impossible de charger tes jeux Xbox."
+    const responses =
+      await Promise.all(
+        xboxAccountIndexes.map(index =>
+          fetch(WORKER_URL + "/xbox/games?account=" + index)
+            .then(r => r.json().then(d => ({ index, r, d })))
+            .catch(() => ({ index, r: null, d: null }))
+        )
       );
-    }
+
+    const merged =
+      new Map();
+
+    responses.forEach(({ index, r, d }) => {
+
+      if(!r || !r.ok || d?.error || !Array.isArray(d?.results)){
+        return;
+      }
+
+      d.results.forEach(g => {
+
+        const existing =
+          merged.get(g.titleId);
+
+        if(existing){
+
+          /* On garde la meilleure progression entre les 2 comptes */
+
+          if(g.percentage > existing.percentage){
+
+            existing.percentage = g.percentage;
+            existing.currentAchievements = g.currentAchievements;
+            existing.totalAchievements = g.totalAchievements;
+            existing.currentGamerscore = g.currentGamerscore;
+            existing.totalGamerscore = g.totalGamerscore;
+
+          }
+
+          existing.accounts.push(index);
+
+          if(
+            new Date(g.lastPlayed || 0) >
+            new Date(existing.lastPlayed || 0)
+          ){
+            existing.lastPlayed = g.lastPlayed;
+          }
+
+        }else{
+
+          merged.set(g.titleId, {
+            ...g,
+            accounts: [index]
+          });
+
+        }
+
+      });
+
+    });
 
     const games =
-      d.results || [];
+      [...merged.values()]
+        .sort(
+          (a,b) =>
+            new Date(b.lastPlayed || 0) - new Date(a.lastPlayed || 0)
+        );
 
     if(!games.length){
 
       c.innerHTML =
-        '<div class="empty">Aucun jeu avec des succès trouvé sur ton compte Xbox.</div>';
+        '<div class="empty">Aucun jeu avec des succès trouvé sur tes comptes Xbox.</div>';
 
       status.textContent = "";
 
@@ -6084,7 +6550,7 @@ async function loadXboxGames(){
     }
 
     status.textContent =
-      `${games.length} jeu(x), triés par dernière session jouée. Le temps de jeu n'est pas fourni par l'API Xbox.`;
+      `${games.length} jeu(x)${xboxAccountIndexes.length > 1 ? " (fusionnés sur " + xboxAccountIndexes.length + " comptes)" : ""}, triés par dernière session jouée. Le temps de jeu n'est pas fourni par l'API Xbox.`;
 
     c.innerHTML = "";
 
@@ -6107,6 +6573,7 @@ async function loadXboxGames(){
 
           <div class="steam-playtime">
             🏆 ${g.currentAchievements}/${g.totalAchievements} (${g.percentage}%)
+            ${g.accounts.length > 1 ? " • 👥 " + g.accounts.length + " comptes" : ""}
           </div>
 
         </div>
@@ -6195,6 +6662,7 @@ async function renderXboxGameDetail(){
 
         <div class="release">
           🏆 ${g.currentGamerscore}/${g.totalGamerscore} Gamerscore
+          ${g.accounts && g.accounts.length > 1 ? " (fusionné sur " + g.accounts.length + " comptes)" : ""}
         </div>
 
         <div id="xboxAchievementsSummary" class="status">
@@ -6215,15 +6683,26 @@ async function renderXboxGameDetail(){
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/xbox/achievements/" +
-        encodeURIComponent(g.titleId)
+    const accounts =
+      (g.accounts && g.accounts.length) ? g.accounts : xboxAccountIndexes;
+
+    const responses =
+      await Promise.all(
+        accounts.map(index =>
+          fetch(
+            WORKER_URL +
+            "/xbox/achievements/" +
+            encodeURIComponent(g.titleId) +
+            "?account=" +
+            index
+          )
+            .then(r => r.json())
+            .catch(() => null)
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      mergeAchievementResponses(responses);
 
     const summary =
       document.getElementById("xboxAchievementsSummary");
@@ -6234,10 +6713,10 @@ async function renderXboxGameDetail(){
     const list =
       document.getElementById("xboxAchievementsList");
 
-    if(!r.ok || !d.available){
+    if(!merged.available){
 
       summary.textContent =
-        d.message ||
+        merged.message ||
         "Aucun succès disponible pour ce jeu.";
 
       return;
@@ -6245,13 +6724,13 @@ async function renderXboxGameDetail(){
     }
 
     summary.textContent =
-      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+      `🏆 ${merged.unlocked} / ${merged.total} succès débloqués (${merged.percentage}%)`;
 
     bar.style.width =
-      d.percentage + "%";
+      merged.percentage + "%";
 
     list.innerHTML =
-      (d.results || [])
+      merged.results
         .map(a => `
           <div class="achievement-item ${a.achieved ? "" : "locked"}">
             <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
@@ -6289,7 +6768,7 @@ async function importXboxLibrary(){
 
   if(
     !confirm(
-      "Importer tous tes jeux Xbox (avec succès) dans ta bibliothèque ?\n\nLe temps de jeu n'est pas fourni par l'API Xbox, seuls les succès et le % de complétion seront synchronisés."
+      "Importer tous tes jeux Xbox (tous comptes connectés, fusionnés) dans ta bibliothèque ?\n\nLe temps de jeu n'est pas fourni par l'API Xbox, seuls les succès et le % de complétion seront synchronisés."
     )
   ){
 
@@ -6312,26 +6791,56 @@ async function importXboxLibrary(){
 
   try{
 
-    const r =
-      await fetch(WORKER_URL + "/xbox/games");
+    await loadXboxAccountIndexes();
 
-    const d =
-      await r.json();
-
-    if(!r.ok || d.error){
-      throw new Error(
-        d.error ||
-        "Impossible de récupérer tes jeux Xbox."
+    const responses =
+      await Promise.all(
+        xboxAccountIndexes.map(index =>
+          fetch(WORKER_URL + "/xbox/games?account=" + index)
+            .then(r => r.json().then(d => ({ index, r, d })))
+            .catch(() => ({ index, r: null, d: null }))
+        )
       );
-    }
 
-    const games =
-      d.results || [];
+    const merged =
+      new Map();
+
+    responses.forEach(({ index, r, d }) => {
+
+      if(!r || !r.ok || d?.error || !Array.isArray(d?.results)){
+        return;
+      }
+
+      d.results.forEach(g => {
+
+        const existing =
+          merged.get(g.titleId);
+
+        if(existing){
+
+          if(g.percentage > existing.percentage){
+            existing.percentage = g.percentage;
+          }
+
+          existing.accounts.push(index);
+
+        }else{
+
+          merged.set(g.titleId, {
+            ...g,
+            accounts: [index]
+          });
+
+        }
+
+      });
+
+    });
 
     let added = 0;
     let updated = 0;
 
-    games.forEach(g => {
+    merged.forEach(g => {
 
       const existing =
         library.find(
@@ -6352,6 +6861,7 @@ async function importXboxLibrary(){
         existing.name = g.name;
         existing.background_image = g.imageUrl;
         existing.progress = g.percentage;
+        existing.xboxAccounts = g.accounts;
 
         updated++;
 
@@ -6368,7 +6878,8 @@ async function importXboxLibrary(){
           minutes: 0,
           status,
           addedAt: Date.now(),
-          source: "xbox"
+          source: "xbox",
+          xboxAccounts: g.accounts
         });
 
         added++;
@@ -6548,15 +7059,32 @@ async function renderXboxLibraryDetail(){
 
   try{
 
-    const r =
-      await fetch(
-        WORKER_URL +
-        "/xbox/achievements/" +
-        encodeURIComponent(g.id)
+    if(!xboxAccountIndexes.length){
+      await loadXboxAccountIndexes();
+    }
+
+    const accounts =
+      (saved.xboxAccounts && saved.xboxAccounts.length)
+        ? saved.xboxAccounts
+        : xboxAccountIndexes;
+
+    const responses =
+      await Promise.all(
+        accounts.map(index =>
+          fetch(
+            WORKER_URL +
+            "/xbox/achievements/" +
+            encodeURIComponent(g.id) +
+            "?account=" +
+            index
+          )
+            .then(r => r.json())
+            .catch(() => null)
+        )
       );
 
-    const d =
-      await r.json();
+    const merged =
+      mergeAchievementResponses(responses);
 
     const summary =
       document.getElementById("xboxLibAchSummary");
@@ -6567,10 +7095,10 @@ async function renderXboxLibraryDetail(){
     const list =
       document.getElementById("xboxLibAchList");
 
-    if(!r.ok || !d.available){
+    if(!merged.available){
 
       summary.textContent =
-        d.message ||
+        merged.message ||
         "Aucun succès disponible pour ce jeu.";
 
       return;
@@ -6578,7 +7106,755 @@ async function renderXboxLibraryDetail(){
     }
 
     summary.textContent =
-      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+      `🏆 ${merged.unlocked} / ${merged.total} succès débloqués (${merged.percentage}%)`;
+
+    bar.style.width =
+      merged.percentage + "%";
+
+    list.innerHTML =
+      merged.results
+        .slice(0, 30)
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+            <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
+            <div class="achievement-body">
+              <div class="achievement-name">${escapeHtml(a.name)}</div>
+              ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
+              ${a.achieved && a.unlockedAt ? `<div class="achievement-date">Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}</div>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+
+    const entry =
+      ensureSaved();
+
+    entry.progress =
+      merged.percentage;
+
+    saveLibrary();
+
+    const progressValue =
+      document.getElementById("progressValue");
+
+    const slider =
+      document.querySelector('.slider[type="range"]');
+
+    if(progressValue){
+      progressValue.textContent = merged.percentage;
+    }
+
+    if(slider){
+      slider.value = merged.percentage;
+    }
+
+  }catch(e){
+
+    console.error(e);
+
+    const summary =
+      document.getElementById("xboxLibAchSummary");
+
+    if(summary){
+      summary.textContent =
+        "Erreur lors du chargement des succès.";
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   PLAYSTATION (PSN)
+========================================================= */
+
+async function showPsn(){
+
+  hideSections();
+
+  document
+    .getElementById("psnSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabPsn")
+    .classList.add("active");
+
+  await loadPsnProfile();
+  await loadPsnGames();
+
+}
+
+
+let psnPlaytimeAvailable = true;
+
+
+async function loadPsnProfile(){
+
+  const errorBox =
+    document.getElementById("psnError");
+
+  const statsBox =
+    document.getElementById("psnStats");
+
+  errorBox.classList.add("hidden");
+  errorBox.innerHTML = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/psn/profile");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de charger ton profil PlayStation."
+      );
+    }
+
+    const earned =
+      d.earnedTrophies || {};
+
+    statsBox.innerHTML = `
+      <div class="steam-connected-bar" style="margin-bottom:18px">
+        <span>
+          🎮 Connecté
+          ${d.trophyLevel ? " • Niveau trophées " + escapeHtml(String(d.trophyLevel)) : ""}
+          ${
+            earned
+              ? " • 🥇 " + Number(earned.gold || 0) +
+                " • 🥈 " + Number(earned.silver || 0) +
+                " • 🥉 " + Number(earned.bronze || 0) +
+                " • 🏆 " + Number(earned.platinum || 0) + " platine(s)"
+              : ""
+          }
+        </span>
+      </div>
+    `;
+
+  }catch(e){
+
+    console.error(e);
+
+    errorBox.classList.remove("hidden");
+
+    errorBox.innerHTML = `
+      <div class="status">
+        ❌ ${escapeHtml(e.message)}<br><br>
+        Vérifie que <code>PSN_NPSSO</code> est bien configurée sur ton Worker, et qu'elle n'a pas expiré (elle expire au bout de quelques semaines — récupère-en une nouvelle sur playstation.com si besoin).
+      </div>
+    `;
+
+    statsBox.innerHTML = "";
+
+  }
+
+}
+
+
+async function loadPsnGames(){
+
+  const c =
+    document.getElementById("psnGames");
+
+  const status =
+    document.getElementById("psnGamesStatus");
+
+  c.innerHTML =
+    '<div class="empty">🏆 Chargement de tes trophées PlayStation...</div>';
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/psn/games");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de charger tes jeux PlayStation."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    psnPlaytimeAvailable =
+      Boolean(d.playtimeAvailable);
+
+    if(!games.length){
+
+      c.innerHTML =
+        '<div class="empty">Aucun jeu avec des trophées trouvé sur ton compte PSN.</div>';
+
+      status.textContent = "";
+
+      return;
+
+    }
+
+    status.textContent =
+      `${games.length} jeu(x), triés par dernière session jouée.` +
+      (
+        psnPlaytimeAvailable
+          ? ""
+          : " (temps de jeu indisponible pour le moment côté PSN)"
+      );
+
+    c.innerHTML = "";
+
+    games.forEach(g => {
+
+      const hours =
+        Math.floor(g.playtimeMinutes / 60);
+
+      const mins =
+        g.playtimeMinutes % 60;
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+
+        ${imageMarkup(g.imageUrl, g.name)}
+
+        <div class="card-content">
+
+          <div class="card-title">
+            ${escapeHtml(g.name)}
+          </div>
+
+          <div class="steam-playtime">
+            🏆 ${g.progress}%
+            ${g.playtimeKnown ? " • 🕐 " + hours + "h " + mins + "min" : ""}
+          </div>
+
+        </div>
+
+      `;
+
+      card.onclick =
+        () => openPsnGame(g);
+
+      c.appendChild(card);
+
+    });
+
+  }catch(e){
+
+    console.error(e);
+
+    c.innerHTML =
+      `<div class="empty">❌ ${escapeHtml(e.message)}</div>`;
+
+  }
+
+}
+
+
+let currentPsnGame = null;
+
+
+function openPsnGame(game){
+
+  currentPsnGame = game;
+
+  hideSections();
+
+  document
+    .getElementById("psnGameSection")
+    .classList.remove("hidden");
+
+  renderPsnGameDetail();
+
+}
+
+
+function goBackFromPsnGame(){
+
+  hideSections();
+
+  document
+    .getElementById("psnSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabPsn")
+    .classList.add("active");
+
+}
+
+
+async function renderPsnGameDetail(){
+
+  const c =
+    document.getElementById("psnGameDetail");
+
+  const g =
+    currentPsnGame;
+
+  if(!g){
+    return;
+  }
+
+  const hours =
+    Math.floor(g.playtimeMinutes / 60);
+
+  const mins =
+    g.playtimeMinutes % 60;
+
+  c.innerHTML = `
+
+    <div class="achievement-header">
+
+      <img
+        src="${escapeHtml(g.imageUrl || placeholder())}"
+        alt="${escapeHtml(g.name)}"
+        onerror="this.onerror=null;this.src=placeholder()"
+      >
+
+      <div class="achievement-progress-wrap">
+
+        <div class="detail-title" style="font-size:24px">
+          ${escapeHtml(g.name)}
+        </div>
+
+        <div class="release">
+          ${g.playtimeKnown ? "🕐 " + hours + "h " + mins + "min de jeu" : "🕐 Temps de jeu indisponible"}
+        </div>
+
+        <div id="psnAchievementsSummary" class="status">
+          Chargement des trophées...
+        </div>
+
+        <div class="bar">
+          <div id="psnAchievementsBar" class="fill" style="width:${g.progress}%"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="psnAchievementsList" class="achievement-list"></div>
+
+  `;
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/psn/trophies/" +
+        encodeURIComponent(g.npCommunicationId) +
+        "?service=" +
+        encodeURIComponent(g.npServiceName || "trophy")
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("psnAchievementsSummary");
+
+    const bar =
+      document.getElementById("psnAchievementsBar");
+
+    const list =
+      document.getElementById("psnAchievementsList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun trophée disponible pour ce jeu.";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} trophées débloqués (${d.percentage}%)`;
+
+    bar.style.width =
+      d.percentage + "%";
+
+    list.innerHTML =
+      (d.results || [])
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+            <div class="achievement-icon">${a.achieved ? (a.type === "platinum" ? "🏆" : "🥇") : "🔒"}</div>
+            <div class="achievement-body">
+              <div class="achievement-name">${escapeHtml(a.name)}</div>
+              ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
+              ${a.achieved && a.unlockedAt ? `<div class="achievement-date">Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}</div>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+
+  }catch(e){
+
+    console.error(e);
+
+    const summary =
+      document.getElementById("psnAchievementsSummary");
+
+    if(summary){
+      summary.textContent =
+        "Erreur lors du chargement des trophées.";
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   PSN → BIBLIOTHÈQUE PRINCIPALE
+========================================================= */
+
+async function importPsnLibrary(){
+
+  if(
+    !confirm(
+      "Importer tous tes jeux PlayStation dans ta bibliothèque ?\n\nLes trophées (et le temps de jeu quand disponible) seront synchronisés automatiquement."
+    )
+  ){
+
+    return;
+
+  }
+
+  const btn =
+    document.getElementById("importPsnBtn");
+
+  const status =
+    document.getElementById("importPsnStatus");
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Import en cours...";
+  }
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/psn/games");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de récupérer tes jeux PlayStation."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    let added = 0;
+    let updated = 0;
+
+    games.forEach(g => {
+
+      const hours =
+        Math.floor(g.playtimeMinutes / 60);
+
+      const minutes =
+        g.playtimeMinutes % 60;
+
+      const existing =
+        library.find(
+          x =>
+            String(x.id) === String(g.npCommunicationId) &&
+            x.source === "psn"
+        );
+
+      const status =
+        g.progress >= 100
+          ? "Terminé"
+          : (g.progress > 0 || g.playtimeMinutes > 0)
+            ? "En cours"
+            : "À jouer";
+
+      if(existing){
+
+        existing.name = g.name;
+        existing.background_image = g.imageUrl;
+        existing.progress = g.progress;
+        existing.hours = hours;
+        existing.minutes = minutes;
+        existing.psnServiceName = g.npServiceName;
+
+        updated++;
+
+      }else{
+
+        library.push({
+          id: g.npCommunicationId,
+          name: g.name,
+          background_image: g.imageUrl,
+          released: null,
+          note: 0,
+          progress: g.progress,
+          hours,
+          minutes,
+          status,
+          addedAt: Date.now(),
+          source: "psn",
+          psnServiceName: g.npServiceName
+        });
+
+        added++;
+
+      }
+
+    });
+
+    saveLibrary();
+
+    status.textContent =
+      `✅ ${added} jeu(x) ajouté(s), ${updated} mis à jour.`;
+
+    renderLibrary();
+
+  }catch(e){
+
+    console.error(e);
+
+    status.textContent =
+      "❌ " + e.message;
+
+  }finally{
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = "🎮 Importer depuis PlayStation";
+    }
+
+  }
+
+}
+
+
+async function renderPsnLibraryDetail(){
+
+  const detail =
+    document.getElementById("detail");
+
+  const g =
+    currentGame;
+
+  if(!g){
+    return;
+  }
+
+  const saved =
+    getCurrentSaved() || g;
+
+  const rating =
+    Number(saved.note || 0);
+
+  const progress =
+    Number(saved.progress || 0);
+
+  const hours =
+    Number(saved.hours || 0);
+
+  const minutes =
+    Number(saved.minutes || 0);
+
+  const status =
+    saved.status || "À jouer";
+
+  detail.innerHTML = `
+
+    <div class="detail">
+
+      <div class="detail-top">
+
+        <img
+          class="cover"
+          src="${escapeHtml(gameImage(g))}"
+          alt=""
+        >
+
+        <div>
+
+          <h1 class="detail-title">
+            ${escapeHtml(g.name || "Jeu")}
+          </h1>
+
+          <div class="release">
+            🎮 Importé depuis ta bibliothèque PlayStation
+          </div>
+
+          ${
+            hours || minutes
+              ? ""
+              : '<div class="description">Le temps de jeu n\'a pas pu être récupéré pour ce jeu (limite de l\'API PSN pour certains titres).</div>'
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🏆 Trophées PlayStation
+        </div>
+
+        <div id="psnLibAchSummary" class="status">
+          Chargement des trophées...
+        </div>
+
+        <div class="bar">
+          <div id="psnLibAchBar" class="fill" style="width:${progress}%"></div>
+        </div>
+
+        <div id="psnLibAchList" class="achievement-list" style="margin-top:14px"></div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          ⭐ Ma note
+        </div>
+
+        <div class="rating">
+          <span id="ratingValue">${rating}</span> / 10
+        </div>
+
+        <div class="rating-controls">
+          <button id="minusRating" onclick="changeRating(-.5)">−</button>
+          <span>par 0,5</span>
+          <button id="plusRating" onclick="changeRating(.5)">+</button>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          📊 Progression (synchronisée avec les trophées PSN)
+        </div>
+
+        <div class="progress-number">
+          <span id="progressValue">${progress}</span>%
+        </div>
+
+        <input
+          class="slider"
+          type="range"
+          min="0"
+          max="100"
+          value="${progress}"
+          oninput="changeProgress(this.value)"
+        >
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🕐 Temps de jeu
+        </div>
+
+        <div class="time-inputs">
+
+          <input id="hoursInput" type="number" min="0" value="${hours}" placeholder="Heures">
+          <input id="minutesInput" type="number" min="0" max="59" value="${minutes}" placeholder="Minutes">
+
+          <button class="add" onclick="saveTime()">Enregistrer</button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🎯 Statut
+        </div>
+
+        <select onchange="changeStatus(this.value)">
+          <option ${status === "À jouer" ? "selected" : ""}>À jouer</option>
+          <option ${status === "En cours" ? "selected" : ""}>En cours</option>
+          <option ${status === "Terminé" ? "selected" : ""}>Terminé</option>
+        </select>
+
+      </div>
+
+
+      <div class="action">
+
+        <button class="in-library">🎮 Dans ta bibliothèque (PSN)</button>
+
+        <button class="delete" onclick="deleteCurrentGame()">🗑️ Supprimer</button>
+
+      </div>
+
+    </div>
+  `;
+
+  updateRatingButtons();
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/psn/trophies/" +
+        encodeURIComponent(g.id) +
+        "?service=" +
+        encodeURIComponent(saved.psnServiceName || "trophy")
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("psnLibAchSummary");
+
+    const bar =
+      document.getElementById("psnLibAchBar");
+
+    const list =
+      document.getElementById("psnLibAchList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun trophée disponible pour ce jeu.";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} trophées débloqués (${d.percentage}%)`;
 
     bar.style.width =
       d.percentage + "%";
@@ -6588,7 +7864,7 @@ async function renderXboxLibraryDetail(){
         .slice(0, 30)
         .map(a => `
           <div class="achievement-item ${a.achieved ? "" : "locked"}">
-            <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
+            <div class="achievement-icon">${a.achieved ? (a.type === "platinum" ? "🏆" : "🥇") : "🔒"}</div>
             <div class="achievement-body">
               <div class="achievement-name">${escapeHtml(a.name)}</div>
               ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
@@ -6625,11 +7901,11 @@ async function renderXboxLibraryDetail(){
     console.error(e);
 
     const summary =
-      document.getElementById("xboxLibAchSummary");
+      document.getElementById("psnLibAchSummary");
 
     if(summary){
       summary.textContent =
-        "Erreur lors du chargement des succès.";
+        "Erreur lors du chargement des trophées.";
     }
 
   }
