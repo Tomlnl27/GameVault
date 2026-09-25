@@ -749,6 +749,12 @@ main{
   margin-left:6px
 }
 
+.badge-xbox{
+  background:#0e3b1a;
+  color:#7fdb8f;
+  margin-left:6px
+}
+
 .library-delete,
 .wishlist-delete{
   margin-left:auto;
@@ -1168,6 +1174,7 @@ main{
   <button id="tabGenres" onclick="showGenres()">🎭 Genres</button>
   <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
   <button id="tabSteam" onclick="showSteam()">🕹️ Steam</button>
+  <button id="tabXbox" onclick="showXbox()">🟩 Xbox</button>
 </nav>
 
 <main>
@@ -1220,7 +1227,17 @@ main{
       🎮 Importer depuis Steam
     </button>
 
+    <button
+      id="importXboxBtn"
+      class="add"
+      onclick="importXboxLibrary()"
+    >
+      🟩 Importer depuis Xbox
+    </button>
+
     <span id="importSteamStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
+
+    <span id="importXboxStatus" class="status" style="display:inline-block;margin:0 0 0 10px"></span>
 
   </div>
 
@@ -1420,6 +1437,36 @@ main{
   <button class="back" onclick="goBackFromSteamGame()">← Retour</button>
 
   <div id="steamGameDetail"></div>
+
+</section>
+
+
+<section id="xboxSection" class="hidden">
+
+  <h2>🟩 Mon compte Xbox</h2>
+
+  <div id="xboxError" class="steam-connect hidden"></div>
+
+  <div id="xboxStats"></div>
+
+  <div id="xboxGamesBlock">
+
+    <h3 class="steam-block-title">🏆 Succès Xbox</h3>
+
+    <div id="xboxGamesStatus" class="status"></div>
+
+    <div id="xboxGames" class="games"></div>
+
+  </div>
+
+</section>
+
+
+<section id="xboxGameSection" class="hidden">
+
+  <button class="back" onclick="goBackFromXboxGame()">← Retour</button>
+
+  <div id="xboxGameDetail"></div>
 
 </section>
 
@@ -1669,6 +1716,11 @@ async function openGame(game){
 
   if(game.source === "steam"){
     await renderSteamLibraryDetail();
+    return;
+  }
+
+  if(game.source === "xbox"){
+    await renderXboxLibraryDetail();
     return;
   }
 
@@ -3877,6 +3929,12 @@ function renderLibrary(){
             : ""
         }
 
+        ${
+          g.source === "xbox"
+            ? '<div class="badge badge-xbox">🟩 Xbox</div>'
+            : ""
+        }
+
       </div>
 
       <button
@@ -4727,7 +4785,9 @@ function hideSections(){
     "genresSection",
     "statsSection",
     "steamSection",
-    "steamGameSection"
+    "steamGameSection",
+    "xboxSection",
+    "xboxGameSection"
   ]
   .forEach(
     id =>
@@ -4745,7 +4805,8 @@ function hideSections(){
     "tabUpcoming",
     "tabGenres",
     "tabStats",
-    "tabSteam"
+    "tabSteam",
+    "tabXbox"
   ]
   .forEach(
     id =>
@@ -5892,6 +5953,679 @@ async function renderSteamLibraryDetail(){
 
     const summary =
       document.getElementById("steamLibAchSummary");
+
+    if(summary){
+      summary.textContent =
+        "Erreur lors du chargement des succès.";
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   XBOX
+========================================================= */
+
+async function showXbox(){
+
+  hideSections();
+
+  document
+    .getElementById("xboxSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabXbox")
+    .classList.add("active");
+
+  await loadXboxProfile();
+  await loadXboxGames();
+
+}
+
+
+async function loadXboxProfile(){
+
+  const errorBox =
+    document.getElementById("xboxError");
+
+  const statsBox =
+    document.getElementById("xboxStats");
+
+  errorBox.classList.add("hidden");
+  errorBox.innerHTML = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/xbox/profile");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de charger ton profil Xbox."
+      );
+    }
+
+    statsBox.innerHTML = `
+      <div class="steam-connected-bar" style="margin-bottom:18px">
+        <span>
+          🟩 Connecté en tant que <strong>${escapeHtml(d.gamertag || "Joueur Xbox")}</strong>
+          ${d.gamerscore ? " • 🏆 " + escapeHtml(String(d.gamerscore)) + " Gamerscore" : ""}
+        </span>
+      </div>
+    `;
+
+  }catch(e){
+
+    console.error(e);
+
+    errorBox.classList.remove("hidden");
+
+    errorBox.innerHTML = `
+      <div class="status">
+        ❌ ${escapeHtml(e.message)}<br><br>
+        Vérifie que <code>XBOX_API_KEY</code> est bien configurée sur ton Worker (clé OpenXBL depuis xbl.io).
+      </div>
+    `;
+
+    statsBox.innerHTML = "";
+
+  }
+
+}
+
+
+async function loadXboxGames(){
+
+  const c =
+    document.getElementById("xboxGames");
+
+  const status =
+    document.getElementById("xboxGamesStatus");
+
+  c.innerHTML =
+    '<div class="empty">🏆 Chargement de tes succès Xbox...</div>';
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/xbox/games");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de charger tes jeux Xbox."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    if(!games.length){
+
+      c.innerHTML =
+        '<div class="empty">Aucun jeu avec des succès trouvé sur ton compte Xbox.</div>';
+
+      status.textContent = "";
+
+      return;
+
+    }
+
+    status.textContent =
+      `${games.length} jeu(x), triés par dernière session jouée. Le temps de jeu n'est pas fourni par l'API Xbox.`;
+
+    c.innerHTML = "";
+
+    games.forEach(g => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+
+        ${imageMarkup(g.imageUrl, g.name)}
+
+        <div class="card-content">
+
+          <div class="card-title">
+            ${escapeHtml(g.name)}
+          </div>
+
+          <div class="steam-playtime">
+            🏆 ${g.currentAchievements}/${g.totalAchievements} (${g.percentage}%)
+          </div>
+
+        </div>
+
+      `;
+
+      card.onclick =
+        () => openXboxGame(g);
+
+      c.appendChild(card);
+
+    });
+
+  }catch(e){
+
+    console.error(e);
+
+    c.innerHTML =
+      `<div class="empty">❌ ${escapeHtml(e.message)}</div>`;
+
+  }
+
+}
+
+
+let currentXboxGame = null;
+
+
+function openXboxGame(game){
+
+  currentXboxGame = game;
+
+  hideSections();
+
+  document
+    .getElementById("xboxGameSection")
+    .classList.remove("hidden");
+
+  renderXboxGameDetail();
+
+}
+
+
+function goBackFromXboxGame(){
+
+  hideSections();
+
+  document
+    .getElementById("xboxSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabXbox")
+    .classList.add("active");
+
+}
+
+
+async function renderXboxGameDetail(){
+
+  const c =
+    document.getElementById("xboxGameDetail");
+
+  const g =
+    currentXboxGame;
+
+  if(!g){
+    return;
+  }
+
+  c.innerHTML = `
+
+    <div class="achievement-header">
+
+      <img
+        src="${escapeHtml(g.imageUrl || placeholder())}"
+        alt="${escapeHtml(g.name)}"
+        onerror="this.onerror=null;this.src=placeholder()"
+      >
+
+      <div class="achievement-progress-wrap">
+
+        <div class="detail-title" style="font-size:24px">
+          ${escapeHtml(g.name)}
+        </div>
+
+        <div class="release">
+          🏆 ${g.currentGamerscore}/${g.totalGamerscore} Gamerscore
+        </div>
+
+        <div id="xboxAchievementsSummary" class="status">
+          Chargement des succès...
+        </div>
+
+        <div class="bar">
+          <div id="xboxAchievementsBar" class="fill" style="width:${g.percentage}%"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="xboxAchievementsList" class="achievement-list"></div>
+
+  `;
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/xbox/achievements/" +
+        encodeURIComponent(g.titleId)
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("xboxAchievementsSummary");
+
+    const bar =
+      document.getElementById("xboxAchievementsBar");
+
+    const list =
+      document.getElementById("xboxAchievementsList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun succès disponible pour ce jeu.";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+
+    bar.style.width =
+      d.percentage + "%";
+
+    list.innerHTML =
+      (d.results || [])
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+            <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
+            <div class="achievement-body">
+              <div class="achievement-name">${escapeHtml(a.name)}</div>
+              ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
+              ${a.achieved && a.unlockedAt ? `<div class="achievement-date">Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}</div>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+
+  }catch(e){
+
+    console.error(e);
+
+    const summary =
+      document.getElementById("xboxAchievementsSummary");
+
+    if(summary){
+      summary.textContent =
+        "Erreur lors du chargement des succès.";
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   XBOX → BIBLIOTHÈQUE PRINCIPALE
+========================================================= */
+
+async function importXboxLibrary(){
+
+  if(
+    !confirm(
+      "Importer tous tes jeux Xbox (avec succès) dans ta bibliothèque ?\n\nLe temps de jeu n'est pas fourni par l'API Xbox, seuls les succès et le % de complétion seront synchronisés."
+    )
+  ){
+
+    return;
+
+  }
+
+  const btn =
+    document.getElementById("importXboxBtn");
+
+  const status =
+    document.getElementById("importXboxStatus");
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Import en cours...";
+  }
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(WORKER_URL + "/xbox/games");
+
+    const d =
+      await r.json();
+
+    if(!r.ok || d.error){
+      throw new Error(
+        d.error ||
+        "Impossible de récupérer tes jeux Xbox."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    let added = 0;
+    let updated = 0;
+
+    games.forEach(g => {
+
+      const existing =
+        library.find(
+          x =>
+            Number(x.id) === Number(g.titleId) &&
+            x.source === "xbox"
+        );
+
+      const status =
+        g.percentage >= 100
+          ? "Terminé"
+          : (g.currentAchievements > 0 || g.lastPlayed)
+            ? "En cours"
+            : "À jouer";
+
+      if(existing){
+
+        existing.name = g.name;
+        existing.background_image = g.imageUrl;
+        existing.progress = g.percentage;
+
+        updated++;
+
+      }else{
+
+        library.push({
+          id: g.titleId,
+          name: g.name,
+          background_image: g.imageUrl,
+          released: null,
+          note: 0,
+          progress: g.percentage,
+          hours: 0,
+          minutes: 0,
+          status,
+          addedAt: Date.now(),
+          source: "xbox"
+        });
+
+        added++;
+
+      }
+
+    });
+
+    saveLibrary();
+
+    status.textContent =
+      `✅ ${added} jeu(x) ajouté(s), ${updated} mis à jour.`;
+
+    renderLibrary();
+
+  }catch(e){
+
+    console.error(e);
+
+    status.textContent =
+      "❌ " + e.message;
+
+  }finally{
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = "🟩 Importer depuis Xbox";
+    }
+
+  }
+
+}
+
+
+async function renderXboxLibraryDetail(){
+
+  const detail =
+    document.getElementById("detail");
+
+  const g =
+    currentGame;
+
+  if(!g){
+    return;
+  }
+
+  const saved =
+    getCurrentSaved() || g;
+
+  const rating =
+    Number(saved.note || 0);
+
+  const progress =
+    Number(saved.progress || 0);
+
+  const status =
+    saved.status || "À jouer";
+
+  detail.innerHTML = `
+
+    <div class="detail">
+
+      <div class="detail-top">
+
+        <img
+          class="cover"
+          src="${escapeHtml(gameImage(g))}"
+          alt=""
+        >
+
+        <div>
+
+          <h1 class="detail-title">
+            ${escapeHtml(g.name || "Jeu")}
+          </h1>
+
+          <div class="release">
+            🟩 Importé depuis ta bibliothèque Xbox
+          </div>
+
+          <div class="description">
+            Le temps de jeu n'est pas fourni par l'API Xbox — seuls les succès sont synchronisés.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🏆 Succès Xbox
+        </div>
+
+        <div id="xboxLibAchSummary" class="status">
+          Chargement des succès...
+        </div>
+
+        <div class="bar">
+          <div id="xboxLibAchBar" class="fill" style="width:${progress}%"></div>
+        </div>
+
+        <div id="xboxLibAchList" class="achievement-list" style="margin-top:14px"></div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          ⭐ Ma note
+        </div>
+
+        <div class="rating">
+          <span id="ratingValue">${rating}</span> / 10
+        </div>
+
+        <div class="rating-controls">
+          <button id="minusRating" onclick="changeRating(-.5)">−</button>
+          <span>par 0,5</span>
+          <button id="plusRating" onclick="changeRating(.5)">+</button>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          📊 Progression (synchronisée avec les succès Xbox)
+        </div>
+
+        <div class="progress-number">
+          <span id="progressValue">${progress}</span>%
+        </div>
+
+        <input
+          class="slider"
+          type="range"
+          min="0"
+          max="100"
+          value="${progress}"
+          oninput="changeProgress(this.value)"
+        >
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          🎯 Statut
+        </div>
+
+        <select onchange="changeStatus(this.value)">
+          <option ${status === "À jouer" ? "selected" : ""}>À jouer</option>
+          <option ${status === "En cours" ? "selected" : ""}>En cours</option>
+          <option ${status === "Terminé" ? "selected" : ""}>Terminé</option>
+        </select>
+
+      </div>
+
+
+      <div class="action">
+
+        <button class="in-library">🟩 Dans ta bibliothèque (Xbox)</button>
+
+        <button class="delete" onclick="deleteCurrentGame()">🗑️ Supprimer</button>
+
+      </div>
+
+    </div>
+  `;
+
+  updateRatingButtons();
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/xbox/achievements/" +
+        encodeURIComponent(g.id)
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("xboxLibAchSummary");
+
+    const bar =
+      document.getElementById("xboxLibAchBar");
+
+    const list =
+      document.getElementById("xboxLibAchList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun succès disponible pour ce jeu.";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+
+    bar.style.width =
+      d.percentage + "%";
+
+    list.innerHTML =
+      (d.results || [])
+        .slice(0, 30)
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+            <div class="achievement-icon">${a.achieved ? "🏆" : "🔒"}</div>
+            <div class="achievement-body">
+              <div class="achievement-name">${escapeHtml(a.name)}</div>
+              ${a.description ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>` : ""}
+              ${a.achieved && a.unlockedAt ? `<div class="achievement-date">Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}</div>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+
+    const entry =
+      ensureSaved();
+
+    entry.progress =
+      d.percentage;
+
+    saveLibrary();
+
+    const progressValue =
+      document.getElementById("progressValue");
+
+    const slider =
+      document.querySelector('.slider[type="range"]');
+
+    if(progressValue){
+      progressValue.textContent = d.percentage;
+    }
+
+    if(slider){
+      slider.value = d.percentage;
+    }
+
+  }catch(e){
+
+    console.error(e);
+
+    const summary =
+      document.getElementById("xboxLibAchSummary");
 
     if(summary){
       summary.textContent =
