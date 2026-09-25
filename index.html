@@ -336,6 +336,134 @@ main{
   border:0
 }
 
+/* =========================
+   STEAM
+========================= */
+
+.steam-connect{
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:18px
+}
+
+.steam-connected-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#0d0d12;
+  border:1px solid #292933;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:18px;
+  font-weight:700;
+  flex-wrap:wrap
+}
+
+.steam-block-title{
+  font-size:19px;
+  font-weight:900;
+  margin:22px 0 12px
+}
+
+.steam-playtime{
+  font-size:12px;
+  color:#9fd68c;
+  margin-top:6px;
+  font-weight:800
+}
+
+.steam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:10px
+}
+
+@media(max-width:600px){
+  .steam-summary-grid{
+    grid-template-columns:1fr
+  }
+}
+
+.achievement-header{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  margin-bottom:18px;
+  flex-wrap:wrap
+}
+
+.achievement-header img{
+  width:90px;
+  height:90px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#000
+}
+
+.achievement-progress-wrap{
+  flex:1;
+  min-width:180px
+}
+
+.achievement-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+
+.achievement-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  background:#14141b;
+  border:1px solid #25252f;
+  border-radius:12px
+}
+
+.achievement-item.locked{
+  opacity:.45
+}
+
+.achievement-icon{
+  width:40px;
+  height:40px;
+  border-radius:8px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  background:#20202a
+}
+
+.achievement-body{
+  flex:1;
+  min-width:0
+}
+
+.achievement-name{
+  font-weight:800;
+  font-size:14px
+}
+
+.achievement-desc{
+  color:#858590;
+  font-size:12px;
+  margin-top:3px
+}
+
+.achievement-date{
+  color:#9fd68c;
+  font-size:11px;
+  margin-top:4px;
+  font-weight:700
+}
+
 .lightbox-close,
 .lightbox-nav{
   position:absolute;
@@ -1033,6 +1161,7 @@ main{
   <button id="tabUpcoming" onclick="showUpcoming()">📅 Prochaines sorties</button>
   <button id="tabGenres" onclick="showGenres()">🎭 Genres</button>
   <button id="tabStats" onclick="showStats()">📊 Statistiques</button>
+  <button id="tabSteam" onclick="showSteam()">🕹️ Steam</button>
 </nav>
 
 <main>
@@ -1206,6 +1335,71 @@ main{
   <h2>📊 Mes statistiques</h2>
 
   <div id="statsContent"></div>
+
+</section>
+
+
+<section id="steamSection" class="hidden">
+
+  <h2>🕹️ Mon compte Steam</h2>
+
+  <div id="steamConnectBox" class="steam-connect hidden">
+
+    <p class="status" style="margin-bottom:10px">
+      Connecte ton compte Steam pour importer automatiquement tes jeux, tes heures de jeu, tes succès et ta liste de souhaits.
+      Ton profil (et les détails du jeu) doivent être publics.
+    </p>
+
+    <div class="search">
+      <input
+        id="steamIdInput"
+        placeholder="Pseudo Steam (ex: gaben) ou SteamID64"
+      >
+      <button onclick="connectSteam()">Connecter</button>
+    </div>
+
+    <div id="steamConnectStatus" class="status"></div>
+
+  </div>
+
+  <div id="steamConnectedBar" class="steam-connected-bar hidden">
+
+    <span id="steamConnectedLabel"></span>
+
+    <button class="back" onclick="disconnectSteam()">Déconnecter</button>
+
+  </div>
+
+  <div id="steamStats"></div>
+
+  <div id="steamGamesBlock" class="hidden">
+
+    <h3 class="steam-block-title">📚 Bibliothèque Steam</h3>
+
+    <div id="steamGamesStatus" class="status"></div>
+
+    <div id="steamGames" class="games"></div>
+
+  </div>
+
+  <div id="steamWishlistBlock" class="hidden">
+
+    <h3 class="steam-block-title">❤️ Liste de souhaits Steam</h3>
+
+    <div id="steamWishlistStatus" class="status"></div>
+
+    <div id="steamWishlist" class="games"></div>
+
+  </div>
+
+</section>
+
+
+<section id="steamGameSection" class="hidden">
+
+  <button class="back" onclick="goBackFromSteamGame()">← Retour</button>
+
+  <div id="steamGameDetail"></div>
 
 </section>
 
@@ -4500,7 +4694,9 @@ function hideSections(){
     "wishlistSection",
     "upcomingSection",
     "genresSection",
-    "statsSection"
+    "statsSection",
+    "steamSection",
+    "steamGameSection"
   ]
   .forEach(
     id =>
@@ -4517,7 +4713,8 @@ function hideSections(){
     "tabWishlist",
     "tabUpcoming",
     "tabGenres",
-    "tabStats"
+    "tabStats",
+    "tabSteam"
   ]
   .forEach(
     id =>
@@ -4670,6 +4867,579 @@ function showStats(){
 
 
   renderStats();
+
+}
+
+
+/* =========================================================
+   STEAM
+========================================================= */
+
+let steamId =
+  localStorage.getItem("gamevault_steamid") || null;
+
+let currentSteamGame = null;
+
+
+function showSteam(){
+
+  hideSections();
+
+  document
+    .getElementById("steamSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabSteam")
+    .classList.add("active");
+
+  renderSteamPage();
+
+}
+
+
+function renderSteamPage(){
+
+  const connectBox =
+    document.getElementById("steamConnectBox");
+
+  const connectedBar =
+    document.getElementById("steamConnectedBar");
+
+  const gamesBlock =
+    document.getElementById("steamGamesBlock");
+
+  const wishlistBlock =
+    document.getElementById("steamWishlistBlock");
+
+  const statsBox =
+    document.getElementById("steamStats");
+
+  if(!steamId){
+
+    connectBox.classList.remove("hidden");
+    connectedBar.classList.add("hidden");
+    gamesBlock.classList.add("hidden");
+    wishlistBlock.classList.add("hidden");
+    statsBox.innerHTML = "";
+
+    return;
+
+  }
+
+  connectBox.classList.add("hidden");
+  connectedBar.classList.remove("hidden");
+  gamesBlock.classList.remove("hidden");
+  wishlistBlock.classList.remove("hidden");
+
+  document
+    .getElementById("steamConnectedLabel")
+    .textContent =
+      "✅ Connecté (SteamID: " + steamId + ")";
+
+  loadSteamGames();
+  loadSteamWishlist();
+
+}
+
+
+async function connectSteam(){
+
+  const input =
+    document.getElementById("steamIdInput");
+
+  const status =
+    document.getElementById("steamConnectStatus");
+
+  const value =
+    (input.value || "").trim();
+
+  if(!value){
+
+    status.textContent =
+      "Entre ton pseudo Steam ou ton SteamID64.";
+
+    return;
+
+  }
+
+  status.textContent =
+    "Connexion...";
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/resolve?vanity=" +
+        encodeURIComponent(value)
+      );
+
+    const d =
+      await r.json();
+
+    if(!r.ok || !d.steamid){
+
+      status.textContent =
+        d.error ||
+        "Impossible de trouver ce profil Steam.";
+
+      return;
+
+    }
+
+    steamId = d.steamid;
+
+    localStorage.setItem(
+      "gamevault_steamid",
+      steamId
+    );
+
+    status.textContent = "";
+
+    renderSteamPage();
+
+  }catch(e){
+
+    console.error(e);
+
+    status.textContent =
+      "Erreur de connexion à Steam.";
+
+  }
+
+}
+
+
+function disconnectSteam(){
+
+  if(
+    !confirm(
+      "Déconnecter ton compte Steam ? (aucune donnée n'est supprimée sur Steam, juste ici)"
+    )
+  ){
+
+    return;
+
+  }
+
+  steamId = null;
+
+  localStorage.removeItem("gamevault_steamid");
+
+  renderSteamPage();
+
+}
+
+
+async function loadSteamGames(){
+
+  const c =
+    document.getElementById("steamGames");
+
+  const status =
+    document.getElementById("steamGamesStatus");
+
+  const statsBox =
+    document.getElementById("steamStats");
+
+  c.innerHTML =
+    '<div class="empty">📚 Chargement de ta bibliothèque Steam...</div>';
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/games?steamid=" +
+        encodeURIComponent(steamId)
+      );
+
+    const d =
+      await r.json();
+
+    if(!r.ok){
+      throw new Error(
+        d.error ||
+        "Impossible de charger la bibliothèque Steam."
+      );
+    }
+
+    const games =
+      d.results || [];
+
+    if(!games.length){
+
+      c.innerHTML =
+        '<div class="empty">Aucun jeu trouvé (profil privé ou bibliothèque vide).</div>';
+
+      statsBox.innerHTML = "";
+
+      return;
+
+    }
+
+    const totalMinutes =
+      games.reduce(
+        (s,g) => s + Number(g.playtimeMinutes || 0),
+        0
+      );
+
+    statsBox.innerHTML = `
+      <div class="steam-summary-grid">
+
+        <div class="stat">
+          <div class="stat-icon">🎮</div>
+          <div class="stat-number">${games.length}</div>
+          <div class="stat-label">Jeux possédés (Steam)</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-number">${Math.round(totalMinutes / 60)}h</div>
+          <div class="stat-label">Temps de jeu cumulé</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-number">${games.filter(g => g.playtimeMinutes2Weeks > 0).length}</div>
+          <div class="stat-label">Joués ces 2 dernières semaines</div>
+        </div>
+
+      </div>
+    `;
+
+    status.textContent =
+      `${games.length} jeu(x), triés par temps de jeu.`;
+
+    c.innerHTML = "";
+
+    games.forEach(g => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+      const hours =
+        Math.floor(g.playtimeMinutes / 60);
+
+      const mins =
+        g.playtimeMinutes % 60;
+
+      card.innerHTML = `
+
+        ${imageMarkup(g.headerUrl, g.name)}
+
+        <div class="card-content">
+
+          <div class="card-title">
+            ${escapeHtml(g.name)}
+          </div>
+
+          <div class="steam-playtime">
+            🕐 ${hours}h ${mins}min
+            ${g.playtimeMinutes2Weeks > 0 ? " • 🔥 actif" : ""}
+          </div>
+
+        </div>
+
+      `;
+
+      card.onclick =
+        () => openSteamGame(g);
+
+      c.appendChild(card);
+
+    });
+
+  }catch(e){
+
+    console.error(e);
+
+    c.innerHTML =
+      `<div class="empty">❌ ${escapeHtml(e.message)}</div>`;
+
+  }
+
+}
+
+
+async function loadSteamWishlist(){
+
+  const c =
+    document.getElementById("steamWishlist");
+
+  const status =
+    document.getElementById("steamWishlistStatus");
+
+  c.innerHTML =
+    '<div class="empty">❤️ Chargement de ta liste de souhaits Steam...</div>';
+
+  status.textContent = "";
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/wishlist?steamid=" +
+        encodeURIComponent(steamId)
+      );
+
+    const d =
+      await r.json();
+
+    if(!r.ok){
+      throw new Error(
+        d.error ||
+        "Impossible de charger la liste de souhaits Steam."
+      );
+    }
+
+    const items =
+      d.results || [];
+
+    if(!items.length){
+
+      c.innerHTML =
+        '<div class="empty">Aucun jeu dans ta liste de souhaits Steam.</div>';
+
+      status.textContent = "";
+
+      return;
+
+    }
+
+    status.textContent =
+      `${items.length} jeu(x) dans ta liste de souhaits Steam.`;
+
+    c.innerHTML = "";
+
+    items.forEach(g => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+
+        ${imageMarkup(g.headerUrl, g.name)}
+
+        <div class="card-content">
+
+          <div class="card-title">
+            ${escapeHtml(g.name)}
+          </div>
+
+          <div class="card-date">
+            ${escapeHtml(g.releaseString || "Date inconnue")}
+          </div>
+
+        </div>
+
+      `;
+
+      card.onclick =
+        () =>
+          window.open(
+            "https://store.steampowered.com/app/" + g.appid,
+            "_blank"
+          );
+
+      c.appendChild(card);
+
+    });
+
+  }catch(e){
+
+    console.error(e);
+
+    c.innerHTML =
+      `<div class="empty">❌ ${escapeHtml(e.message)}</div>`;
+
+  }
+
+}
+
+
+function openSteamGame(game){
+
+  currentSteamGame = game;
+
+  hideSections();
+
+  document
+    .getElementById("steamGameSection")
+    .classList.remove("hidden");
+
+  renderSteamGameDetail();
+
+}
+
+
+function goBackFromSteamGame(){
+
+  hideSections();
+
+  document
+    .getElementById("steamSection")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("tabSteam")
+    .classList.add("active");
+
+  renderSteamPage();
+
+}
+
+
+async function renderSteamGameDetail(){
+
+  const c =
+    document.getElementById("steamGameDetail");
+
+  const g =
+    currentSteamGame;
+
+  if(!g){
+    return;
+  }
+
+  const hours =
+    Math.floor(g.playtimeMinutes / 60);
+
+  const mins =
+    g.playtimeMinutes % 60;
+
+  c.innerHTML = `
+
+    <div class="achievement-header">
+
+      <img
+        src="${escapeHtml(g.headerUrl || placeholder())}"
+        alt="${escapeHtml(g.name)}"
+        onerror="this.onerror=null;this.src=placeholder()"
+      >
+
+      <div class="achievement-progress-wrap">
+
+        <div class="detail-title" style="font-size:24px">
+          ${escapeHtml(g.name)}
+        </div>
+
+        <div class="release">
+          🕐 ${hours}h ${mins}min de jeu
+        </div>
+
+        <div id="steamAchievementsSummary" class="status">
+          Chargement des succès...
+        </div>
+
+        <div class="bar">
+          <div id="steamAchievementsBar" class="fill" style="width:0%"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="steamAchievementsList" class="achievement-list"></div>
+
+  `;
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/steam/achievements/" +
+        encodeURIComponent(g.appid) +
+        "?steamid=" +
+        encodeURIComponent(steamId)
+      );
+
+    const d =
+      await r.json();
+
+    const summary =
+      document.getElementById("steamAchievementsSummary");
+
+    const bar =
+      document.getElementById("steamAchievementsBar");
+
+    const list =
+      document.getElementById("steamAchievementsList");
+
+    if(!r.ok || !d.available){
+
+      summary.textContent =
+        d.message ||
+        "Aucun succès disponible pour ce jeu.";
+
+      bar.style.width = "0%";
+
+      list.innerHTML = "";
+
+      return;
+
+    }
+
+    summary.textContent =
+      `🏆 ${d.unlocked} / ${d.total} succès débloqués (${d.percentage}%)`;
+
+    bar.style.width =
+      d.percentage + "%";
+
+    list.innerHTML =
+      (d.results || [])
+        .map(a => `
+          <div class="achievement-item ${a.achieved ? "" : "locked"}">
+
+            <div class="achievement-icon">
+              ${a.achieved ? "🏆" : "🔒"}
+            </div>
+
+            <div class="achievement-body">
+
+              <div class="achievement-name">
+                ${escapeHtml(a.name)}
+              </div>
+
+              ${
+                a.description
+                  ? `<div class="achievement-desc">${escapeHtml(a.description)}</div>`
+                  : ""
+              }
+
+              ${
+                a.achieved && a.unlockedAt
+                  ? `<div class="achievement-date">
+                      Débloqué le ${new Date(a.unlockedAt).toLocaleDateString("fr-FR")}
+                    </div>`
+                  : ""
+              }
+
+            </div>
+
+          </div>
+        `)
+        .join("");
+
+  }catch(e){
+
+    console.error(e);
+
+    document
+      .getElementById("steamAchievementsSummary")
+      .textContent =
+        "Erreur lors du chargement des succès.";
+
+  }
 
 }
 
