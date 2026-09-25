@@ -1556,6 +1556,39 @@ async function renderDetail(){
   }
 
 
+  /* Screenshots (endpoint dédié : /games/{id} ne renvoie pas short_screenshots) */
+
+  let screenshotsData = [];
+
+  try{
+
+    const r =
+      await fetch(
+        WORKER_URL +
+        "/game-screenshots/" +
+        encodeURIComponent(game.id)
+      );
+
+    if(r.ok){
+
+      const d =
+        await r.json();
+
+      if(Array.isArray(d.results)){
+        screenshotsData = d.results;
+      }
+    }
+
+  }catch(e){
+
+    console.log(
+      "Screenshots indisponibles",
+      e
+    );
+
+  }
+
+
   /* Vidéos / bandes-annonces (RAWG, avec repli YouTube si RAWG n'a rien) */
 
   let movies = [];
@@ -1621,11 +1654,17 @@ async function renderDetail(){
   /* Médias RAWG : vidéos (en premier) + screenshots, façon Steam/PS5 */
 
   const screenshots =
-    Array.isArray(game?.short_screenshots)
-      ? game.short_screenshots
+    screenshotsData.length
+      ? screenshotsData
           .filter(x => x?.image)
           .slice(0, 14)
-      : [];
+      : (
+          Array.isArray(game?.short_screenshots)
+            ? game.short_screenshots
+                .filter(x => x?.image)
+                .slice(0, 14)
+            : []
+        );
 
   const videoItems =
     movies.length
