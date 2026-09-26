@@ -311,6 +311,13 @@ main{
   font-size:15px
 }
 
+.translation-note{
+  color:var(--text-faint);
+  font-size:11px;
+  margin-top:6px;
+  font-style:italic
+}
+
 .meta{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -2240,9 +2247,13 @@ async function renderDetail(){
       : "";
 
   const description =
+    game.description_fr ||
     game.description_raw ||
     stripHtml(game.description) ||
     "Aucune description disponible.";
+
+  const descriptionIsTranslated =
+    Boolean(game.description_fr);
 
   const developers =
     Array.isArray(game.developers)
@@ -2484,6 +2495,12 @@ async function renderDetail(){
           <div class="description">
             ${escapeHtml(description)}
           </div>
+
+          ${
+            descriptionIsTranslated
+              ? '<div class="translation-note">Traduit automatiquement de l\'anglais</div>'
+              : ""
+          }
 
 
           <div class="meta">
